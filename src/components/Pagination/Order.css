@@ -1,0 +1,27 @@
+.pagination {
+    width: 300px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.pagination li {
+    list-style: none;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+}
+
+
+.page-link {
+    cursor: pointer;
+    background-color: white;
+    color: #999;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s ease;
+}

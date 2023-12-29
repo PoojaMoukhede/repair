@@ -1,0 +1,32 @@
+.navbar-container2 {
+  position: relative;
+  z-index: 1;
+}
+
+.navbar2 {
+  position: absolute;
+  top: -10px;
+  left: 25%;
+  width: 50%;
+  background-color: #004976; 
+  /* #405180 */
+  color: white;
+  padding: 8px;
+  z-index: 2;
+  border-radius: 40px 5px 40px 5px;
+}
+
+.navbar2 ul{
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navbtn {
+  color: white;
+  border-bottom: 0.5px solid white;
+  cursor: pointer;
+}
+
+
