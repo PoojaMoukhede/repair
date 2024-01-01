@@ -1,24 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import axios from "axios";
 
-function Readymodel({ Title, onButtonClick ,btnText}) {
+function Readymodel({ Title, onButtonClick, btnText, orderID }) {
   const [show, setShow] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({});
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
-  const handleMoveForBilling = () => {
-    if (onButtonClick) {
-      onButtonClick();
+  const handleMoveForBilling = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/orders/${orderID}/details`);
+      const mergedData = response.data; 
+      console.log(`merge data : ${mergedData}`);
+      setOrderDetails(mergedData);
+
+      if (onButtonClick) {
+        onButtonClick();
+      }
+    } catch (error) {
+      console.error("Error fetching order details:", error);
     }
-    handleClose();
   };
+
+  useEffect(() => {
+    if (show) {
+      handleMoveForBilling();
+    }
+  }, [show, orderID]);
 
   return (
     <>
-      <Button variant="" onClick={handleShow}>
-        modal
+      <Button variant="" 
+      // onClick={handleShow}
+      onClick={()=>setShow(true)}
+      >
       </Button>
 
       <Modal show={show} onHide={handleClose} size="lg">
@@ -31,33 +48,37 @@ function Readymodel({ Title, onButtonClick ,btnText}) {
           <div className="row">
             <div className="col-6">
               <span>Repair Item Name</span>
-              <h5 className="modelText">AVH14-T1-07</h5>
+              <h5 className="modelText">{orderDetails.productName}</h5>
             </div>
             <div className="col-6">
               <span>Customer Name</span>
-              <h5 className="modelText">AVH14-T1-07</h5>
+              <h5 className="modelText">{orderDetails.CustomeName}</h5>
             </div>
           </div>
 
           <div className="row mt-3">
             <div className="col-6">
-              <span>Repair Item Name</span>
-              <h5 className="modelText">AVH14-T1-07</h5>
+              <span>Repair Order Number</span>
+              <h5 className="modelText">{orderDetails.orderNumber}</h5>
             </div>
             <div className="col-6">
-              <span>Repair Item Name</span>
-              <h5 className="modelText">AVH14-T1-07</h5>
+              <span>Repair Order Date</span>
+              <h5 className="modelText">{orderDetails.orderDate}</h5>
             </div>
           </div>
+
           <hr />
+
           <div className="row">
             <span>Customer Remark</span>
-            <h5 className="modelText">N/A</h5>
+            <h5 className="modelText">{orderDetails? orderDetails.customerReason :"N/A"}</h5>
           </div>
+
           <hr />
+
           <div className="row">
             <span>Repairer Remark</span>
-            <h5 className="modelText">N/A</h5>
+            <h5 className="modelText">{orderDetails? orderDetails.orderRemark :"N/A"}</h5>
           </div>
         </Modal.Body>
 
@@ -69,7 +90,8 @@ function Readymodel({ Title, onButtonClick ,btnText}) {
             variant=""
             style={{ backgroundColor: "#004976", color: "white" }}
             onClick={handleMoveForBilling}
-          >{btnText}
+          >
+            {btnText}
           </Button>
         </Modal.Footer>
       </Modal>

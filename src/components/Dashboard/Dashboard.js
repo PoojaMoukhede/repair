@@ -145,7 +145,7 @@ export default function Dashboard() {
                   </Link>
                 </div>
                 <div className="col-md-6 col-xl-3">
-                  {/* <Link to="/customer"> */}
+                  <Link to="/invoiceTable">
                     <div className=" mb-3 widget-content widget-content0 ">
                       <div className="overview_top">
                         <div className="orange">
@@ -156,7 +156,7 @@ export default function Dashboard() {
                         </p>
                       </div>
                     </div>
-                  {/* </Link> */}
+                  </Link>
                 </div>
                 <div className="col-md-6 col-xl-3">
                   {/* <Link to="/weather"> */}

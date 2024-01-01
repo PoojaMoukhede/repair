@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { FaShieldHalved } from "react-icons/fa6";
@@ -9,30 +9,44 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import OrderComponent from "./OrderComponent";
 import booked from "../../Images/checkmark.png";
 import "./btn.css";
+import axios from "axios";
+import { useAPI } from "../Context";
 
 export default function RepairOrder() {
-  const [invoiceItems, setInvoiceItems] = useState([
+  const { postOrder } = useAPI();
+  const [orderItems, setOrderItems] = useState([
     {
       id: 1,
-      product: "",
+      productName: "",
       serialNumber: "",
-      hsnCode: "",
+      HSN: "",
       includeHsn: false,
       rate: "",
       tax: "",
       total: "",
       customerReason: "",
+      orderRemark: "",
+      orderDate: "",
+      orderNumber: "",
+      isReapired: false,
+      isInProcess: false,
+      isReady: false,
+      isBilled: false,
+      isScraped: false,
+      CustomerName: '',
+      CustomerReferance: "",
+      RefrenceDate: "",
     },
   ]);
   const [cartCountValue, setCartCountValue] = useState(1);
   const handleAddRow = () => {
-    setInvoiceItems((prevItems) => [
+    setOrderItems((prevItems) => [
       ...prevItems,
       {
         id: prevItems.length + 1,
-        product: "",
+        productName: "",
         serialNumber: "",
-        hsnCode: "",
+        HSN: "",
         includeHsn: false,
         rate: "",
         tax: "",
@@ -44,12 +58,12 @@ export default function RepairOrder() {
   };
 
   const handleDeleteRow = (id) => {
-    setInvoiceItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setOrderItems((prevItems) => prevItems.filter((item) => item.id !== id));
     setCartCountValue((prevCount) => prevCount - 1);
   };
 
   const handleInputChange = (id, name, value) => {
-    setInvoiceItems((prevItems) =>
+    setOrderItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, [name]: value } : item
       )
@@ -59,7 +73,28 @@ export default function RepairOrder() {
 
   const handleButtonClick = () => {
     setAdded(!added);
+    postOrder(orderItems);
   };
+  const [customerData, setCustomerData] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState("");
+  const currentDate = new Date().toISOString().split("T")[0];
+  const [referanceDate, setReferanceDate] = useState(currentDate);
+
+  useEffect(() => {
+    try {
+      axios
+        .get(`http://localhost:8000/customer`)
+        .then((response) => {
+          setCustomerData(response.data);
+          console.log("sort data", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   return (
     <>
@@ -74,7 +109,6 @@ export default function RepairOrder() {
                   <div className="card">
                     <div className="card-header-tab card-header">
                       <div className="card-header-title">
-                        {/* <i className="header-icon fa-regular fa-user"></i> */}
                         <FaRegUser className="header-icon" />
                         Customer Detail
                       </div>
@@ -84,21 +118,38 @@ export default function RepairOrder() {
                         <div className="widget-chart p-3">
                           <form className="row g-3">
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Name
                               </label>
                               <select
                                 className="form-select input_repair"
                                 aria-label="Default select example"
+                                value={selectedCustomer}
+                                onChange={(e) =>
+                                  setSelectedCustomer(e.target.value)
+                                }
                               >
-                                <option selected>Select Customer</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value="" disabled>
+                                  Select Customer
+                                </option>
+                                {customerData.map((customer) => (
+                                  <option
+                                    key={customer.CustomeID}
+                                    value={customer.CustomeName}
+                                  >
+                                    {customer.CustomeName}
+                                  </option>
+                                ))}
                               </select>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Referance
                               </label>
                               <input
@@ -109,13 +160,20 @@ export default function RepairOrder() {
                               />
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputAddress" className="form-label">
+                              <label
+                                htmlFor="inputAddress"
+                                className="form-label"
+                              >
                                 Customer Referance Date
                               </label>
                               <input
                                 type="date"
                                 className={`form-control input_repair`}
                                 placeholder="Referance"
+                                value={referanceDate}
+                                onChange={(e) =>
+                                  setReferanceDate(e.target.value)
+                                }
                                 required
                               />
                             </div>
@@ -143,7 +201,7 @@ export default function RepairOrder() {
                             <thead style={{ backgroundColor: "gray" }}>
                               <tr>
                                 <th scope="col">Sr. No</th>
-                                <th scope="col">Product</th>
+                                <th scope="col">productName</th>
                                 <th scope="col">Serial Number</th>
                                 <th scope="col">HSN</th>
                                 <th scope="col">
@@ -157,28 +215,47 @@ export default function RepairOrder() {
                               </tr>
                             </thead>
                             <tbody className="table-group-divider">
-                              {invoiceItems.map((item) => (
+                              {orderItems.map((item) => (
                                 <tr key={item.id}>
                                   <th scope="row">{item.id}</th>
                                   <td>
                                     <select
                                       className="form-select input_repair"
                                       aria-label="Default select example"
-                                      value={item.product}
+                                      value={item.productName}
                                       onChange={(e) =>
                                         handleInputChange(
                                           item.id,
-                                          "product",
+                                          "productName",
                                           e.target.value
                                         )
                                       }
                                     >
                                       <option value="" disabled>
-                                        Select Product
+                                        Select productName
                                       </option>
-                                      <option value="1">One</option>
-                                      <option value="2">Two</option>
-                                      <option value="3">Three</option>
+                                      <option value="Temprature Controller">
+                                        Temprature Controller
+                                      </option>
+                                      <option value="Timers & Counters">
+                                        Timers & Counters
+                                      </option>
+                                      <option value="Process Control Instruments">
+                                        Process Control Instruments
+                                      </option>
+                                      <option value="Power & Energy Meters">
+                                        Power & Energy Meters
+                                      </option>
+                                      <option value="APFC & Protection Relays">
+                                        APFC & Protection Relays
+                                      </option>
+                                      <option value="Color Mark Sensors">
+                                        Color Mark Sensors
+                                      </option>
+                                      <option value="Cryo">Cryo</option>
+                                      <option value="Panel Meters">
+                                        Panel Meters
+                                      </option>
                                     </select>
                                   </td>
                                   <td>
@@ -203,11 +280,11 @@ export default function RepairOrder() {
                                     <input
                                       className="input_repair"
                                       placeholder="12345"
-                                      value={item.hsnCode}
+                                      value={item.HSN}
                                       onChange={(e) =>
                                         handleInputChange(
                                           item.id,
-                                          "hsnCode",
+                                          "HSN",
                                           e.target.value
                                         )
                                       }
@@ -337,7 +414,12 @@ export default function RepairOrder() {
                         </div>
                         <div className="p-2 d-flex">
                           <div style={{ width: "60%" }}>
-                            <span className="d-flex"><h6 className="ms-2">Order Remark</h6> <small className="ms-2">(upto 500 character)</small></span>
+                            <span className="d-flex">
+                              <h6 className="ms-2">Order Remark</h6>{" "}
+                              <small className="ms-2">
+                                (upto 500 character)
+                              </small>
+                            </span>
                             <OrderComponent />
                           </div>
                           <button
@@ -354,7 +436,6 @@ export default function RepairOrder() {
                             </div>
                             <div className="dots"></div>
                           </button>
-                    
                         </div>
                       </div>
                     </div>

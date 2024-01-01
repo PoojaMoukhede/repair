@@ -446,3 +446,140 @@ li,
 .input_repair:focus {
   border: 1px #85cb33 solid !important;
 }
+/* Default styles for the table */
+.table-responsive {
+  height: 80vh;
+}
+
+.table {
+  font-size: 0.9rem;
+  color: white;
+}
+
+.table thead {
+  background: beige;
+}
+
+.table th,
+.table td {
+  text-align: center;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 599px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .table th,
+  .table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table tr {
+    margin-bottom: 1em;
+  }
+
+  .table td:before {
+    color: #000;
+    content: attr(data-label);
+    display: inline-block;
+    font-size: 75%;
+    font-weight: bold;
+    text-transform: capitalize;
+    vertical-align: top;
+    width: 50%;
+  }
+
+  .table p {
+    margin: -1em 0 0 50%;
+  }
+}
+
+@media screen and (max-width: 349px) {
+  .table td:before {
+    display: block;
+  }
+
+  .table p {
+    margin: 0;
+  }
+}
+/* Default styles for the table */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  font-size: 0.9rem;
+  color: white;
+}
+
+.table th,
+.table td {
+  text-align: center;
+}
+
+.table thead {
+  background: beige;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 567px) {
+  .table tbody,
+  .table thead,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+  }
+
+  .table thead {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .table tr {
+    margin-bottom: 1em;
+  }
+
+  .table td {
+    border: none;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 349px) {
+  .table td {
+    padding-left: 0;
+  }
+
+  .table td:before {
+    display: block;
+  }
+}
+.current-route {
+  font-size: 1.2rem;
+  color: #fff;
+  font-variant: small-caps;
+  cursor: pointer;
+}
+.laststatus {
+  width: 80%;
+  margin: auto;
+  padding: 0.2rem;
+  border-radius: 20px;
+  font-weight: 600;
+}

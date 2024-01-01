@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import dummyData from "./MOCK_DATA (1).json";
 import Navbar from "../Navbar";
 import Readymodel from "../Ready/Readymodel";
 import Pagination from "../Pagination/Pagination";
+import axios from "axios";
+// import { useAPI } from "../Context";
 
-export default function OrderList({ show, onHide }) {
+export default function OrderList() {
+  // const { processList } = useAPI();
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log(`data : ${dummyData}`);
-        setEntriesData(dummyData);
+        const response = await axios.get(
+          "http://localhost:8000/order-item-list-with-customer"
+        );
+        setEntriesData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching order list:", error);
       }
     };
     fetchData();
   }, []);
 
+  // const transfer_To_Process = async(id,data)=>{
+  //   console.log(id,data)
+  //   await processList(id,data)
+  // }
+
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
-
 
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
@@ -36,11 +45,46 @@ export default function OrderList({ show, onHide }) {
     )
   );
 
-  function handleClick() {
-    console.log("model open");
+  const handleClick = (entry) => {
+    setSelectedOrder(entry);
     setIsModalOpen(true);
-    console.log("model open after set");
+  };
+  function handleOrderNumberClick(orderID) {
+    setSelectedOrder(orderID);
   }
+
+  // const makeStyle = (entriesData) => {
+  //   const { isInProcess, isReady, isBilled, isScraped } = entriesData;
+
+  //   if (isInProcess === 0 && isReady === 0 && isBilled === 0 && isScraped === 0) {
+  //     return {
+  //       background: "rgb(145 254 159 / 47%)",
+  //       color: "green",
+  //     };
+  //   } else {
+  //     return {
+  //       background: "#59bfff",
+  //       color: "white",
+  //     };
+  //   }
+  // };
+  const makeStyle = (entriesData) => {
+    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
+
+    if (!isInProcess && !isReady && !isBilled && !isScraped) {
+      return {
+        background: "#f9bb00",
+        color: "black",
+        border: "1px solid #efc84a",
+      };
+    } else {
+      return {
+        background: "rgb(145 254 159 / 47%)",
+        color: "green",
+        border: "1px solid #85cb33",
+      };
+    }
+  };
 
   return (
     <>
@@ -103,6 +147,7 @@ export default function OrderList({ show, onHide }) {
                                   <th className="text-center">Repair Item</th>
                                   <th className="text-center">Serial Number</th>
                                   <th className="text-center">
+                                    {" "}
                                     Customer Reason
                                   </th>
                                   <th className="text-center">Repairer Note</th>
@@ -115,43 +160,75 @@ export default function OrderList({ show, onHide }) {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {entry.Orderdate}
+                                      {/* {entry.orderDate} */}
+                                      {new Date(entry.orderDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )}
                                     </td>
+
                                     <td
                                       className="text-center"
-                                      onClick={() => handleClick()}
+                                      onClick={() =>
+                                        handleOrderNumberClick(entry.orderID)
+                                      }
                                     >
                                       {entry.orderNumber}
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}
-                                        btnText={"Move For Billing"}
+                                        btnText={"Moving to In-Process"}
                                         Title={"Repair Item DONE Confirmation"}
                                         onButtonClick={() => {
-                                        console.log("Confirmation 1 task")}}
+                                          // transfer_To_Process(entry.orderID,"in_process")
+                                          console.log("Confirmation 1 task");
+                                        }}
+                                        orderID={entry.orderID}
                                       />
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.customer}
+                                      {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairItem}
+                                      {entry.productName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.serialnumber}
+                                      {entry.serialNumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.customerreason}
+                                      {entry.customerReason}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairnote}
+                                      {entry.orderRemark}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairdate}
+                                      {/* {entry.orderDate} */}
+                                      {new Date(entry.orderDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )}
                                     </td>
                                     <td className="text-center">
-                                      {entry.status}
+                                      <p
+                                        className="text-center laststatus"
+                                        style={makeStyle(entriesData)}
+                                      >
+                                        {!entriesData.isInProcess &&
+                                        !entriesData.isReady &&
+                                        !entriesData.isBilled &&
+                                        !entriesData.isScraped
+                                          ? "Pending"
+                                          : "Repaired"}
+                                      </p>
                                     </td>
                                   </tr>
                                 ))}
@@ -159,7 +236,7 @@ export default function OrderList({ show, onHide }) {
                             </table>
                           </div>
                         </div>
-                        <Pagination/>
+                        <Pagination />
                       </div>
                     </div>
                   </div>
@@ -169,6 +246,18 @@ export default function OrderList({ show, onHide }) {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <Readymodel
+          show={isModalOpen}
+          onHide={() => setIsModalOpen(false)}
+          btnText={"Moving to In-Process"}
+          Title={"Repair Item DONE Confirmation"}
+          orderDetails={selectedOrder}
+          onButtonClick={() => {
+            console.log("Confirmation 1 task");
+          }}
+        />
+      )}
     </>
   );
 }

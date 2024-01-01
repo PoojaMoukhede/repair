@@ -10,6 +10,7 @@ import Ready from "./components/Ready/Ready";
 import ToBill from "./components/ToBill/ToBill";
 import Login from "./components/Login/Login";
 import { APIContextProvider } from "./components/Context";
+import Invoice from "./components/Invoice/Invoice";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route exact path="/inProcess" element={<InProcess />} />
           <Route exact path="/ready" element={<Ready />} />
           <Route exact path="/tobill" element={<ToBill />} />
+          <Route  exact path="/invoiceTable" element={<Invoice/>}/>
         </Routes>
         </APIContextProvider>
       </BrowserRouter>

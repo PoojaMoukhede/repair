@@ -2,24 +2,20 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import dummyData from "../OrderList/MOCK_DATA (1).json";
-import Navbar from "../Navbar";
-import Readymodel from "../Ready/Readymodel";
-import { useAPI } from "../Context";
 
-export default function InProcess() {
-  const { processList } = useAPI();
+import Pagination from "../Pagination/Pagination";
+
+export default function Invoice({ show, onHide }) {
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [readyStateData, setReadyStateData] = useState({});
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(`data : ${dummyData}`);
+        // console.log(`data : ${dummyData}`);
         setEntriesData(dummyData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -32,7 +28,6 @@ export default function InProcess() {
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
 
-  const totalPages = Math.ceil(entriesData.length / entriesPerPage);
 
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
@@ -40,41 +35,15 @@ export default function InProcess() {
     )
   );
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // function handleClick() {
-  //   console.log("model open");
-  //   setIsModalOpen(true);
-  //   console.log("model open after set");
-  // }
-
-
-  const handleClick = (entry) => {
-    const orderId = entry.orderID;
-    const dataForReadyState = {
-      Orderdate: entry.Orderdate,
-      orderNumber: entry.orderNumber,
-      customer: entry.customer,
-      repairItem: entry.repairItem,
-      serialnumber: entry.serialnumber,
-      customerreason: entry.customerreason,
-      repairnote: entry.repairnote,
-      repairdate: entry.repairdate,
-      status: entry.status,
-    };
-    console.log(`id : ${orderId}`);
-    console.log(`Callllll...................... ${dataForReadyState}`);
+  function handleClick() {
+    console.log("model open");
     setIsModalOpen(true);
-    setReadyStateData({ orderId, dataForReadyState });
-  };
-  
+    console.log("model open after set");
+  }
 
   return (
     <>
       <Header />
-      <Navbar />
       <div id="grid">
         <Sidebar />
         <div id="right">
@@ -146,33 +115,14 @@ export default function InProcess() {
                                     <td className="text-center">
                                       {entry.Orderdate}
                                     </td>
-                                    <td className="text-center"  onClick={() => handleClick(entry)}>
+                                    <td
+                                      className="text-center"
+                                      onClick={() => handleClick()}
+                                    >
                                       {entry.orderNumber}
                                      
-                                      {/* <Readymodel
-                                        show={isModalOpen}
-                                        onHide={() => setIsModalOpen(false)}
-                                        onButtonClick={() => {
-                                          console.log("Confirmation 1 task");
-                                        }}
-                                        Title={"Ready to bill Confirmation"}
-                                        btnText={"Moving to Ready"}
-                                      /> */}
-                                      <Readymodel
-                                        show={isModalOpen}
-                                        onHide={() => setIsModalOpen(false)}
-                                        onButtonClick={() => {
-                                          const { orderId, dataForReadyState } =
-                                            readyStateData;
-                                          processList(
-                                            orderId,
-                                            dataForReadyState
-                                          );
-                                        }}
-                                        Title={"Ready to bill Confirmation"}
-                                        btnText={"Moving to Ready"}
-                                      />
                                     </td>
+
                                     <td className="text-center">
                                       {entry.customer}
                                     </td>
@@ -200,27 +150,7 @@ export default function InProcess() {
                             </table>
                           </div>
                         </div>
-                        <nav>
-                          <ul className="pagination">
-                            {Array.from({ length: totalPages }).map(
-                              (_, index) => (
-                                <li
-                                  key={index}
-                                  className={`page-item ${
-                                    currentPage === index + 1 ? "active" : ""
-                                  }`}
-                                >
-                                  <button
-                                    className="page-link"
-                                    onClick={() => handlePageChange(index + 1)}
-                                  >
-                                    {index + 1}
-                                  </button>
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </nav>
+                        <Pagination/>
                       </div>
                     </div>
                   </div>

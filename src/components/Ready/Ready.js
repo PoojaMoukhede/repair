@@ -124,7 +124,7 @@ export default function Ready() {
                                         onButtonClick={() => {
                                         console.log("Confirmation 1 task")}}
                                         Title={"Billing Confirmation"}
-                                        btnText={"Billing"}
+                                        btnText={"Move to Billing"}
                                       />
                                     </td>
                                     <td className="text-center">

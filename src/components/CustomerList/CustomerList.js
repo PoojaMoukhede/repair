@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar";
 import EditCustomer from "../NewCustomer/EditCustomer";
 import axios from "axios";
 
+
 export default function CustomerList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
