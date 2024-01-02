@@ -61,9 +61,21 @@ export default function RepairOrder() {
     setCartCountValue((prevCount) => prevCount - 1);
   };
 
+
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
+
   const handleInputChange = (id, name, value) => {
-    setOrderItems({ ...orderItems, [name]: value });
+    if (name === "CustomerName") {
+      const selectedCustomer = customerData.find(
+        (customer) => customer.CustomeName === value
+      );
+
+      setSelectedCustomerId(selectedCustomer ? selectedCustomer.CustomeID : "");
+    }
+    console.log(selectedCustomer.CustomeID);
     setSelectedCustomer(value);
+
+    setOrderItems({ ...orderItems, [name]: value ,CustomeID: selectedCustomerId});
   };
 
   const handleButtonClick = () => {
@@ -78,7 +90,6 @@ export default function RepairOrder() {
         console.error("Error posting order:", err);
       });
   };
-
 
   const [orderItems, setOrderItems] = useState({
     id: 1,
@@ -97,9 +108,9 @@ export default function RepairOrder() {
     CustomerReferance: "",
     RefrenceDate: currentDate,
     CustomeName: "",
-    CustomeID: "5",
+    CustomeID: selectedCustomerId,
   });
-  
+
   // const [orderItems, setOrderItems] = useState([
   //   {
   //     id: 1,
@@ -175,6 +186,32 @@ export default function RepairOrder() {
                                   </option>
                                 ))}
                               </select>
+
+                              {/* <select
+                                className="form-select input_repair"
+                                aria-label="Default select example"
+                                value={selectedCustomer}
+                                name="CustomerName"
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    orderItems.id,
+                                    "CustomerName",
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <option value="" disabled>
+                                  Select Customer
+                                </option>
+                                {customerData.map((customer) => (
+                                  <option
+                                    key={customer.CustomeID}
+                                    value={customer.CustomeName}
+                                  >
+                                    {customer.CustomeName}
+                                  </option>
+                                ))}
+                              </select> */}
                             </div>
                             <div className="col-md-4">
                               <label

@@ -9,24 +9,37 @@ function Readymodel({ Title, onButtonClick, btnText, orderID }) {
 
   const handleClose = () => setShow(false);
 
-  const handleMoveForBilling = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8000/orders/${orderID}/details`);
-      const mergedData = response.data; 
-      console.log(`merge data : ${mergedData}`);
-      setOrderDetails(mergedData);
+  // const handleMoveForBilling = async () => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:8000/orders/${orderID}/details`);
+  //     const mergedData = response.data; 
+  //     console.log(`merge data : ${mergedData}`);
+  //     setOrderDetails(mergedData);
 
-      if (onButtonClick) {
-        onButtonClick();
-      }
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-    }
-  };
+  //     if (onButtonClick) {
+  //       onButtonClick();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching order details:", error);
+  //   }
+  // };
+ const handleMoveToProcess = () => {
+    axios
+      .put(`http://localhost:8000/orders/${orderID}/move-to-process`, {
+        isInProcess: true, 
+      })
+      .then((res) => {
+        console.log("Server response:", res.data);
+      })
+      .catch((err) => {
+        console.error("Error updating order:", err);
+      });
+  }
 
   useEffect(() => {
     if (show) {
-      handleMoveForBilling();
+      handleMoveToProcess()
+      // handleMoveForBilling();
     }
   }, [show, orderID]);
 
@@ -89,7 +102,7 @@ function Readymodel({ Title, onButtonClick, btnText, orderID }) {
           <Button
             variant=""
             style={{ backgroundColor: "#004976", color: "white" }}
-            onClick={handleMoveForBilling}
+            onClick={handleMoveToProcess}
           >
             {btnText}
           </Button>

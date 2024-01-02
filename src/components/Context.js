@@ -121,12 +121,12 @@ export function APIContextProvider({ children }) {
 
   const processList = async (id, data) => {
     await axios
-      .put(`${processURL}/${id}`, data)
+      .put(`${processURL}/${id}/move-to-process`, data)
 
       .then((res) => {
         const info = res.data;
         setIsInProcess(data);
-        console.log(`${processURL}${id}`);
+        console.log(`${processURL}${id}/move-to-process`);
       })
       .catch((error) => {
         console.error("Error:", error);

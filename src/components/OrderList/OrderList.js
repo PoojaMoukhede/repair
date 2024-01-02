@@ -5,10 +5,10 @@ import Navbar from "../Navbar";
 import Readymodel from "../Ready/Readymodel";
 import Pagination from "../Pagination/Pagination";
 import axios from "axios";
-// import { useAPI } from "../Context";
+import { useAPI } from "../Context";
 
 export default function OrderList() {
-  // const { processList } = useAPI();
+  const { processList } = useAPI();
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
@@ -30,10 +30,20 @@ export default function OrderList() {
     fetchData();
   }, []);
 
-  // const transfer_To_Process = async(id,data)=>{
-  //   console.log(id,data)
-  //   await processList(id,data)
-  // }
+
+  const handleMoveToProcess = (orderID) => {
+    axios
+      .put(`http://localhost:8000/orders/${orderID}/move-to-process`, {
+        isInProcess: true, 
+      })
+      .then((res) => {
+        console.log("Server response:", res.data);
+      })
+      .catch((err) => {
+        console.error("Error updating order:", err);
+      });
+  };
+  
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -51,6 +61,7 @@ export default function OrderList() {
   };
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
+    console.log(orderID);
   }
 
   // const makeStyle = (entriesData) => {
@@ -175,6 +186,7 @@ export default function OrderList() {
                                       className="text-center"
                                       onClick={() =>
                                         handleOrderNumberClick(entry.orderID)
+                                      
                                       }
                                     >
                                       {entry.orderNumber}
@@ -254,6 +266,8 @@ export default function OrderList() {
           Title={"Repair Item DONE Confirmation"}
           orderDetails={selectedOrder}
           onButtonClick={() => {
+            handleMoveToProcess(selectedOrder.orderID)
+            console.log(`selectedOrder.orderID : ${selectedOrder.orderID}`);
             console.log("Confirmation 1 task");
           }}
         />
