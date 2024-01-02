@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const APIContext = createContext();
 
 export function APIContextProvider({ children }) {
-  const URL = "http://192.168.1.211:8000/";
+  const URL = "http://localhost:8000/";
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
@@ -14,14 +14,14 @@ export function APIContextProvider({ children }) {
   const [isInProcess, setIsInProcess] = useState();
   const [isReady, setIsReady] = useState();
   const [isBilled, setIsBilled] = useState();
-  const [orderData, setOderData] = useState([])
+  const [orderData, setOderData] = useState([]);
   // const [isScraped, setIScraped] = useState();
 
   const SignUpUrl = `${URL}register`;
   const loginUrl = `${URL}login`;
   const addCustomerURL = `${URL}customer`;
   const EditCustomer = `${URL}customer`;
-  const orderURL= `${URL}order-item-list`;
+  const orderURL = `${URL}order-item-list`;
   const processURL = `${URL}in-process`;
   const readyURL = `${URL}ready`;
   const billURL = `${URL}billing`;
@@ -105,73 +105,101 @@ export function APIContextProvider({ children }) {
       });
   };
 
-  const orderList = async() => {
+  const orderList = async () => {
     await axios
-    .get(`${orderURL}`)
+      .get(`${orderURL}`)
 
-    .then((res) => {
-      const info = res.data;
-      setIsBilled(info);
-      console.log(`${orderURL}`);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-  };
-
-  const processList = async(id,data) => {
-    await axios
-    .put(`${processURL}/${id}`, data)
-
-    .then((res) => {
-      const info = res.data;
-      setIsInProcess(data);
-      console.log(`${processURL}${id}`);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-  };
-
-  const readyList = async(id,data) => {
-    await axios
-    .put(`${readyURL}/${id}`, data)
-
-    .then((res) => {
-      const info = res.data;
-      setIsReady(data);
-      console.log(`${readyURL}${id}`);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-  };
-
-  const billedList = async(id,data) => {
-    await axios
-    .put(`${billURL}/${id}`, data)
-
-    .then((res) => {
-      const info = res.data;
-      setIsBilled(data);
-      console.log(`${billURL}${id}`);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-  };
-
-  const postOrder = (Data) => {
-    axios
-      .post(postOrderURL, Data)
       .then((res) => {
-        setOderData(Data)
+        const info = res.data;
+        setIsBilled(info);
+        console.log(`${orderURL}`);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.error("Error:", error);
       });
   };
 
+  const processList = async (id, data) => {
+    await axios
+      .put(`${processURL}/${id}`, data)
+
+      .then((res) => {
+        const info = res.data;
+        setIsInProcess(data);
+        console.log(`${processURL}${id}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const readyList = async (id, data) => {
+    await axios
+      .put(`${readyURL}/${id}`, data)
+
+      .then((res) => {
+        const info = res.data;
+        setIsReady(data);
+        console.log(`${readyURL}${id}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const billedList = async (id, data) => {
+    await axios
+      .put(`${billURL}/${id}`, data)
+
+      .then((res) => {
+        const info = res.data;
+        setIsBilled(data);
+        console.log(`${billURL}${id}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const postOrder = (data) => {
+    // axios
+    //   .post(postOrderURL, Data)
+    //   .then((res) => {
+    //     console.log(`------ : ${Data}`)
+    //     setOderData(Data)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    axios
+      .post(postOrderURL, data)
+      .then((res) => {
+        const {
+          id,
+          productName,
+          serialNumber,
+          HSN,
+          includeHsn,
+          rate,
+          tax,
+          total,
+          customerReason,
+          orderRemark,
+          orderDate,
+          orderNumber,
+          CustomerName,
+          CustomerReferance,
+          RefrenceDate,
+          CustomeName,
+        } = res.data;
+
+        setOderData(data);
+        // window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
   // const scrapList = async(id,data) => {
   //   await axios

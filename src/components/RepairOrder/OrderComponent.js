@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Translator = () => {
+const Translator = ({ name, value, onChange }) => {
   const [text, setText] = useState("");
   const [fromLanguage, setFromLanguage] = useState("en-GB");
   const [toLanguage, setToLanguage] = useState('');
@@ -70,12 +70,14 @@ const Translator = () => {
       <div className="wrapper">
         <div className="text-input">
           <textarea
-            spellCheck="false"
-            className="single-textarea"
-            placeholder="Type your text"
-            value={text}
-            onChange={handleInputChange}
-          ></textarea>
+      className="input_repair"
+      placeholder="Order Remark (upto 500 characters)"
+      onChange={handleInputChange}
+      style={{
+        height: "48px",
+        borderRadius: "5px",
+      }}
+    />
         </div>
         <div className="language-dropdown">
           <select value={fromLanguage} onChange={handleLanguageChange}>
