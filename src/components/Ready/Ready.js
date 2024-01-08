@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import dummyData from "../OrderList/MOCK_DATA (1).json";
+import axios from "axios";
 import Navbar from "../Navbar";
 import Readymodel from "./Readymodel";
 
@@ -11,18 +11,47 @@ export default function Ready() {
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(`data : ${dummyData}`);
-        setEntriesData(dummyData);
+        const response = await axios.get(
+          "http://localhost:8000/isready-orders"
+        );
+        setEntriesData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching order list:", error);
       }
     };
     fetchData();
   }, []);
+
+  const handleMoveToProcess = async (orderID) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/orders/${orderID}/isbilled`
+      );
+      console.log("Server response:", response.data );
+      console.log(orderID);
+      // Additional logic or state updates if needed
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  };
+
+  const handleClick = (entry) => {
+    setSelectedOrder(entry);
+    setIsModalOpen(true);
+  };
+
+  function handleOrderNumberClick(orderID) {
+    setSelectedOrder(orderID);
+    console.log(orderID);
+  }
+
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -40,7 +69,23 @@ export default function Ready() {
     setCurrentPage(pageNumber);
   };
 
+  const makeStyle = (entriesData) => {
+    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
 
+    if (!isInProcess && !isReady && !isBilled && !isScraped) {
+      return {
+        background: "#f9bb00",
+        color: "black",
+        border: "1px solid #efc84a",
+      };
+    } else {
+      return {
+        background: "rgb(145 254 159 / 47%)",
+        color: "green",
+        border: "1px solid #85cb33",
+      };
+    }
+  };
   return (
     <>
       <Header />
@@ -121,6 +166,8 @@ export default function Ready() {
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}
+                                        orderState="isbilled" 
+                                        orderID={entry.orderID}
                                         onButtonClick={() => {
                                         console.log("Confirmation 1 task")}}
                                         Title={"Billing Confirmation"}
@@ -128,25 +175,42 @@ export default function Ready() {
                                       />
                                     </td>
                                     <td className="text-center">
-                                      {entry.customer}
+                                      {entry.CustomerName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairItem}
+                                      {entry.productName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.serialnumber}
+                                      {entry.serialNumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.customerreason}
+                                      {entry.customerReason}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairnote}
+                                      {entry.orderRemark}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairdate}
+                                    {new Date(entry.orderDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )}
                                     </td>
                                     <td className="text-center">
-                                      {entry.status}
+                                    <p
+                                        className="text-center laststatus"
+                                        style={makeStyle(entriesData)}
+                                      >
+                                        {!entriesData.isInProcess &&
+                                        !entriesData.isReady &&
+                                        !entriesData.isBilled &&
+                                        !entriesData.isScraped
+                                          ? "Pending"
+                                          : "Repaired"}
+                                      </p>
                                     </td>
                                   </tr>
                                 ))}
@@ -184,6 +248,22 @@ export default function Ready() {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <Readymodel
+          show={isModalOpen}
+          onHide={() => setIsModalOpen(false)}
+          btnText={"Moving to In-Process"}
+          Title={"Repair Item DONE Confirmation"}
+          orderDetails={selectedOrder}
+          orderID={selectedOrder.orderID}
+          orderState="isbilled"
+          onButtonClick={() => {
+            handleMoveToProcess(selectedOrder.orderID);
+            console.log(`selectedOrder.orderID : ${selectedOrder.orderID}`);
+            console.log("Confirmation 1 task");
+          }}
+        />
+      )}
     </>
   );
 }

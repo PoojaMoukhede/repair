@@ -27,7 +27,7 @@ export default function Dashboard() {
           <div className="app-main__outer">
             <div className="app-main__inner">
               <div className="row">
-                <div className="col-md-6 col-xl-3">
+                {/* <div className="col-md-6 col-xl-3">
                   <Link to="/customer">
                     <div className=" mb-4 widget-content widget-content0 ">
                       <div className="overview_top">
@@ -41,7 +41,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </Link>
-                </div>
+                </div> */}
                 <div className="col-md-6 col-xl-3">
                   <Link to="/customerList">
                     <div className="  mb-4 widget-content widget-content0 ">
@@ -159,7 +159,7 @@ export default function Dashboard() {
                   </Link>
                 </div>
                 <div className="col-md-6 col-xl-3">
-                  {/* <Link to="/weather"> */}
+                  <Link to="/scrape">
                     <div className=" mb-3 widget-content widget-content0 ">
                       <div className="overview_top">
                         <div className="orange">
@@ -170,7 +170,7 @@ export default function Dashboard() {
                         </p>
                       </div>
                     </div>
-                  {/* </Link> */}
+                  </Link>
                 </div>
               </div>
             </div>

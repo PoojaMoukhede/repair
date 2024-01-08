@@ -16,6 +16,18 @@ export default function Navbar() {
       <div className="navbar-container2">
         <nav className="navbar2">
           <ul>
+          <li>
+              <Link
+                to="/addRepair"
+                className={`btn navbtn ${
+                  currentPath === "/addRepair" ? "active" : ""
+                }`}
+                onClick={() => handleButtonClick("Order Item List")}
+              >
+                <i class="header-icon fa-solid fa-cart-plus"></i>
+                New Order 
+              </Link>
+            </li>
             <li>
               <Link
                 to="/orderList"

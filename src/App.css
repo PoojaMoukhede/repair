@@ -231,6 +231,7 @@ a {
   /* margin: auto; */
 }
 .card-header2 {
+  /* padding: 0; */
   margin-top: -20px !important;
   border-radius: 60px 5px 60px 5px !important;
   margin: auto;
@@ -582,4 +583,14 @@ li,
   padding: 0.2rem;
   border-radius: 20px;
   font-weight: 600;
+}
+
+
+.btnB:hover {
+  background: #405180;
+  cursor: pointer;
+  color: white;
+}
+.btnB{
+  border-radius: 60px 5px 60px 5px !important;
 }

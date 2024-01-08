@@ -8,6 +8,7 @@ import { FaRegUser } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import OrderComponent from "./OrderComponent";
 import booked from "../../Images/checkmark.png";
+import { Link } from "react-router-dom";
 import "./btn.css";
 import axios from "axios";
 import { useAPI } from "../Context";
@@ -61,7 +62,6 @@ export default function RepairOrder() {
     setCartCountValue((prevCount) => prevCount - 1);
   };
 
-
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
 
   const handleInputChange = (id, name, value) => {
@@ -75,7 +75,11 @@ export default function RepairOrder() {
     console.log(selectedCustomer.CustomeID);
     setSelectedCustomer(value);
 
-    setOrderItems({ ...orderItems, [name]: value ,CustomeID: selectedCustomerId});
+    setOrderItems({
+      ...orderItems,
+      [name]: value,
+      CustomeID: selectedCustomerId,
+    });
   };
 
   const handleButtonClick = () => {
@@ -111,27 +115,6 @@ export default function RepairOrder() {
     CustomeID: selectedCustomerId,
   });
 
-  // const [orderItems, setOrderItems] = useState([
-  //   {
-  //     id: 1,
-  //     productName: "",
-  //     serialNumber: "",
-  //     HSN: "",
-  //     includeHsn: false,
-  //     rate: "",
-  //     tax: "",
-  //     total: "",
-  //     customerReason: "",
-  //     orderRemark: "",
-  //     orderDate: currentDate,
-  //     orderNumber: "",
-  //     CustomerName: "",
-  //     CustomerReferance: "",
-  //     RefrenceDate: currentDate,
-  //     CustomeName: "",
-  //     CustomeID: "5",
-  //   }
-  // ]);
 
   return (
     <>
@@ -141,9 +124,18 @@ export default function RepairOrder() {
         <div id="right">
           <div className="app-main__outer">
             <div className="app-main__inner">
+              <Link to="/orderList">
+                <button className="btn btn-success mb-3" style={{fontWeight:700}}>
+                  <i class="header-icon2 fa-solid fa-arrow-left-long"></i>
+                  Back
+                </button>{" "}
+              </Link>
               <div className="row">
                 <div className="col-md-12">
-                  <div className="card">
+                  <div
+                    className="card"
+                    style={{ border: "1px solid lightgray" }}
+                  >
                     <div className="card-header-tab card-header">
                       <div className="card-header-title">
                         <FaRegUser className="header-icon" />
@@ -263,7 +255,10 @@ export default function RepairOrder() {
 
               <div className="row mt-3">
                 <div className="col-md-12">
-                  <div className="card">
+                  <div
+                    className="card"
+                    style={{ border: "1px solid lightgray" }}
+                  >
                     <div className="card-header-tab card-header">
                       <div className="card-header-title">
                         <i className="header-icon fa-brands fa-opencart"></i>

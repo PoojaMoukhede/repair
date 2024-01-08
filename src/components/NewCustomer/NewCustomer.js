@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
 import Header from "../Header";
+import { Link } from "react-router-dom";
 import { useAPI } from "../Context";
 import {
   CitySelect,
@@ -132,7 +133,7 @@ export default function NewCustomer() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onAddCustomer(formData)
+      onAddCustomer(formData);
       console.log("Form submitted:", formData);
     } else {
       console.log("Form validation failed.");
@@ -170,10 +171,19 @@ export default function NewCustomer() {
         <div id="right">
           <div className="app-main__outer">
             <div className="app-main__inner">
+              <Link to="/customerList">
+                <button className="btn btn-success">
+                  <i class="header-icon fa-solid fa-arrow-left-long"></i>
+                  Back
+                </button>{" "}
+              </Link>
               <div className="row">
-                <div className="col-md-8 m-auto mt-5">
+                <div className="col-md-8 m-auto mt-3">
                   <div className="card cardR">
-                    <div className="card-header-tab card-header card-header2" style={{backgroundColor:"white", color:"black"}}>
+                    <div
+                      className="card-header-tab card-header card-header2"
+                      style={{ backgroundColor: "white", color: "black" }}
+                    >
                       <div className="card-header-title">
                         <i className="header-icon fa-solid fa-user-plus"></i>
                         Create New Customer
@@ -398,22 +408,22 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-12 d-flex justify-content-center align-item-center">
-                            <button
-                              type="submit"
-                              className="btn btn2"
-                              style={{
-                                width: "50%",
-                              }}
-                            >
-                              <i
-                                className="fa-solid fa-circle-plus"
+                              <button
+                                type="submit"
+                                className="btn btn2"
                                 style={{
-                                  fontSize: "1.3rem",
-                                  marginRight: "1rem",
+                                  width: "50%",
                                 }}
-                              ></i>
-                              Add Customer
-                            </button>
+                              >
+                                <i
+                                  className="fa-solid fa-circle-plus"
+                                  style={{
+                                    fontSize: "1.3rem",
+                                    marginRight: "1rem",
+                                  }}
+                                ></i>
+                                Add Customer
+                              </button>
                             </div>
                           </form>
                         </div>

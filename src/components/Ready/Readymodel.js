@@ -3,55 +3,61 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 
-function Readymodel({ Title, onButtonClick, btnText, orderID }) {
+function Readymodel({ Title, onButtonClick, btnText, orderID,orderState }) {
   const [show, setShow] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
 
   const handleClose = () => setShow(false);
 
-  // const handleMoveForBilling = async () => {
-  //   try {
-  //     const response = await axios.get(`http://localhost:8000/orders/${orderID}/details`);
-  //     const mergedData = response.data; 
-  //     console.log(`merge data : ${mergedData}`);
-  //     setOrderDetails(mergedData);
+  const handleMoveToProcess = async () => {
+    try {
 
-  //     if (onButtonClick) {
-  //       onButtonClick();
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching order details:", error);
-  //   }
-  // };
- const handleMoveToProcess = () => {
-    axios
-      .put(`http://localhost:8000/orders/${orderID}/move-to-process`, {
-        isInProcess: true, 
-      })
-      .then((res) => {
-        console.log("Server response:", res.data);
-      })
-      .catch((err) => {
-        console.error("Error updating order:", err);
-      });
-  }
+      const response = await axios.put(
+        `http://localhost:8000/orders/${orderID}/${orderState}`
+      );
+      const updatedOrderDetails = response.data;
+      console.log("Updated order details:", updatedOrderDetails);
 
+      setOrderDetails(updatedOrderDetails);
+
+      if (onButtonClick) {
+        onButtonClick();
+      }
+    } catch (error) {
+      console.error("Error updating order details:", error);
+    }
+  };
+
+  const handleFetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/orders/${orderID}/details`
+      );
+      const mergedData = response.data;
+      console.log(`merge data : ${mergedData}`);
+      setOrderDetails(mergedData);
+
+      if (onButtonClick) {
+        onButtonClick();
+      }
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+    }
+  };
   useEffect(() => {
     if (show) {
-      handleMoveToProcess()
-      // handleMoveForBilling();
+      handleFetchData();
     }
   }, [show, orderID]);
 
   return (
     <>
-      <Button variant="" 
-      // onClick={handleShow}
-      onClick={()=>setShow(true)}
-      >
+      <Button variant="" onClick={() => setShow(true)}>
+        Open Modal
       </Button>
 
       <Modal show={show} onHide={handleClose} size="lg">
+        {/* Modal content goes here */}
         <Modal.Header closeButton>
           <Modal.Title style={{ color: "#004976", fontSize: "1.3rem" }}>
             {Title}
@@ -84,17 +90,20 @@ function Readymodel({ Title, onButtonClick, btnText, orderID }) {
 
           <div className="row">
             <span>Customer Remark</span>
-            <h5 className="modelText">{orderDetails? orderDetails.customerReason :"N/A"}</h5>
+            <h5 className="modelText">
+              {orderDetails ? orderDetails.customerReason : "N/A"}
+            </h5>
           </div>
 
           <hr />
 
           <div className="row">
             <span>Repairer Remark</span>
-            <h5 className="modelText">{orderDetails? orderDetails.orderRemark :"N/A"}</h5>
+            <h5 className="modelText">
+              {orderDetails ? orderDetails.orderRemark : "N/A"}
+            </h5>
           </div>
         </Modal.Body>
-
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close

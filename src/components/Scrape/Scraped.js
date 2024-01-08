@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import Navbar from "../Navbar";
 import Pagination from "../Pagination/Pagination";
 import axios from "axios";
 
-export default function OrderList() {
+
+export default function Scraped() {
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/orders"
+          "http://localhost:8000/isscraped-orders"
         );
         setEntriesData(response.data);
       } catch (error) {
@@ -26,7 +24,6 @@ export default function OrderList() {
     };
     fetchData();
   }, []);
-
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -38,37 +35,9 @@ export default function OrderList() {
     )
   );
 
-  const handleClick = (entry) => {
-    setSelectedOrder(entry);
-    setIsModalOpen(true);
-  };
-  function handleOrderNumberClick(orderID) {
-    setSelectedOrder(orderID);
-    console.log(orderID);
-  }
-
-  const makeStyle = (entriesData) => {
-    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
-
-    if (!isInProcess && !isReady && !isBilled && !isScraped) {
-      return {
-        background: "#f9bb00",
-        color: "black",
-        border: "1px solid #efc84a",
-      };
-    } else {
-      return {
-        background: "rgb(145 254 159 / 47%)",
-        color: "green",
-        border: "1px solid #85cb33",
-      };
-    }
-  };
-
   return (
     <>
       <Header />
-      <Navbar />
       <div id="grid">
         <Sidebar />
         <div id="right">
@@ -120,84 +89,32 @@ export default function OrderList() {
                               <thead style={{ background: "beige" }}>
                                 <tr>
                                   <th>Sr. No</th>
-                                  <th className="text-center">Order Date</th>
+                                  <th className="text-center">
+                                    Repair Order Item
+                                  </th>
+                                  <th className="text-center">Model</th>
                                   <th className="text-center">Order Number</th>
                                   <th className="text-center">Customer</th>
-                                  <th className="text-center">Repair Item</th>
-                                  <th className="text-center">Serial Number</th>
-                                  <th className="text-center">
-                                    {" "}
-                                    Customer Reason
-                                  </th>
-                                  <th className="text-center">Repairer Note</th>
-                                  <th className="text-center">Repaired Date</th>
-                                  <th className="text-center">Status</th>
+                                  <th className="text-center">Remark</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {filteredRows.map((entry, index) => (
                                   <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td className="text-center">
-                                      {new Date(entry.orderDate).toLocaleString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                          month: "2-digit",
-                                          day: "2-digit",
-                                        }
-                                      )}
-                                    </td>
 
-                                    <td
-                                      className="text-center"
-                                      onClick={() =>
-                                        handleOrderNumberClick(entry.orderID)
-                                      
-                                      }
-                                    >
-                                      {entry.orderNumber}
-                                      
-                                    </td>
-
-                                    <td className="text-center">
-                                      {entry.CustomerName}
-                                    </td>
+                                    <td className="text-center"></td>
                                     <td className="text-center">
                                       {entry.productName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.serialNumber}
+                                      {entry.orderNumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.customerReason}
+                                      {entry.CustomerName}
                                     </td>
                                     <td className="text-center">
                                       {entry.orderRemark}
-                                    </td>
-                                    <td className="text-center">
-                                      {/* {entry.orderDate} */}
-                                      {new Date(entry.orderDate).toLocaleString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                          month: "2-digit",
-                                          day: "2-digit",
-                                        }
-                                      )}
-                                    </td>
-                                    <td className="text-center">
-                                      <p
-                                        className="text-center laststatus"
-                                        style={makeStyle(entriesData)}
-                                      >
-                                        {!entriesData.isInProcess &&
-                                        !entriesData.isReady &&
-                                        !entriesData.isBilled &&
-                                        !entriesData.isScraped
-                                          ? "Pending"
-                                          : "Repaired"}
-                                      </p>
                                     </td>
                                   </tr>
                                 ))}
@@ -208,6 +125,7 @@ export default function OrderList() {
                         <Pagination />
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>

@@ -15,7 +15,6 @@ export function APIContextProvider({ children }) {
   const [isReady, setIsReady] = useState();
   const [isBilled, setIsBilled] = useState();
   const [orderData, setOderData] = useState([]);
-  // const [isScraped, setIScraped] = useState();
 
   const SignUpUrl = `${URL}register`;
   const loginUrl = `${URL}login`;
@@ -51,11 +50,13 @@ export function APIContextProvider({ children }) {
       .post(loginUrl, loginData)
       .then((res) => {
         const myToken = res.data.token;
+        const AdminEmail = res.data.user.email
         localStorage.setItem("token", myToken);
-        localStorage.setItem("email", loginData.email);
+        localStorage.setItem("email", AdminEmail);
+        setUserEmail(AdminEmail);
         navigate("/dashboard");
         document.location.reload();
-        setUserEmail(loginData.email);
+
       })
       .catch((err) => {
         console.log(err);
@@ -162,15 +163,6 @@ export function APIContextProvider({ children }) {
   };
 
   const postOrder = (data) => {
-    // axios
-    //   .post(postOrderURL, Data)
-    //   .then((res) => {
-    //     console.log(`------ : ${Data}`)
-    //     setOderData(Data)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     axios
       .post(postOrderURL, data)
       .then((res) => {
@@ -201,20 +193,6 @@ export function APIContextProvider({ children }) {
       });
   };
 
-  // const scrapList = async(id,data) => {
-  //   await axios
-  //   .put(`${readyURL}/${id}`, data)
-
-  //   .then((res) => {
-  //     const info = res.data;
-  //     setIsInProcess(data);
-  //     console.log(`${readyURL}${id}`);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
-  // };
-
   return (
     <APIContext.Provider
       value={{
@@ -229,6 +207,7 @@ export function APIContextProvider({ children }) {
         readyList,
         billedList,
         postOrder,
+        userEmail,
         // scrapList,
       }}
     >

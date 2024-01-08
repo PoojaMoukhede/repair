@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
+import { Link, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import EditCustomer from "../NewCustomer/EditCustomer";
 import axios from "axios";
 
-
 export default function CustomerList() {
+  const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const [selectedCustomer, setselectedCustomer] = useState(null);
+  const currentPath = location.pathname;
   const handleAddMember = (newEmployee) => {
     setRows((prevRows) => [...prevRows, newEmployee]);
   };
@@ -43,6 +45,12 @@ export default function CustomerList() {
     setRows(newData);
   };
 
+  const [activeButton, setActiveButton] = useState(null);
+
+  const handleButtonClick = (buttonName) => {
+    setActiveButton(buttonName);
+  };
+
   return (
     <>
       <Header />
@@ -58,16 +66,58 @@ export default function CustomerList() {
                     style={{ marginTop: "5px", borderTop: "none" }}
                   >
                     <div
-                      className="card-header-tab card-header card-header2"
+                      className="card-header-tab card-header card-header2 p-0"
                       style={{
                         backgroundColor: "white",
                         color: "black",
                         height: "40px",
                       }}
                     >
-                      <div className="card-header-title">
-                        <i className="header-icon fa-solid fa-users"></i>
-                        New Customer List
+                      <div className="d-flex">
+                        <div
+                          className="card-header-title"
+                          style={{ width: "50%" }}
+                        >
+                          <Link
+                            to="/customerList"
+                            className={` ${
+                              currentPath === "/customerList" ? "active" : ""
+                            }`}
+                            onClick={() => handleButtonClick("Customer List")}
+                            
+                          >
+                            <button
+                              className="btn btnB"
+                              style={{ width: "100%" }}
+                              onClick={() => handleButtonClick("Customer List")}
+                            >
+                              <i className="header-icon fa-solid fa-users"></i>
+                              Customer List
+                            </button>
+                          </Link>
+                        </div>
+
+                        <div
+                          className="card-header-title"
+                          style={{ width: "50%" }}
+                        >
+                          <Link
+                            to="/customer"
+                            className={` ${
+                              currentPath === "/customer" ? "active" : ""
+                            }`}
+                            onClick={() => handleButtonClick("Customer List")}
+                          >
+                            <button
+                              className="btn btnB"
+                              style={{ width: "100%" }}
+                              onClick={() => handleButtonClick("Add Customer")}
+                            >
+                              <i className="header-icon fa-solid fa-circle-plus"></i>
+                              Add Customer
+                            </button>
+                          </Link>
+                        </div>
                       </div>
                     </div>
                     <div className="tab-content">

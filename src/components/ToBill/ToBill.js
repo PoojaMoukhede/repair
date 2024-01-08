@@ -1,22 +1,49 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import dummyData from "../OrderList/MOCK_DATA (1).json";
+import axios from "axios";
 import Navbar from "../Navbar";
+import Readymodel from "../Ready/Readymodel";
 
 export default function ToBill() {
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const handleMoveToProcess = async (orderID) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/orders/${orderID}/isscraped`
+      );
+      console.log("Server response:", response.data);
+      // Additional logic or state updates if needed
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  };
+
+  const handleClick = (entry) => {
+    setSelectedOrder(entry);
+    setIsModalOpen(true);
+  };
+
+  function handleOrderNumberClick(orderID) {
+    setSelectedOrder(orderID);
+    console.log(orderID);
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(`data : ${dummyData}`);
-        setEntriesData(dummyData);
+        const response = await axios.get(
+          "http://localhost:8000/isbilled-orders"
+        );
+        setEntriesData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching order list:", error);
       }
     };
     fetchData();
@@ -38,6 +65,23 @@ export default function ToBill() {
     setCurrentPage(pageNumber);
   };
 
+  const makeStyle = (entriesData) => {
+    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
+
+    if (!isInProcess && !isReady && !isBilled && !isScraped) {
+      return {
+        background: "#f9bb00",
+        color: "black",
+        border: "1px solid #efc84a",
+      };
+    } else {
+      return {
+        background: "rgb(145 254 159 / 47%)",
+        color: "green",
+        border: "1px solid #85cb33",
+      };
+    }
+  };
 
   return (
     <>
@@ -116,27 +160,54 @@ export default function ToBill() {
                                     </td>
                                     <td className="text-center">
                                       {entry.orderNumber}
+                                      <Readymodel
+                                        show={isModalOpen}
+                                        onHide={() => setIsModalOpen(false)}
+                                        orderState="isbilled" 
+                                        orderID={entry.orderID}
+                                        onButtonClick={() => {
+                                        console.log("Confirmation 1 task")}}
+                                        Title={"Scraped Item"}
+                                        btnText={"Scrape"}
+                                      />
                                     </td>
                                     <td className="text-center">
-                                      {entry.customer}
+                                      {entry.CustomerName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairItem}
+                                      {entry.productName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.serialnumber}
+                                      {entry.serialNumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.customerreason}
+                                      {entry.customerReason}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairnote}
+                                      {entry.orderRemark}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairdate}
-                                    </td>
+                                    {new Date(entry.orderDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )} </td>
+                                   
                                     <td className="text-center">
-                                      {entry.status}
+                                    <p
+                                        className="text-center laststatus"
+                                        style={makeStyle(entriesData)}
+                                      >
+                                        {!entriesData.isInProcess &&
+                                        !entriesData.isReady &&
+                                        !entriesData.isBilled &&
+                                        !entriesData.isScraped
+                                          ? "Pending"
+                                          : "Repaired"}
+                                      </p>
                                     </td>
                                   </tr>
                                 ))}
@@ -174,6 +245,21 @@ export default function ToBill() {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <Readymodel
+          show={isModalOpen}
+          onHide={() => setIsModalOpen(false)}
+          btnText={"Moving to In-Process"}
+          Title={"Repair Item DONE Confirmation"}
+          orderDetails={selectedOrder}
+          orderID={selectedOrder.orderID}
+          orderState="isscraped"
+          onButtonClick={() => {
+            handleMoveToProcess(selectedOrder.orderID);
+            console.log(`selectedOrder.orderID : ${selectedOrder.orderID}`);
+          }}
+        />
+      )}
     </>
   );
 }

@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import dummyData from "../OrderList/MOCK_DATA (1).json";
-
+import Navbar from "./Navbar";
 import Pagination from "../Pagination/Pagination";
+import { useNavigate } from "react-router-dom";
 
 export default function Invoice({ show, onHide }) {
+  const navigate = useNavigate()
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,22 +29,21 @@ export default function Invoice({ show, onHide }) {
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
 
-
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
-  function handleClick() {
-    console.log("model open");
-    setIsModalOpen(true);
-    console.log("model open after set");
-  }
+
+function handleClick(){
+navigate('/billingInfo')
+}
 
   return (
     <>
       <Header />
+      <Navbar />
       <div id="grid">
         <Sidebar />
         <div id="right">
@@ -95,17 +95,14 @@ export default function Invoice({ show, onHide }) {
                               <thead style={{ background: "beige" }}>
                                 <tr>
                                   <th>Sr. No</th>
-                                  <th className="text-center">Order Date</th>
-                                  <th className="text-center">Order Number</th>
-                                  <th className="text-center">Customer</th>
-                                  <th className="text-center">Repair Item</th>
-                                  <th className="text-center">Serial Number</th>
+                                  <th className="text-center">Invoice Date</th>
                                   <th className="text-center">
-                                    Customer Reason
+                                    Invoice Number
                                   </th>
-                                  <th className="text-center">Repairer Note</th>
-                                  <th className="text-center">Repaired Date</th>
-                                  <th className="text-center">Status</th>
+                                  <th className="text-center">Customer</th>
+                                  <th className="text-center">Amount</th>
+                                  <th className="text-center">IRN</th>
+                                  <th className="text-center">Invoice</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -117,10 +114,8 @@ export default function Invoice({ show, onHide }) {
                                     </td>
                                     <td
                                       className="text-center"
-                                      onClick={() => handleClick()}
                                     >
                                       {entry.orderNumber}
-                                     
                                     </td>
 
                                     <td className="text-center">
@@ -133,16 +128,16 @@ export default function Invoice({ show, onHide }) {
                                       {entry.serialnumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.customerreason}
-                                    </td>
-                                    <td className="text-center">
-                                      {entry.repairnote}
-                                    </td>
-                                    <td className="text-center">
-                                      {entry.repairdate}
-                                    </td>
-                                    <td className="text-center">
-                                      {entry.status}
+                                      <button
+                                        className="btn"
+                                        style={{
+                                          color: "green",
+                                          fontSize: "1.2rem",
+                                        }}
+                                        onClick={handleClick}
+                                      >
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                      </button>
                                     </td>
                                   </tr>
                                 ))}
@@ -150,7 +145,7 @@ export default function Invoice({ show, onHide }) {
                             </table>
                           </div>
                         </div>
-                        <Pagination/>
+                        <Pagination />
                       </div>
                     </div>
                   </div>
