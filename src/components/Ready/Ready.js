@@ -162,7 +162,7 @@ export default function Ready() {
                                       {entry.Orderdate}
                                     </td>
                                     <td className="text-center">
-                                      {entry.orderNumber}
+                                      {/* {entry.orderNumber} */}
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}

@@ -6,6 +6,8 @@ import upi from "../../Images/upi-ar21.svg";
 
 export default function RegularInvoice() {
   const [detail, setDetail] = useState([]);
+  const [invoiceDetail, setInvoiceDetail] = useState([]);
+  const [orderDetail, setOrderDetail] = useState([]);
 
   useEffect(() => {
     try {
@@ -13,7 +15,25 @@ export default function RegularInvoice() {
         .get(`http://localhost:8000/companyDetail`)
         .then((response) => {
           setDetail(response.data[0]);
-          console.log("----data----", response.data[0]);
+          // console.log("----data----", response.data[0]);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+      axios
+        .get(`http://localhost:8000/orders/3/details`)
+        .then((response) => {
+          setOrderDetail(response.data);
+          // console.log("----orders----", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+      axios
+        .get(`http://localhost:8000/invoice/3`)
+        .then((response) => {
+          setInvoiceDetail(response.data);
+          // console.log("----invoice----", response.data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -22,6 +42,49 @@ export default function RegularInvoice() {
       console.log(e);
     }
   }, []);
+
+  //   CustomeContactNo,
+  //   CustomeEmail
+  //   CustomeID
+  //   CustomeName
+  //   CustomerAddress
+  //   CustomerCIN
+  //   CustomerCity
+  //   CustomerCountry
+  //   CustomerGST
+  //   CustomerName
+  //   CustomerPAN
+  //   CustomerPinCode
+  //   CustomerReferance
+  //   CustomerState
+  //   RefrenceDate
+  //   customerReason
+  //   orderDate
+  //   orderID
+  //   orderNumber
+  //   orderRemark
+  //   orderState
+  //   productName
+  //   rate
+  //   serialNumber
+  // ,total
+
+  // cgst
+  // ff
+  // hsn
+  // igst
+  // invoiceDate
+  // invoice_number
+  // orderID
+  // sgst
+  // shippingAddress
+  // shippingCity
+  // shippingCountry
+  // shippingPerson
+  // shippingState
+  // subTotal
+  // totalAmount
+  // transportationMode
 
   return (
     <>
@@ -141,17 +204,17 @@ export default function RegularInvoice() {
                     </tr>
                     <tr>
                       <td colspan="3" style={{ border: "1px solid black" }}>
-                        N/A
+                        {orderDetail.CustomerReferance}
                       </td>
 
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                        N/A
+                     N/A
                       </td>
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                        N/A
+                      {invoiceDetail.transportationMode}
                       </td>
                       <td colspan="3" style={{ border: "1px solid black" }}>
-                        N/A
+                      {invoiceDetail.invoice_number}
                       </td>
                       <td
                         colspan="4"
@@ -160,7 +223,15 @@ export default function RegularInvoice() {
                           textAlign: "center",
                         }}
                       >
-                        N/A
+                         {new Date(invoiceDetail.invoiceDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )}
+                     
                       </td>
                     </tr>
                     <tr>
@@ -172,7 +243,9 @@ export default function RegularInvoice() {
                           textAlign: "left",
                         }}
                       >
-                        <p className="p-0 m-0">Billing To :</p>
+                        <p className="p-0 m-0">
+                          Billing To : <b>{orderDetail.CustomeName}</b>
+                        </p>
                       </td>
                       <td
                         colspan="6"
@@ -182,7 +255,9 @@ export default function RegularInvoice() {
                           textAlign: "left",
                         }}
                       >
-                        <p className="p-0 m-0">Ship To :</p>
+                        <p className="p-0 m-0">
+                          Ship To : <b>{invoiceDetail.shippingPerson}</b>
+                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -193,7 +268,15 @@ export default function RegularInvoice() {
                           textAlign: "left",
                         }}
                       >
-                        <p className="p-0 m-0">Addrress : </p>
+                        <p className="p-0 m-0">
+                          Addrress :{" "}
+                          <b>
+                            {orderDetail.CustomerAddress},
+                            {orderDetail.CustomerCity} ,{" "}
+                            {orderDetail.CustomerState},{" "}
+                            {orderDetail.CustomerCountry}
+                          </b>{" "}
+                        </p>
                       </td>
                       <td
                         colspan="6"
@@ -202,7 +285,14 @@ export default function RegularInvoice() {
                           textAlign: "left",
                         }}
                       >
-                        <p className="p-0 m-0">Addrress : </p>
+                        <p className="p-0 m-0">Addrress :
+                        <b>
+                            {invoiceDetail.shippingAddress},
+                            {invoiceDetail.shippingCity} ,{" "}
+                            {invoiceDetail.shippingState},{" "}
+                            {invoiceDetail.shippingCountry}
+                          </b>{" "}
+                         </p>
                       </td>
                     </tr>
                     <tr>
@@ -210,13 +300,13 @@ export default function RegularInvoice() {
                         colspan="6"
                         style={{ border: "1px solid #000", textAlign: "left" }}
                       >
-                        <p className="p-0 m-0">GST : </p>
+                        <p className="p-0 m-0">GST : <b>{orderDetail.CustomerGST}</b> </p>
                       </td>
                       <td
                         colspan="6"
                         style={{ border: "1px solid #000", textAlign: "left" }}
                       >
-                        <p className="p-0 m-0">GST : </p>
+                        <p className="p-0 m-0">GST : <b>{orderDetail.CustomerGST}</b> </p>
                       </td>
                     </tr>
                     <tr>

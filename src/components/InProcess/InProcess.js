@@ -169,7 +169,6 @@ export default function OrderList() {
                                         handleOrderNumberClick(entry.orderID)
                                       }
                                     >
-                                      {entry.orderNumber}
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}

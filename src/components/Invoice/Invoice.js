@@ -5,6 +5,7 @@ import dummyData from "../OrderList/MOCK_DATA (1).json";
 import Navbar from "./Navbar";
 import Pagination from "../Pagination/Pagination";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Invoice({ show, onHide }) {
   const navigate = useNavigate()
@@ -13,13 +14,16 @@ export default function Invoice({ show, onHide }) {
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log(`data : ${dummyData}`);
-        setEntriesData(dummyData);
+        const response = await axios.get(
+          "http://localhost:8000/invoice"
+        );
+        setEntriesData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching order list:", error);
       }
     };
     fetchData();
@@ -34,7 +38,9 @@ export default function Invoice({ show, onHide }) {
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
 function handleClick(){
 navigate('/billingInfo')
@@ -115,17 +121,17 @@ navigate('/billingInfo')
                                     <td
                                       className="text-center"
                                     >
-                                      {entry.orderNumber}
+                                      {entry.invoice_number}
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.customer}
+                                      {entry.CustomerName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.repairItem}
+                                      {entry.totalAmount}
                                     </td>
                                     <td className="text-center">
-                                      {entry.serialnumber}
+                                      {/* {entry.IRN} */} N/A
                                     </td>
                                     <td className="text-center">
                                       <button

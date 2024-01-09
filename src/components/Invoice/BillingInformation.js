@@ -1,6 +1,6 @@
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
 import bill from "../../Images/bill.png";
 import axios from "axios";
@@ -19,7 +19,25 @@ const BillingInformation = () => {
     CustomeEmail: "",
     CustomerGST: "",
     orderRemark: "",
-})
+  });
+
+  const [invoice, setInvoice] = useState({
+    invoice_number: "",
+    shippingAddress: "",
+    shippingPerson: "",
+    shippingCity: "",
+    shippingState: "",
+    shippingCountry: "",
+    invoiceDate: "",
+    transportationMode: "",
+    subTotal: "",
+    igst: "",
+    cgst: "",
+    sgst: "",
+    ff: "",
+    hsn: "",
+    totalAmount: "",
+  });
 
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
@@ -40,14 +58,12 @@ const BillingInformation = () => {
     nextStep();
   };
 
-
   useEffect(() => {
     const fetchData = async (orderID) => {
       try {
         const response = await axios.get(
-        //   `http://localhost:8000/orders/${orderID}/details`
-        `http://localhost:8000/orders/1/details`
-
+          //   `http://localhost:8000/orders/${orderID}/details`
+          `http://localhost:8000/orders/1/details`
         );
         setOrderData(response.data);
       } catch (error) {
@@ -56,8 +72,6 @@ const BillingInformation = () => {
     };
     fetchData();
   }, []);
-
-
 
   const renderStep = (step) => {
     switch (step) {
@@ -86,77 +100,132 @@ const BillingInformation = () => {
                   <label className="fieldlabels">
                     <i class="fa-solid fa-circle-user header-icon2"></i>Customer
                   </label>
-                  <input type="text" name="email" readOnly value={orderData.CustomerName}/>
+                  <input
+                    type="text"
+                    name="email"
+                    readOnly
+                    value={orderData.CustomerName}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-calendar-days header-icon2"></i>Repair
                     Order Date
                   </label>
-                  <input type="text" name="uname" readOnly value={orderData.orderDate} />
+                  <input
+                    type="text"
+                    name="uname"
+                    readOnly
+                    value={orderData.orderDate}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-cart-arrow-down header-icon2"></i>
                     Order Number
                   </label>
-                  <input type="text" name="uname" readOnly value={orderData.orderNumber}/>
+                  <input
+                    type="text"
+                    name="uname"
+                    readOnly
+                    value={orderData.orderNumber}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-user-tag header-icon2"></i>Booked By
                   </label>
-                  <input type="text" name="pwd" readOnly value="N/A"/>
+                  <input type="text" name="pwd" readOnly value="N/A" />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-location-dot header-icon2"></i>Address
                   </label>
-                  <input type="text" name="cpwd" readOnly value={orderData.CustomerAddress}/>
+                  <input
+                    type="text"
+                    name="cpwd"
+                    readOnly
+                    value={orderData.CustomerAddress}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-building header-icon2"></i>City
                   </label>
-                  <input type="text" name="email" readOnly value={orderData.CustomerCity}/>
+                  <input
+                    type="text"
+                    name="email"
+                    readOnly
+                    value={orderData.CustomerCity}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-building-columns header-icon2"></i>
                     State
                   </label>
-                  <input type="text" name="uname" readOnly value={orderData.CustomerState}/>
+                  <input
+                    type="text"
+                    name="uname"
+                    readOnly
+                    value={orderData.CustomerState}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-earth-americas header-icon2"></i>
                     Country
                   </label>
-                  <input type="text" name="pwd" readOnly value={orderData.CustomerCountry}/>
+                  <input
+                    type="text"
+                    name="pwd"
+                    readOnly
+                    value={orderData.CustomerCountry}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-phone header-icon2"></i>Phone
                   </label>
-                  <input type="text" name="email" readOnly value={orderData.CustomeContactNo}/>
+                  <input
+                    type="text"
+                    name="email"
+                    readOnly
+                    value={orderData.CustomeContactNo}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-at header-icon2"></i>Email
                   </label>
-                  <input type="text" name="uname" readOnly value={orderData.CustomeEmail} />
+                  <input
+                    type="text"
+                    name="uname"
+                    readOnly
+                    value={orderData.CustomeEmail}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-certificate header-icon2"></i>GST
                   </label>
-                  <input type="text" name="pwd" readOnly value={orderData.CustomerGST}/>
+                  <input
+                    type="text"
+                    name="pwd"
+                    readOnly
+                    value={orderData.CustomerGST}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-file-lines header-icon2"></i>Remark
                   </label>
-                  <input type="email" name="email" readOnly value={orderData.orderRemark}/>
+                  <input
+                    type="email"
+                    name="email"
+                    readOnly
+                    value={orderData.orderRemark}
+                  />
                 </div>
               </div>
             </div>
@@ -192,7 +261,12 @@ const BillingInformation = () => {
                     <i class="fa-solid fa-earth-americas header-icon2"></i>
                     Shipping To
                   </label>
-                  <input type="text" name="" placeholder="Shipping To"  value=''/>
+                  <input
+                    type="text"
+                    name=""
+                    placeholder="Shipping To"
+                    value=""
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
@@ -202,28 +276,72 @@ const BillingInformation = () => {
                     type="text"
                     name="address"
                     placeholder="Shipping Address"
-                    value=''
+                    value=""
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-building header-icon2"></i>City
                   </label>
-                  <input type="text" name="email" placeholder="Shipping City" value='' />
+                  <input
+                    type="text"
+                    name="email"
+                    placeholder="Shipping City"
+                    value=""
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-building-columns header-icon2"></i>
                     State
                   </label>
-                  <input type="text" name="email" placeholder="Shipping State"  value=''/>
+                  <input
+                    type="text"
+                    name="email"
+                    placeholder="Shipping State"
+                    value=""
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-earth-americas header-icon2"></i>
                     Country
                   </label>
-                  <input type="text" name="email" placeholder="Shipping Country" />
+                  <input
+                    type="text"
+                    name="email"
+                    placeholder="Shipping Country"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <label className="fieldlabels">
+                    <i class="fa-solid fa-truck-plane header-icon2"></i>
+                    Transportation Mode
+                  </label>
+                  <select
+                    style={{
+                      border: "none",
+                      borderBottom: "1px solid #e5e5e5",
+                      backgroundColor: "transparent",
+                      height: "47px",
+                      width: "350px",
+                    }}
+                    value={invoice.transportationMode}
+                  >
+                    <option>Select Transportation Mode</option>
+                    <option value="Train">Train</option>
+                    <option value="Ship">Ship</option>
+                    <option value="Plane">Plane</option>
+                    <option value="Truck">Truck</option>
+                  </select>
+                  {/* <input type="text" name="email" placeholder="Shipping Country" /> */}
+                </div>
+                <div className="col-md-3">
+                  <label className="fieldlabels">
+                    <i class="fa-solid fa-indian-rupee-sign header-icon2"></i>
+                    F&F
+                  </label>
+                  <input type="number" name="email"  value={invoice.ff}/>
                 </div>
               </div>
             </div>

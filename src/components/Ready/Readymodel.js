@@ -53,7 +53,7 @@ function Readymodel({ Title, onButtonClick, btnText, orderID,orderState }) {
   return (
     <>
       <Button variant="" onClick={() => setShow(true)}>
-        Open Modal
+        {orderDetails.orderNumber}
       </Button>
 
       <Modal show={show} onHide={handleClose} size="lg">

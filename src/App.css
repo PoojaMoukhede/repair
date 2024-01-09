@@ -594,3 +594,26 @@ li,
 .btnB{
   border-radius: 60px 5px 60px 5px !important;
 }
+.animat{
+  transition: all .3s;
+  animation: bound .6s ease-in infinite alternate;
+}
+.animat::before {
+  display: block;
+  content: "\f217";
+  color: #fff;
+  font-weight: bold;
+  font-size: 15px;
+  position: absolute;
+  top: -18px;
+  left: -10px;
+}
+
+@keyframes bound {
+  0% {
+   transform: translateY(0);
+  }
+  100% {
+   transform: translateY(10px);
+  }
+}

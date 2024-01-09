@@ -85,7 +85,7 @@ export default function ToBill() {
 
   return (
     <>
-      <Header />
+      <Header/>
       <Navbar />
       <div id="grid">
         <Sidebar />
@@ -156,10 +156,10 @@ export default function ToBill() {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {entry.Orderdate}
+                                      {entry.invoiceDate}
                                     </td>
                                     <td className="text-center">
-                                      {entry.orderNumber}
+                                      {/* {entry.orderNumber} */}
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}
