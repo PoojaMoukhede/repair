@@ -1,33 +1,47 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import dummyData from "../OrderList/MOCK_DATA (1).json";
 import Navbar from "./Navbar";
 import Pagination from "../Pagination/Pagination";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Invoice({ show, onHide }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/invoice"
-        );
+        const response = await axios.get("http://localhost:8000/invoice");
         setEntriesData(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching order list:", error);
       }
     };
     fetchData();
+    getBilledData();
   }, []);
+
+  function getBilledData() {
+    const billedData = [];
+    entriesData.forEach((element) => {
+      if (
+        element.isInProcess === 1 &&
+        element.isReady === 1 &&
+        element.isBilled === 1 &&
+        element.isScraped === 0
+      ) {
+        billedData.push(element);
+        console.log(`Billed Data ${billedData}`);
+        console.log(`No data to render`);
+      }
+    });
+  }
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -42,9 +56,9 @@ export default function Invoice({ show, onHide }) {
     setCurrentPage(pageNumber);
   };
 
-function handleClick(){
-navigate('/billingInfo')
-}
+  function handleClick() {
+    navigate("/regularinvoice");
+  }
 
   return (
     <>
@@ -116,16 +130,20 @@ navigate('/billingInfo')
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {entry.Orderdate}
+                                      {new Date(
+                                        entry.invoiceDate
+                                      ).toLocaleString("en-US", {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                      })}
                                     </td>
-                                    <td
-                                      className="text-center"
-                                    >
+                                    <td className="text-center">
                                       {entry.invoice_number}
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.CustomerName}
+                                      {entry.shippingPerson}
                                     </td>
                                     <td className="text-center">
                                       {entry.totalAmount}

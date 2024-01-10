@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../../Images/multispan-logo-HD.png";
 import QR from "../../Images/qr-code.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
+import ReactToPrint from "react-to-print";
+
 
 export default function RegularInvoice() {
+  let  componentRef = useRef();
   const [detail, setDetail] = useState([]);
   const [invoiceDetail, setInvoiceDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
@@ -15,7 +18,6 @@ export default function RegularInvoice() {
         .get(`http://localhost:8000/companyDetail`)
         .then((response) => {
           setDetail(response.data[0]);
-          // console.log("----data----", response.data[0]);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -24,7 +26,6 @@ export default function RegularInvoice() {
         .get(`http://localhost:8000/orders/3/details`)
         .then((response) => {
           setOrderDetail(response.data);
-          // console.log("----orders----", response.data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -33,7 +34,6 @@ export default function RegularInvoice() {
         .get(`http://localhost:8000/invoice/3`)
         .then((response) => {
           setInvoiceDetail(response.data);
-          // console.log("----invoice----", response.data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -43,61 +43,21 @@ export default function RegularInvoice() {
     }
   }, []);
 
-  //   CustomeContactNo,
-  //   CustomeEmail
-  //   CustomeID
-  //   CustomeName
-  //   CustomerAddress
-  //   CustomerCIN
-  //   CustomerCity
-  //   CustomerCountry
-  //   CustomerGST
-  //   CustomerName
-  //   CustomerPAN
-  //   CustomerPinCode
-  //   CustomerReferance
-  //   CustomerState
-  //   RefrenceDate
-  //   customerReason
-  //   orderDate
-  //   orderID
-  //   orderNumber
-  //   orderRemark
-  //   orderState
-  //   productName
-  //   rate
-  //   serialNumber
-  // ,total
 
-  // cgst
-  // ff
-  // hsn
-  // igst
-  // invoiceDate
-  // invoice_number
-  // orderID
-  // sgst
-  // shippingAddress
-  // shippingCity
-  // shippingCountry
-  // shippingPerson
-  // shippingState
-  // subTotal
-  // totalAmount
-  // transportationMode
+
 
   return (
     <>
-      <main className="container-fluid">
+      <main className="container-fluid" ref={(el) => (componentRef = el)}>
         <div className="row">
-          <div className="container">
+          {/* Printable Area */}
+          <div className="container" >
             <div className="col-12">
               <div className="col-12 pt-2">
                 <table
                   className="table table-borderless table-sm"
                   style={{ border: "1px solid #000" }}
                 >
-                  {/* printableArea */}
                   <tbody>
                     <tr>
                       <td colspan="10" style={{ border: "1px solid #000" }}>
@@ -208,13 +168,13 @@ export default function RegularInvoice() {
                       </td>
 
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                     N/A
+                        N/A
                       </td>
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                      {invoiceDetail.transportationMode}
+                        {invoiceDetail.transportationMode}
                       </td>
                       <td colspan="3" style={{ border: "1px solid black" }}>
-                      {invoiceDetail.invoice_number}
+                        {invoiceDetail.invoice_number}
                       </td>
                       <td
                         colspan="4"
@@ -223,15 +183,14 @@ export default function RegularInvoice() {
                           textAlign: "center",
                         }}
                       >
-                         {new Date(invoiceDetail.invoiceDate).toLocaleString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                          month: "2-digit",
-                                          day: "2-digit",
-                                        }
-                                      )}
-                     
+                        {new Date(invoiceDetail.invoiceDate).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}
                       </td>
                     </tr>
                     <tr>
@@ -285,14 +244,15 @@ export default function RegularInvoice() {
                           textAlign: "left",
                         }}
                       >
-                        <p className="p-0 m-0">Addrress :
-                        <b>
+                        <p className="p-0 m-0">
+                          Addrress :
+                          <b>
                             {invoiceDetail.shippingAddress},
                             {invoiceDetail.shippingCity} ,{" "}
                             {invoiceDetail.shippingState},{" "}
                             {invoiceDetail.shippingCountry}
                           </b>{" "}
-                         </p>
+                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -300,13 +260,17 @@ export default function RegularInvoice() {
                         colspan="6"
                         style={{ border: "1px solid #000", textAlign: "left" }}
                       >
-                        <p className="p-0 m-0">GST : <b>{orderDetail.CustomerGST}</b> </p>
+                        <p className="p-0 m-0">
+                          GST : <b>{orderDetail.CustomerGST}</b>{" "}
+                        </p>
                       </td>
                       <td
                         colspan="6"
                         style={{ border: "1px solid #000", textAlign: "left" }}
                       >
-                        <p className="p-0 m-0">GST : <b>{orderDetail.CustomerGST}</b> </p>
+                        <p className="p-0 m-0">
+                          GST : <b>{orderDetail.CustomerGST}</b>{" "}
+                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -649,8 +613,33 @@ export default function RegularInvoice() {
               </div>
             </div>
           </div>
+          {/* Printable Area */}
         </div>
       </main>
+
+      <div className="row">
+        <div className="d-flex justify-content-center gap-4">
+          <button className="btn btn-success">
+            <i class="fa-solid fa-circle-left header-icon2" style={{color:"#e4e4dc"}}></i>
+            Back
+          </button>
+          {/* <button className="btn btn-success">
+            <i class="fa-solid fa-print header-icon2" style={{color:"#e4e4dc"}}></i>
+            Print
+          </button> */}
+          <ReactToPrint
+          trigger={() => <button className="btn btn-success">
+          <i class="fa-solid fa-print header-icon2" style={{color:"#e4e4dc"}}></i>
+          Print
+        </button>}
+          content={() => componentRef}
+        />
+          <button className="btn btn-success">
+            <i class="fa-solid fa-cloud-arrow-down header-icon2" style={{color:"#e4e4dc"}}></i>
+            Download
+          </button>
+        </div>
+      </div>
     </>
   );
 }

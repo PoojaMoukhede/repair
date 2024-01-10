@@ -4,11 +4,16 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import bill from "../../Images/bill.png";
 import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const BillingInformation = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const orderID = queryParams.get("orderID");
+  // console.log(orderID);
   const [currentStep, setCurrentStep] = useState(1);
   const [orderData, setOrderData] = useState({
-    orderID: "",
+    // orderID: "",
     orderDate: "",
     orderNumber: "",
     CustomerAddress: "",
@@ -21,7 +26,9 @@ const BillingInformation = () => {
     orderRemark: "",
   });
 
+
   const [invoice, setInvoice] = useState({
+    orderID: orderID,
     invoice_number: "",
     shippingAddress: "",
     shippingPerson: "",
@@ -39,6 +46,47 @@ const BillingInformation = () => {
     totalAmount: "",
   });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInvoice({ ...invoice, [name]: value });
+  };
+
+  const handleSubmitlast = (e) => {
+    e.preventDefault();
+    const data = {
+      invoice_number: "",
+      shippingAddress: "",
+      shippingPerson: "",
+      shippingCity: "",
+      shippingState: "",
+      shippingCountry: "",
+      invoiceDate: "",
+      transportationMode: "",
+      subTotal: "",
+      igst: "",
+      cgst: "",
+      sgst: "",
+      ff: "",
+      hsn: "",
+      totalAmount: "",
+    };
+    axios
+      .post("http://localhost:8000/invoice", data)
+      .then((res) => {
+        setInvoice(res.data);
+        console.log(` data : -------------------- : ${res.data}`);
+        // nextStep();
+      })
+      .catch((error) => {
+        console.error("Error submitting data:", error);
+      });
+  };
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    nextStep();
+  }
+
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -53,25 +101,26 @@ const BillingInformation = () => {
     return { width: `${percent}%` };
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    nextStep();
-  };
 
-  useEffect(() => {
-    const fetchData = async (orderID) => {
-      try {
-        const response = await axios.get(
-          //   `http://localhost:8000/orders/${orderID}/details`
-          `http://localhost:8000/orders/1/details`
-        );
-        setOrderData(response.data);
-      } catch (error) {
-        console.error("Error fetching order list:", error);
-      }
-    };
-    fetchData();
-  }, []);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/orders/${orderID}/details`
+      );
+      setOrderData(response.data);
+      // console.log(`http://localhost:8000/orders/${orderID}/details`);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+    }
+  };
+  fetchData();
+}, [orderID]);
+
+  const navigate = useNavigate();
+  function handleNavigate() {
+    navigate("/regularinvoice");
+  }
 
   const renderStep = (step) => {
     switch (step) {
@@ -263,9 +312,10 @@ const BillingInformation = () => {
                   </label>
                   <input
                     type="text"
-                    name=""
+                    name="shippingPerson"
                     placeholder="Shipping To"
-                    value=""
+                    onChange={handleInputChange}
+                    value={invoice.shippingPerson}
                   />
                 </div>
                 <div className="col-md-6">
@@ -274,9 +324,10 @@ const BillingInformation = () => {
                   </label>
                   <input
                     type="text"
-                    name="address"
+                    name="shippingAddress"
                     placeholder="Shipping Address"
-                    value=""
+                    onChange={handleInputChange}
+                    value={invoice.shippingAddress}
                   />
                 </div>
                 <div className="col-md-6">
@@ -285,9 +336,10 @@ const BillingInformation = () => {
                   </label>
                   <input
                     type="text"
-                    name="email"
+                    name="shippingCity"
                     placeholder="Shipping City"
-                    value=""
+                    onChange={handleInputChange}
+                    value={invoice.shippingCity}
                   />
                 </div>
                 <div className="col-md-6">
@@ -297,9 +349,10 @@ const BillingInformation = () => {
                   </label>
                   <input
                     type="text"
-                    name="email"
+                    name="shippingState"
                     placeholder="Shipping State"
-                    value=""
+                    onChange={handleInputChange}
+                    value={invoice.shippingState}
                   />
                 </div>
                 <div className="col-md-6">
@@ -309,8 +362,10 @@ const BillingInformation = () => {
                   </label>
                   <input
                     type="text"
-                    name="email"
+                    name="shippingCountry"
                     placeholder="Shipping Country"
+                    onChange={handleInputChange}
+                    value={invoice.shippingCountry}
                   />
                 </div>
                 <div className="col-md-3">
@@ -326,7 +381,9 @@ const BillingInformation = () => {
                       height: "47px",
                       width: "350px",
                     }}
+                    name="transportationMode"
                     value={invoice.transportationMode}
+                    onChange={handleInputChange}
                   >
                     <option>Select Transportation Mode</option>
                     <option value="Train">Train</option>
@@ -341,7 +398,12 @@ const BillingInformation = () => {
                     <i class="fa-solid fa-indian-rupee-sign header-icon2"></i>
                     F&F
                   </label>
-                  <input type="number" name="email"  value={invoice.ff}/>
+                  <input
+                    type="number"
+                    name="email"
+                    value={invoice.ff}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </div>
             </div>
@@ -444,10 +506,18 @@ const BillingInformation = () => {
               <br />
               <br />
               <div className="row justify-content-center">
-                <div className="col-7 text-center">
-                  <button className="btn btn-success">
+                <div className="col-2 text-center">
+                  <button className="btn btn-success" onClick={handleNavigate}>
                     <i class="fa-solid fa-file-invoice header-icon2"></i>
-                    Generate Invoice
+                    {/* Generate Invoice */}
+                    Preview Invoice
+                  </button>
+                </div>
+                <div className="col-2 text-center">
+                  <button className="btn btn-success" onClick={navigate('/invoiceTable')}>
+                  <i class="fa-solid fa-file-lines header-icon2"></i>
+                    {/* Generate Invoice */}
+                    Invoice Table
                   </button>
                 </div>
               </div>
@@ -473,6 +543,15 @@ const BillingInformation = () => {
         <div id="right">
           <div className="app-main__outer">
             <div className="app-main__inner">
+              <Link to="/tobill">
+                <button
+                  className="btn btn-success mb-3"
+                  style={{ fontWeight: 700, marginBottom: "0" }}
+                >
+                  <i class="header-icon2 fa-solid fa-arrow-left-long"></i>
+                  Back
+                </button>{" "}
+              </Link>
               <div className="row">
                 <div className="col-md-12">
                   <div className="card">
@@ -484,13 +563,10 @@ const BillingInformation = () => {
                         >
                           <div className="col-11 col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center p-0 mb-2">
                             <div
-                              className="card px-0 pt-4 pb-0"
+                              className="card px-0 pt-1 pb-0"
                               style={{ backgroundColor: "#f9fdff" }}
                             >
-                              <form
-                                id="msform"
-                                //   onSubmit={handleSubmit}
-                              >
+                              <form id="msform" onSubmit={handleSubmitlast}>
                                 {/* progressbar */}
                                 <ul id="progressbar">
                                   <li

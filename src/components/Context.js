@@ -10,7 +10,6 @@ export function APIContextProvider({ children }) {
   const [userEmail, setUserEmail] = useState("");
   const [employeeData, setEmployeedata] = useState([]);
   const [customer, setCustomer] = useState([]);
-  const [isorder, setIsOrder] = useState();
   const [isInProcess, setIsInProcess] = useState();
   const [isReady, setIsReady] = useState();
   const [isBilled, setIsBilled] = useState();

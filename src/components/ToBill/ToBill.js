@@ -4,8 +4,10 @@ import Sidebar from "../Sidebar";
 import axios from "axios";
 import Navbar from "../Navbar";
 import Readymodel from "../Ready/Readymodel";
+import { useNavigate } from "react-router-dom";
 
 export default function ToBill() {
+  const navigate = useNavigate();
   const [entriesPerPage, setEntriesPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
@@ -24,10 +26,15 @@ export default function ToBill() {
     }
   };
 
-  const handleClick = (entry) => {
-    setSelectedOrder(entry);
-    setIsModalOpen(true);
-  };
+  
+  // function handleClick() {
+  //   navigate("/billingInfo");
+  // }
+
+  function handleClick(orderID) {
+    navigate(`/billingInfo?orderID=${orderID}`);
+  }
+  
 
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
@@ -92,6 +99,7 @@ export default function ToBill() {
         <div id="right">
           <div className="app-main__outer">
             <div className="app-main__inner">
+           
               <div className="row">
                 <div className="col-md-12">
                   <div className="card">
@@ -148,7 +156,7 @@ export default function ToBill() {
                                   </th>
                                   <th className="text-center">Repairer Note</th>
                                   <th className="text-center">Repaired Date</th>
-                                  <th className="text-center">Status</th>
+                                  <th className="text-center">Invoice</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -197,17 +205,18 @@ export default function ToBill() {
                                       )} </td>
                                    
                                     <td className="text-center">
-                                    <p
-                                        className="text-center laststatus"
-                                        style={makeStyle(entriesData)}
+                                    <button
+                                        className="btn"
+                                        style={{
+                                          color: "green",
+                                          fontSize: "1.2rem",
+                                        }}
+                                        orderID={entry.orderID}
+                                        onClick={() => handleClick(entry.orderID)}
+                                        // onClick={console.log(`entry.orderID : ${entry.orderID}`)}
                                       >
-                                        {!entriesData.isInProcess &&
-                                        !entriesData.isReady &&
-                                        !entriesData.isBilled &&
-                                        !entriesData.isScraped
-                                          ? "Pending"
-                                          : "Repaired"}
-                                      </p>
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                      </button>
                                     </td>
                                   </tr>
                                 ))}
