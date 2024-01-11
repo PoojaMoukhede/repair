@@ -4,13 +4,16 @@ import QR from "../../Images/qr-code.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
-
+import { useNavigate ,useParams} from "react-router-dom";
 
 export default function RegularInvoice() {
-  let  componentRef = useRef();
+  const navigate = useNavigate();
+  const { orderID } = useParams();
+  let componentRef = useRef();
   const [detail, setDetail] = useState([]);
-  const [invoiceDetail, setInvoiceDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
+  const [orderDetailTable, setOrderDetailTable] = useState([]);
+  const [word, setWord] = useState("");
 
   useEffect(() => {
     try {
@@ -23,17 +26,12 @@ export default function RegularInvoice() {
           console.error("Error fetching data:", error);
         });
       axios
-        .get(`http://localhost:8000/orders/3/details`)
+        .get(`http://localhost:8000/invoiceData/${orderID}`)
         .then((response) => {
-          setOrderDetail(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-      axios
-        .get(`http://localhost:8000/invoice/3`)
-        .then((response) => {
-          setInvoiceDetail(response.data);
+          const responseData = response.data;
+          setOrderDetail(responseData);
+          setWord(convertNumberToWords(responseData.totalAmount));
+          setOrderDetailTable([responseData]); // Wrap responseData in an array
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -41,17 +39,104 @@ export default function RegularInvoice() {
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }, [orderID]);
 
 
+  function convertNumberToWords(number) {
+    const units = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const teens = [
+      // "",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens = [
+      // "",
+      "Ten",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
 
+    const convertChunkToWords = (num) => {
+      const result = [];
+      if (num >= 100) {
+        result.push(units[Math.floor(num / 100)] + " Hundred");
+        num %= 100;
+      }
+
+      if (num >= 11 && num <= 19) {
+        result.push(teens[num - 11]);
+      } else if (num >= 20) {
+        result.push(tens[Math.floor(num / 10)]);
+        num %= 10;
+      }
+
+      if (num > 0) {
+        result.push(units[num]);
+      }
+
+      return result.join(" ");
+    };
+
+    const chunks = [];
+    let remaining = Math.floor(number);
+
+    while (remaining > 0) {
+      chunks.push(remaining % 1000);
+      remaining = Math.floor(remaining / 1000);
+    }
+
+    if (chunks.length === 0) {
+      return "Zero Rupees";
+    }
+
+    const words = chunks
+      .map((chunk, index) => {
+        if (chunk === 0) {
+          return "";
+        }
+        //   console.log(index);
+        const chunkInWords = convertChunkToWords(chunk);
+        return (
+          chunkInWords +
+          (index === 0 ? "" : ` ${index === 1 ? "Thousand" : "Lakh"}`)
+        );
+      })
+      .reverse()
+      .join(" ");
+
+    return `${words} Rupees Only`;
+  }
 
   return (
     <>
       <main className="container-fluid" ref={(el) => (componentRef = el)}>
         <div className="row">
           {/* Printable Area */}
-          <div className="container" >
+          <div className="container">
             <div className="col-12">
               <div className="col-12 pt-2">
                 <table
@@ -171,10 +256,10 @@ export default function RegularInvoice() {
                         N/A
                       </td>
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                        {invoiceDetail.transportationMode}
+                        {orderDetail.transportationMode}
                       </td>
                       <td colspan="3" style={{ border: "1px solid black" }}>
-                        {invoiceDetail.invoice_number}
+                        {orderDetail.invoice_number}
                       </td>
                       <td
                         colspan="4"
@@ -183,7 +268,7 @@ export default function RegularInvoice() {
                           textAlign: "center",
                         }}
                       >
-                        {new Date(invoiceDetail.invoiceDate).toLocaleString(
+                        {new Date(orderDetail.invoiceDate).toLocaleString(
                           "en-US",
                           {
                             year: "numeric",
@@ -215,7 +300,7 @@ export default function RegularInvoice() {
                         }}
                       >
                         <p className="p-0 m-0">
-                          Ship To : <b>{invoiceDetail.shippingPerson}</b>
+                          Ship To : <b>{orderDetail.shippingPerson}</b>
                         </p>
                       </td>
                     </tr>
@@ -247,10 +332,10 @@ export default function RegularInvoice() {
                         <p className="p-0 m-0">
                           Addrress :
                           <b>
-                            {invoiceDetail.shippingAddress},
-                            {invoiceDetail.shippingCity} ,{" "}
-                            {invoiceDetail.shippingState},{" "}
-                            {invoiceDetail.shippingCountry}
+                            {orderDetail.shippingAddress},
+                            {orderDetail.shippingCity} ,{" "}
+                            {orderDetail.shippingState},{" "}
+                            {orderDetail.shippingCountry}
                           </b>{" "}
                         </p>
                       </td>
@@ -282,6 +367,7 @@ export default function RegularInvoice() {
                         }}
                       ></td>
                     </tr>
+                    {/* <table></table> */}
                     <tr>
                       <th
                         style={{
@@ -338,32 +424,31 @@ export default function RegularInvoice() {
                         Repair Rate
                       </th>
                     </tr>
-
-                    <tr className="m-0 p-0 ">
-                      <td
-                        style={{ border: "1px solid black", width: "50px" }}
-                      ></td>
-                      <td
-                        colspan="3"
-                        style={{ border: "1px solid black" }}
-                      ></td>
-                      <td
-                        colspan="2"
-                        style={{ border: "1px solid black" }}
-                      ></td>
-                      <td
-                        style={{ border: "1px solid black" }}
-                        colspan="2"
-                      ></td>
-                      <td
-                        style={{ border: "1px solid black" }}
-                        colspan="2"
-                      ></td>
-                      <td
-                        style={{ border: "1px solid black", width: "150px" }}
-                        colspan="3"
-                      ></td>
-                    </tr>
+                    {orderDetailTable.map((entry, index) => (
+                      <tr className="m-0 p-0" key={index}>
+                        <td style={{ border: "1px solid black" }}>
+                          {index + 1}
+                        </td>
+                        <td colspan="3" style={{ border: "1px solid black" }}>
+                          {entry.productName}
+                        </td>
+                        <td colspan="2" style={{ border: "1px solid black" }}>
+                          {entry.serialNumber}
+                        </td>
+                        <td style={{ border: "1px solid black" }} colspan="2">
+                          {entry.HSN}
+                        </td>
+                        <td style={{ border: "1px solid black" }} colspan="2">
+                          18%
+                        </td>
+                        <td
+                          style={{ border: "1px solid black", width: "150px" }}
+                          colspan="3"
+                        >
+                          {parseFloat(entry.totalAmount).toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
 
                     <tr>
                       <td
@@ -398,7 +483,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        &#x20B9;
+                        {orderDetail.subTotal}
                       </td>
                     </tr>
                     <tr></tr>
@@ -415,7 +500,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        &#x20B9;
+                        {orderDetail.igst}
                       </td>
                     </tr>
                     <tr>
@@ -431,7 +516,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        &#x20B9;
+                        {orderDetail.cgst}
                       </td>
                     </tr>
                     <tr>
@@ -447,7 +532,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        &#x20B9;
+                        {orderDetail.sgst}
                       </td>
                     </tr>
                     <tr>
@@ -463,7 +548,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        &#x20B9;
+                        {orderDetail.ff}
                       </td>
                     </tr>
 
@@ -480,6 +565,7 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
+                        {parseFloat(orderDetail.totalAmount).toFixed(2)}{" "}
                         &#x20B9;
                       </td>
                     </tr>
@@ -488,7 +574,11 @@ export default function RegularInvoice() {
                         colspan="14"
                         style={{ border: "1px solid black", textAlign: "left" }}
                       >
-                        <p className="p-0 m-0">Amount In Words : </p>
+                        <p className="p-0 m-0">
+                          Amount In Words :
+                          <b style={{ color: "black" }}> {word}</b>
+                          {/* {console.log(convertNumberToWords(orderDetail.totalAmount))} */}
+                        </p>
                       </td>
                     </tr>
                     <tr>
@@ -619,23 +709,33 @@ export default function RegularInvoice() {
 
       <div className="row">
         <div className="d-flex justify-content-center gap-4">
-          <button className="btn btn-success">
-            <i class="fa-solid fa-circle-left header-icon2" style={{color:"#e4e4dc"}}></i>
+          <button
+            className="btn btn-success"
+            onClick={() => navigate("/invoiceTable")}
+          >
+            <i
+              className="fa-solid fa-circle-left header-icon2"
+              style={{ color: "#e4e4dc" }}
+            ></i>
             Back
           </button>
-          {/* <button className="btn btn-success">
-            <i class="fa-solid fa-print header-icon2" style={{color:"#e4e4dc"}}></i>
-            Print
-          </button> */}
           <ReactToPrint
-          trigger={() => <button className="btn btn-success">
-          <i class="fa-solid fa-print header-icon2" style={{color:"#e4e4dc"}}></i>
-          Print
-        </button>}
-          content={() => componentRef}
-        />
+            trigger={() => (
+              <button className="btn btn-success">
+                <i
+                  className="fa-solid fa-print header-icon2"
+                  style={{ color: "#e4e4dc" }}
+                ></i>
+                Print
+              </button>
+            )}
+            content={() => componentRef}
+          />
           <button className="btn btn-success">
-            <i class="fa-solid fa-cloud-arrow-down header-icon2" style={{color:"#e4e4dc"}}></i>
+            <i
+              className="fa-solid fa-cloud-arrow-down header-icon2"
+              style={{ color: "#e4e4dc" }}
+            ></i>
             Download
           </button>
         </div>

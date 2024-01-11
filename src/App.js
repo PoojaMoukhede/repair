@@ -39,7 +39,8 @@ function App() {
             <Route exact path="/invoiceTable" element={<Invoice />} />
             <Route exact path="/scrape" element={<Scraped />} />
             <Route exact path="/zeroinvoice" element={<ZeroInvoice />} />
-            <Route exact path="/regularinvoice" element={<RegularInvoice />} />
+            <Route  path="/regularinvoice/:orderID" element={<RegularInvoice />} />
+            <Route path="/regularinvoice/*" element={<RegularInvoice />} />
             <Route exact path="/billingInfo" element={<BillingInformation />} />
           </Routes>
         </APIContextProvider>

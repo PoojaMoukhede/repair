@@ -24,7 +24,7 @@ export default function Navbar() {
                 }`}
                 onClick={() => handleButtonClick("Order Item List")}
               >
-                <i class="header-icon fa-solid fa-cart-plus animat"></i>
+                <i className="header-icon fa-solid fa-cart-plus animat"></i>
                 New Order 
               </Link>
             </li>

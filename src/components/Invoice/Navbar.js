@@ -16,7 +16,7 @@ export default function Navbar() {
       <div className="navbar-container2">
         <nav className="navbar2">
           <ul>
-          <li>
+            <li>
               <Link
                 to="/invoiceTable"
                 className={`btn navbtn ${
@@ -24,7 +24,7 @@ export default function Navbar() {
                 }`}
                 onClick={() => handleButtonClick("Regular Invoice")}
               >
-               <i class="header-icon fa-solid fa-bars-staggered"></i>
+                <i className="header-icon fa-solid fa-bars-staggered"></i>
                 Invoice Table
               </Link>
             </li>
@@ -36,8 +36,8 @@ export default function Navbar() {
                 }`}
                 onClick={() => handleButtonClick("Zero Invoice")}
               >
-                <i class="fa-solid fa-list-ul header-icon"></i>
-               Zero Invoice
+                <i className="fa-solid fa-list-ul header-icon"></i>
+                Zero Invoice
               </Link>
             </li>
             <li>
@@ -48,11 +48,10 @@ export default function Navbar() {
                 }`}
                 onClick={() => handleButtonClick("Regular Invoice")}
               >
-               <i class="fa-solid fa-bars header-icon"></i>
+                <i className="fa-solid fa-bars header-icon"></i>
                 Regular Invoice
               </Link>
             </li>
-           
           </ul>
         </nav>
       </div>

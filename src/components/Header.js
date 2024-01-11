@@ -8,7 +8,7 @@ export default function Header() {
   const [userName, setUserName] = useState("");
   useEffect(() => {
     const userEmail = localStorage.getItem("email");
-    console.log(localStorage);
+    // console.log(localStorage);
     const userFirstName = userEmail.split("@")[0]; 
     setUserName(userFirstName);
     

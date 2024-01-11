@@ -126,7 +126,7 @@ export default function RepairOrder() {
             <div className="app-main__inner">
               <Link to="/orderList">
                 <button className="btn btn-success mb-3" style={{fontWeight:700}}>
-                  <i class="header-icon2 fa-solid fa-arrow-left-long"></i>
+                  <i clclassNameass="header-icon2 fa-solid fa-arrow-left-long"></i>
                   Back
                 </button>{" "}
               </Link>

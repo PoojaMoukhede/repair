@@ -12,48 +12,10 @@ const BillingInformation = () => {
   const orderID = queryParams.get("orderID");
   // console.log(orderID);
   const [currentStep, setCurrentStep] = useState(1);
-  const [orderData, setOrderData] = useState({
-    // orderID: "",
-    orderDate: "",
-    orderNumber: "",
-    CustomerAddress: "",
-    CustomerCity: "",
-    CustomerState: "",
-    CustomerCountry: "",
-    CustomeContactNo: "",
-    CustomeEmail: "",
-    CustomerGST: "",
-    orderRemark: "",
-  });
-
-
-  const [invoice, setInvoice] = useState({
-    orderID: orderID,
-    invoice_number: "",
-    shippingAddress: "",
-    shippingPerson: "",
-    shippingCity: "",
-    shippingState: "",
-    shippingCountry: "",
-    invoiceDate: "",
-    transportationMode: "",
-    subTotal: "",
-    igst: "",
-    cgst: "",
-    sgst: "",
-    ff: "",
-    hsn: "",
-    totalAmount: "",
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInvoice({ ...invoice, [name]: value });
-  };
-
-  const handleSubmitlast = (e) => {
-    e.preventDefault();
-    const data = {
+  const [invoice, setInvoice] = useState(
+    [
+    {
+      orderID: orderID,
       invoice_number: "",
       shippingAddress: "",
       shippingPerson: "",
@@ -69,18 +31,83 @@ const BillingInformation = () => {
       ff: "",
       hsn: "",
       totalAmount: "",
-    };
-    axios
-      .post("http://localhost:8000/invoice", data)
-      .then((res) => {
-        setInvoice(res.data);
-        console.log(` data : -------------------- : ${res.data}`);
-        // nextStep();
-      })
-      .catch((error) => {
-        console.error("Error submitting data:", error);
-      });
+      orderDate: "",
+      orderNumber: "",
+      CustomerAddress: "",
+      CustomerCity: "",
+      CustomerState: "",
+      CustomerCountry: "",
+      CustomeContactNo: "",
+      CustomeEmail: "",
+      CustomerGST: "",
+      orderRemark: "",
+      CustomerName:"",
+      productName:"",
+      serialNumber:'',
+      customerReason:""
+    }  
+  ]);
+const [invoiceArray,setInvoiceArray]=useState([])
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInvoice({ ...invoice, [name]: value });
   };
+  const handleSubmitlast = async (e) => {
+    e.preventDefault();
+  
+    // Extract shipping information from the form inputs
+    const shippingData = {
+      shippingPerson: e.target.elements.shippingPerson.value,
+      shippingAddress: e.target.elements.shippingAddress.value,
+      shippingCity: e.target.elements.shippingCity.value,
+      shippingState: e.target.elements.shippingState.value,
+      shippingCountry: e.target.elements.shippingCountry.value,
+      transportationMode: e.target.elements.transportationMode.value,
+      ff: e.target.elements.ff.value,
+    };
+  
+    try {
+      const response = await axios.post("http://localhost:8000/invoice", shippingData);
+      setInvoice((prevInvoice) => ({
+        ...prevInvoice,
+      }));
+      nextStep();
+    } catch (error) {
+      console.error("Error submitting shipping data:", error);
+    }
+  };
+  
+  
+  // const handleSubmitlast = (e) => {
+  //   e.preventDefault();
+  //   // const data = {
+  //   //   invoice_number: "",
+  //   //   shippingAddress: "",
+  //   //   shippingPerson: "",
+  //   //   shippingCity: "",
+  //   //   shippingState: "",
+  //   //   shippingCountry: "",
+  //   //   invoiceDate: "",
+  //   //   transportationMode: "",
+  //   //   subTotal: "",
+  //   //   igst: "",
+  //   //   cgst: "",
+  //   //   sgst: "",
+  //   //   ff: "",
+  //   //   hsn: "",
+  //   //   totalAmount: "",
+  //   // };
+  //   axios
+  //     .post("http://localhost:8000/invoice", invoice)
+  //     .then((res) => {
+  //       setInvoice(res.data);
+  //       console.log(` data : -------------------- : ${res.data}`);
+  //       // nextStep();
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error submitting data:", error);
+  //     });
+  // };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -105,17 +132,20 @@ const BillingInformation = () => {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/orders/${orderID}/details`
-      );
-      setOrderData(response.data);
-      // console.log(`http://localhost:8000/orders/${orderID}/details`);
+      // const response = await axios.get(`http://localhost:8000/invoiceData/${orderID}`)
+      const response2 = await axios.get(`http://localhost:8000/orders/${orderID}/details`)
+      const result = Object.keys(response2).map((key) => response2[key]);
+      // console.log(`response from chnage to array : ${result}`);
+      setInvoiceArray(result);
+      // setInvoice(response.data);
+      setInvoice(response2.data)
+      console.log(response2)
     } catch (error) {
       console.error("Error fetching order details:", error);
     }
   };
   fetchData();
-}, [orderID]);
+}, []);
 
   const navigate = useNavigate();
   function handleNavigate() {
@@ -140,140 +170,140 @@ useEffect(() => {
                   <div className="d-flex justify-content-between align-items-center">
                     <h6>
                       {" "}
-                      <i class="fa-solid fa-circle-user header-icon"></i>Billing
+                      <i className="fa-solid fa-circle-user header-icon"></i>Billing
                       Information
                     </h6>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-circle-user header-icon2"></i>Customer
+                    <i className="fa-solid fa-circle-user header-icon2"></i>Customer
                   </label>
                   <input
                     type="text"
                     name="email"
                     readOnly
-                    value={orderData.CustomerName}
+                    value={invoice.CustomerName}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-calendar-days header-icon2"></i>Repair
+                    <i className="fa-solid fa-calendar-days header-icon2"></i>Repair
                     Order Date
                   </label>
                   <input
                     type="text"
                     name="uname"
                     readOnly
-                    value={orderData.orderDate}
+                    value={invoice.orderDate}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-cart-arrow-down header-icon2"></i>
+                    <i className="fa-solid fa-cart-arrow-down header-icon2"></i>
                     Order Number
                   </label>
                   <input
                     type="text"
                     name="uname"
                     readOnly
-                    value={orderData.orderNumber}
+                    value={invoice.orderNumber}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-user-tag header-icon2"></i>Booked By
+                    <i className="fa-solid fa-user-tag header-icon2"></i>Booked By
                   </label>
                   <input type="text" name="pwd" readOnly value="N/A" />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-location-dot header-icon2"></i>Address
+                    <i className="fa-solid fa-location-dot header-icon2"></i>Address
                   </label>
                   <input
                     type="text"
                     name="cpwd"
                     readOnly
-                    value={orderData.CustomerAddress}
+                    value={invoice.CustomerAddress}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-building header-icon2"></i>City
+                    <i className="fa-solid fa-building header-icon2"></i>City
                   </label>
                   <input
                     type="text"
                     name="email"
                     readOnly
-                    value={orderData.CustomerCity}
+                    value={invoice.CustomerCity}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-building-columns header-icon2"></i>
+                    <i className="fa-solid fa-building-columns header-icon2"></i>
                     State
                   </label>
                   <input
                     type="text"
                     name="uname"
                     readOnly
-                    value={orderData.CustomerState}
+                    value={invoice.CustomerState}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-earth-americas header-icon2"></i>
+                    <i className="fa-solid fa-earth-americas header-icon2"></i>
                     Country
                   </label>
                   <input
                     type="text"
                     name="pwd"
                     readOnly
-                    value={orderData.CustomerCountry}
+                    value={invoice.CustomerCountry}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-phone header-icon2"></i>Phone
+                    <i className="fa-solid fa-phone header-icon2"></i>Phone
                   </label>
                   <input
                     type="text"
                     name="email"
                     readOnly
-                    value={orderData.CustomeContactNo}
+                    value={invoice.CustomeContactNo}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-at header-icon2"></i>Email
+                    <i className="fa-solid fa-at header-icon2"></i>Email
                   </label>
                   <input
                     type="text"
                     name="uname"
                     readOnly
-                    value={orderData.CustomeEmail}
+                    value={invoice.CustomeEmail}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-certificate header-icon2"></i>GST
+                    <i className="fa-solid fa-certificate header-icon2"></i>GST
                   </label>
                   <input
                     type="text"
                     name="pwd"
                     readOnly
-                    value={orderData.CustomerGST}
+                    value={invoice.CustomerGST}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-file-lines header-icon2"></i>Remark
+                    <i className="fa-solid fa-file-lines header-icon2"></i>Remark
                   </label>
                   <input
                     type="email"
                     name="email"
                     readOnly
-                    value={orderData.orderRemark}
+                    value={invoice.orderRemark}
                   />
                 </div>
               </div>
@@ -300,14 +330,14 @@ useEffect(() => {
                 <div className="card-header-tab card-header mb-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <h6>
-                      <i class="fa-solid fa-truck-fast header-icon"></i>Shipping
+                      <i className="fa-solid fa-truck-fast header-icon"></i>Shipping
                       Information
                     </h6>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-earth-americas header-icon2"></i>
+                    <i className="fa-solid fa-earth-americas header-icon2"></i>
                     Shipping To
                   </label>
                   <input
@@ -320,7 +350,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-location-dot header-icon2"></i>Address
+                    <i className="fa-solid fa-location-dot header-icon2"></i>Address
                   </label>
                   <input
                     type="text"
@@ -332,7 +362,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-building header-icon2"></i>City
+                    <i className="fa-solid fa-building header-icon2"></i>City
                   </label>
                   <input
                     type="text"
@@ -344,7 +374,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-building-columns header-icon2"></i>
+                    <i className="fa-solid fa-building-columns header-icon2"></i>
                     State
                   </label>
                   <input
@@ -357,7 +387,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-earth-americas header-icon2"></i>
+                    <i className="fa-solid fa-earth-americas header-icon2"></i>
                     Country
                   </label>
                   <input
@@ -370,7 +400,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-3">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-truck-plane header-icon2"></i>
+                    <i className="fa-solid fa-truck-plane header-icon2"></i>
                     Transportation Mode
                   </label>
                   <select
@@ -395,7 +425,7 @@ useEffect(() => {
                 </div>
                 <div className="col-md-3">
                   <label className="fieldlabels">
-                    <i class="fa-solid fa-indian-rupee-sign header-icon2"></i>
+                    <i className="fa-solid fa-indian-rupee-sign header-icon2"></i>
                     F&F
                   </label>
                   <input
@@ -432,7 +462,7 @@ useEffect(() => {
               <div className="card-header-tab card-header">
                 <div className="d-flex justify-content-between align-items-center">
                   <h6>
-                    <i class="fa-solid fa-screwdriver-wrench header-icon"></i>
+                    <i className="fa-solid fa-screwdriver-wrench header-icon"></i>
                     Repair Order Information
                   </h6>
                 </div>
@@ -454,22 +484,26 @@ useEffect(() => {
                       <th className="text-center">Repair Item</th>
                       <th className="text-center">Serial Number</th>
                       <th className="text-center"> Customer Reason</th>
-                      <th className="text-center">Repairer Note</th>
+                      {/* <th className="text-center">Repairer Note</th> */}
                       <th className="text-center">Repaired Date</th>
                       <th className="text-center">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <td className="text-center">CustomerName</td>
-                    <td className="text-center">productName</td>
-                    <td className="text-center">serialNumber</td>
-                    <td className="text-center">customerReason</td>
-                    <td className="text-center">orderRemark</td>
-                    <td className="text-center">CustomerName</td>
-                    <td className="text-center">productName</td>
-                    <td className="text-center">serialNumber</td>
-                    <td className="text-center">customerReason</td>
-                    <td className="text-center">orderRemark</td>
+                  {invoiceArray.map((entry, index) => (
+                    <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td className="text-center">{entry.orderDate}</td>
+                    <td className="text-center">{entry.orderNumber}</td>
+                    <td className="text-center">{entry.CustomerName}</td>
+                    <td className="text-center">{entry.productName}</td>
+                    <td className="text-center">{entry.serialNumber}</td>
+                    <td className="text-center">{entry.customerReason}</td>
+                    {/* <td className="text-center">{entry.orderDate}</td> */}
+                    <td className="text-center">{entry.orderDate}</td>
+                    <td className="text-center">{entry.orderDate}</td>
+                    </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -508,14 +542,14 @@ useEffect(() => {
               <div className="row justify-content-center">
                 <div className="col-2 text-center">
                   <button className="btn btn-success" onClick={handleNavigate}>
-                    <i class="fa-solid fa-file-invoice header-icon2"></i>
+                    <i className="fa-solid fa-file-invoice header-icon2"></i>
                     {/* Generate Invoice */}
                     Preview Invoice
                   </button>
                 </div>
                 <div className="col-2 text-center">
                   <button className="btn btn-success" onClick={navigate('/invoiceTable')}>
-                  <i class="fa-solid fa-file-lines header-icon2"></i>
+                  <i className="fa-solid fa-file-lines header-icon2"></i>
                     {/* Generate Invoice */}
                     Invoice Table
                   </button>
@@ -548,7 +582,7 @@ useEffect(() => {
                   className="btn btn-success mb-3"
                   style={{ fontWeight: 700, marginBottom: "0" }}
                 >
-                  <i class="header-icon2 fa-solid fa-arrow-left-long"></i>
+                  <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
                   Back
                 </button>{" "}
               </Link>

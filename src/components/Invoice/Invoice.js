@@ -16,7 +16,7 @@ export default function Invoice({ show, onHide }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/invoice");
+        const response = await axios.get("http://localhost:8000/isbilled-orders");
         setEntriesData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -24,7 +24,7 @@ export default function Invoice({ show, onHide }) {
       }
     };
     fetchData();
-    getBilledData();
+    // getBilledData();
   }, []);
 
   function getBilledData() {
@@ -37,8 +37,8 @@ export default function Invoice({ show, onHide }) {
         element.isScraped === 0
       ) {
         billedData.push(element);
-        console.log(`Billed Data ${billedData}`);
-        console.log(`No data to render`);
+        // console.log(`Billed Data ${billedData}`);
+        // console.log(`No data to render`);
       }
     });
   }
@@ -56,8 +56,8 @@ export default function Invoice({ show, onHide }) {
     setCurrentPage(pageNumber);
   };
 
-  function handleClick() {
-    navigate("/regularinvoice");
+  function handleClick(orderID) {
+    navigate(`/regularinvoice/${orderID}`);
   }
 
   return (
@@ -130,27 +130,30 @@ export default function Invoice({ show, onHide }) {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {new Date(
+                                      {/* {new Date(
                                         entry.invoiceDate
                                       ).toLocaleString("en-US", {
                                         year: "numeric",
                                         month: "2-digit",
                                         day: "2-digit",
-                                      })}
+                                      })} */}
+                                      { entry.invoiceDate}
                                     </td>
                                     <td className="text-center">
                                       {entry.invoice_number}
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.shippingPerson}
+                                    {entry.CustomerName}
                                     </td>
                                     <td className="text-center">
-                                      {entry.totalAmount}
+                                      {/* {entry.totalAmount} */}
+                                      {parseFloat(entry.totalAmount).toFixed(2)}
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.IRN} */} N/A
                                     </td>
+                                    {/* <Link to='/regularinvoice'> */}
                                     <td className="text-center">
                                       <button
                                         className="btn"
@@ -158,11 +161,14 @@ export default function Invoice({ show, onHide }) {
                                           color: "green",
                                           fontSize: "1.2rem",
                                         }}
-                                        onClick={handleClick}
+                                        onClick={() => handleClick(entry.orderID)}
                                       >
-                                        <i class="fa-solid fa-circle-plus"></i>
+                                        {" "}
+                                        <i className="fa-solid fa-eye header-icon2"></i>
+                                        {/* <i className="fa-solid fa-circle-plus"></i> */}
                                       </button>
                                     </td>
+                                    {/* </Link> */}
                                   </tr>
                                 ))}
                               </tbody>

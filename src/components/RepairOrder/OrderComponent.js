@@ -28,10 +28,12 @@ const Translator = ({ name, value, onChange }) => {
 
   const handleTranslation = (text, fromLang, toLang) => {
     if (!text) return;
-
     const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
-            text
-          )}&langpair=en-GB|${toLang}`;
+      text
+    )}&langpair=en-GB|gu-IN`;
+    // const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+    //         text
+    //       )}&langpair=en-GB|${toLang}`;
           console.log(`url :${apiUrl}`);
     
     fetch(apiUrl)

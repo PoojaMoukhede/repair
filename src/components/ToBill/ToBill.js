@@ -20,25 +20,20 @@ export default function ToBill() {
         `http://localhost:8000/orders/${orderID}/isscraped`
       );
       console.log("Server response:", response.data);
-      // Additional logic or state updates if needed
     } catch (error) {
       console.error("Error updating order:", error);
     }
   };
 
-  
-  // function handleClick() {
-  //   navigate("/billingInfo");
-  // }
 
   function handleClick(orderID) {
+    // console.log(`orderID : ${orderID}`);
     navigate(`/billingInfo?orderID=${orderID}`);
   }
   
 
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
-    console.log(orderID);
   }
 
 
