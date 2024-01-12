@@ -25,17 +25,14 @@ export default function ToBill() {
     }
   };
 
-
   function handleClick(orderID) {
     // console.log(`orderID : ${orderID}`);
     navigate(`/billingInfo?orderID=${orderID}`);
   }
-  
 
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
   }
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,14 +84,13 @@ export default function ToBill() {
 
   return (
     <>
-      <Header/>
+      <Header />
       <Navbar />
       <div id="grid">
         <Sidebar />
         <div id="right">
           <div className="app-main__outer">
             <div className="app-main__inner">
-           
               <div className="row">
                 <div className="col-md-12">
                   <div className="card">
@@ -159,23 +155,31 @@ export default function ToBill() {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {entry.invoiceDate}
+                                      {new Date(entry.orderDate).toLocaleString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                        }
+                                      )}
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.orderNumber} */}
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}
-                                        orderState="isbilled" 
+                                        orderState="isbilled"
                                         orderID={entry.orderID}
                                         onButtonClick={() => {
-                                        console.log("Confirmation 1 task")}}
+                                          console.log("Confirmation 1 task");
+                                        }}
                                         Title={"Scraped Item"}
                                         btnText={"Scrape"}
                                       />
                                     </td>
                                     <td className="text-center">
-                                      {entry.CustomerName}
+                                      {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
                                       {entry.productName}
@@ -190,24 +194,27 @@ export default function ToBill() {
                                       {entry.orderRemark}
                                     </td>
                                     <td className="text-center">
-                                    {new Date(entry.orderDate).toLocaleString(
+                                      {new Date(entry.orderDate).toLocaleString(
                                         "en-US",
                                         {
                                           year: "numeric",
                                           month: "2-digit",
                                           day: "2-digit",
                                         }
-                                      )} </td>
-                                   
+                                      )}{" "}
+                                    </td>
+
                                     <td className="text-center">
-                                    <button
+                                      <button
                                         className="btn"
                                         style={{
                                           color: "green",
                                           fontSize: "1.2rem",
                                         }}
                                         orderID={entry.orderID}
-                                        onClick={() => handleClick(entry.orderID)}
+                                        onClick={() =>
+                                          handleClick(entry.orderID)
+                                        }
                                         // onClick={console.log(`entry.orderID : ${entry.orderID}`)}
                                       >
                                         <i class="fa-solid fa-circle-plus"></i>

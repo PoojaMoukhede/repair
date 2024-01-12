@@ -161,7 +161,7 @@ export default function OrderList() {
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.CustomerName}
+                                      {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
                                       {entry.productName}

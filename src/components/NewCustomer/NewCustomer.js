@@ -15,6 +15,7 @@ export default function NewCustomer() {
   const [stateid, setstateid] = useState(0);
   const [selectedcity, setSelectedcity] = useState("");
   const { onAddCustomer } = useAPI();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const [formData, setFormData] = useState({
     CustomeName: "",
@@ -127,6 +128,10 @@ export default function NewCustomer() {
     }
 
     setFormErrors(newErrors);
+    const isValid = Object.values(newErrors).every((error) => error === "");
+    setIsFormValid(isValid);
+
+  // return {isValid ,valid};
     return valid;
   };
 
@@ -173,7 +178,7 @@ export default function NewCustomer() {
             <div className="app-main__inner">
               <Link to="/customerList">
                 <button className="btn btn-success">
-                  <i class="header-icon fa-solid fa-arrow-left-long"></i>
+                  <i className="header-icon fa-solid fa-arrow-left-long"></i>
                   Back
                 </button>{" "}
               </Link>
@@ -194,7 +199,7 @@ export default function NewCustomer() {
                         <div className="widget-chart p-3">
                           <form className="row g-3" onSubmit={handleSubmit}>
                             <div className="col-md-6">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer Name
                               </label>
                               <input
@@ -212,7 +217,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer Email
                               </label>
                               <input
@@ -231,7 +236,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-12">
-                              <label for="inputAddress" className="form-label">
+                              <label htmlFor="inputAddress" className="form-label">
                                 Customer Address
                               </label>
                               <textarea
@@ -251,7 +256,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Country
                               </label>
                               <CountrySelect
@@ -264,7 +269,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 State
                               </label>
                               <StateSelect
@@ -278,7 +283,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 City
                               </label>
                               <CitySelect
@@ -294,7 +299,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer GST
                               </label>
                               <input
@@ -313,7 +318,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer PAN
                               </label>
                               <input
@@ -332,7 +337,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer CIN
                               </label>
                               <input
@@ -351,7 +356,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer TAN
                               </label>
                               <input
@@ -370,7 +375,7 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer Pin Code
                               </label>
                               <input
@@ -389,11 +394,11 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label for="inputEmail4" className="form-label">
+                              <label htmlFor="inputEmail4" className="form-label">
                                 Customer Phone Number
                               </label>
                               <input
-                                type="text"
+                                type="number"
                                 className={`form-control ${
                                   formErrors.CustomeContactNo && "is-invalid"
                                 }`}
@@ -410,11 +415,17 @@ export default function NewCustomer() {
                             <div className="col-12 d-flex justify-content-center align-item-center">
                               <button
                                 type="submit"
-                                className="btn btn2"
+                                className={`btn btn2 submitbox`}
+                                // className={`btn btn2 ${isFormValid ? "enabled" : "disabled"}`}
+                                // disabled={!isFormValid}
                                 style={{
-                                  width: "50%",
+                                  width: "50%"
                                 }}
                               >
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
                                 <i
                                   className="fa-solid fa-circle-plus"
                                   style={{
@@ -439,3 +450,4 @@ export default function NewCustomer() {
     </>
   );
 }
+

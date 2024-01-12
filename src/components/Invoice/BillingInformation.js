@@ -12,8 +12,7 @@ const BillingInformation = () => {
   const orderID = queryParams.get("orderID");
   // console.log(orderID);
   const [currentStep, setCurrentStep] = useState(1);
-  const [invoice, setInvoice] = useState(
-    [
+  const [invoice, setInvoice] = useState([
     {
       orderID: orderID,
       invoice_number: "",
@@ -30,31 +29,31 @@ const BillingInformation = () => {
       sgst: "",
       ff: "",
       hsn: "",
-      totalAmount: "",
-      orderDate: "",
-      orderNumber: "",
-      CustomerAddress: "",
-      CustomerCity: "",
-      CustomerState: "",
-      CustomerCountry: "",
-      CustomeContactNo: "",
-      CustomeEmail: "",
-      CustomerGST: "",
-      orderRemark: "",
-      CustomerName:"",
-      productName:"",
-      serialNumber:'',
-      customerReason:""
-    }  
+      // totalAmount: "",
+      // orderDate: "",
+      // orderNumber: "",
+      // CustomerAddress: "",
+      // CustomerCity: "",
+      // CustomerState: "",
+      // CustomerCountry: "",
+      // CustomeContactNo: "",
+      // CustomeEmail: "",
+      // CustomerGST: "",
+      // orderRemark: "",
+      // CustomeName:"",
+      // productName:"",
+      // serialNumber:'',
+      // customerReason:""
+    },
   ]);
-const [invoiceArray,setInvoiceArray]=useState([])
+  const [invoiceArray, setInvoiceArray] = useState([]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInvoice({ ...invoice, [name]: value });
   };
   const handleSubmitlast = async (e) => {
     e.preventDefault();
-  
+
     // Extract shipping information from the form inputs
     const shippingData = {
       shippingPerson: e.target.elements.shippingPerson.value,
@@ -65,19 +64,22 @@ const [invoiceArray,setInvoiceArray]=useState([])
       transportationMode: e.target.elements.transportationMode.value,
       ff: e.target.elements.ff.value,
     };
-  
+
     try {
-      const response = await axios.post("http://localhost:8000/invoice", shippingData);
+      const response = await axios.post(
+        "http://localhost:8000/invoice",
+        shippingData
+      );
       setInvoice((prevInvoice) => ({
         ...prevInvoice,
       }));
+      console.log(response);
       nextStep();
     } catch (error) {
       console.error("Error submitting shipping data:", error);
     }
   };
-  
-  
+
   // const handleSubmitlast = (e) => {
   //   e.preventDefault();
   //   // const data = {
@@ -128,24 +130,25 @@ const [invoiceArray,setInvoiceArray]=useState([])
     return { width: `${percent}%` };
   };
 
-
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      // const response = await axios.get(`http://localhost:8000/invoiceData/${orderID}`)
-      const response2 = await axios.get(`http://localhost:8000/orders/${orderID}/details`)
-      const result = Object.keys(response2).map((key) => response2[key]);
-      // console.log(`response from chnage to array : ${result}`);
-      setInvoiceArray(result);
-      // setInvoice(response.data);
-      setInvoice(response2.data)
-      console.log(response2)
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-    }
-  };
-  fetchData();
-}, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await axios.get(`http://localhost:8000/invoiceData/${orderID}`)
+        const response2 = await axios.get(
+          `http://localhost:8000/orders/${orderID}/details`
+        );
+        const result = Object.keys(response2).map((key) => response2[key]);
+        // console.log(`response from chnage to array : ${result}`);
+        setInvoiceArray(result);
+        // setInvoice(response.data);
+        setInvoice(response2.data);
+        console.log(`response2 ------------ :${response2}`);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const navigate = useNavigate();
   function handleNavigate() {
@@ -170,26 +173,27 @@ useEffect(() => {
                   <div className="d-flex justify-content-between align-items-center">
                     <h6>
                       {" "}
-                      <i className="fa-solid fa-circle-user header-icon"></i>Billing
-                      Information
+                      <i className="fa-solid fa-circle-user header-icon"></i>
+                      Billing Information
                     </h6>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-circle-user header-icon2"></i>Customer
+                    <i className="fa-solid fa-circle-user header-icon2"></i>
+                    Customer
                   </label>
                   <input
                     type="text"
                     name="email"
                     readOnly
-                    value={invoice.CustomerName}
+                    value={invoice.CustomeName}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-calendar-days header-icon2"></i>Repair
-                    Order Date
+                    <i className="fa-solid fa-calendar-days header-icon2"></i>
+                    Repair Order Date
                   </label>
                   <input
                     type="text"
@@ -212,13 +216,15 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-user-tag header-icon2"></i>Booked By
+                    <i className="fa-solid fa-user-tag header-icon2"></i>Booked
+                    By
                   </label>
                   <input type="text" name="pwd" readOnly value="N/A" />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-location-dot header-icon2"></i>Address
+                    <i className="fa-solid fa-location-dot header-icon2"></i>
+                    Address
                   </label>
                   <input
                     type="text"
@@ -297,7 +303,8 @@ useEffect(() => {
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-file-lines header-icon2"></i>Remark
+                    <i className="fa-solid fa-file-lines header-icon2"></i>
+                    Remark
                   </label>
                   <input
                     type="email"
@@ -316,7 +323,7 @@ useEffect(() => {
         );
       case 2:
         return (
-          <fieldset>
+          <fieldset onSubmit={handleSubmitlast}>
             {/* Step 2 content */}
             <div className="form-card">
               <div className="row">
@@ -330,8 +337,8 @@ useEffect(() => {
                 <div className="card-header-tab card-header mb-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <h6>
-                      <i className="fa-solid fa-truck-fast header-icon"></i>Shipping
-                      Information
+                      <i className="fa-solid fa-truck-fast header-icon"></i>
+                      Shipping Information
                     </h6>
                   </div>
                 </div>
@@ -344,20 +351,21 @@ useEffect(() => {
                     type="text"
                     name="shippingPerson"
                     placeholder="Shipping To"
-                    onChange={handleInputChange}
                     value={invoice.shippingPerson}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-location-dot header-icon2"></i>Address
+                    <i className="fa-solid fa-location-dot header-icon2"></i>
+                    Address
                   </label>
                   <input
                     type="text"
                     name="shippingAddress"
                     placeholder="Shipping Address"
-                    onChange={handleInputChange}
                     value={invoice.shippingAddress}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="col-md-6">
@@ -490,25 +498,25 @@ useEffect(() => {
                     </tr>
                   </thead>
                   <tbody>
-                  {invoiceArray.map((entry, index) => (
-                    <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td className="text-center">{entry.orderDate}</td>
-                    <td className="text-center">{entry.orderNumber}</td>
-                    <td className="text-center">{entry.CustomerName}</td>
-                    <td className="text-center">{entry.productName}</td>
-                    <td className="text-center">{entry.serialNumber}</td>
-                    <td className="text-center">{entry.customerReason}</td>
-                    {/* <td className="text-center">{entry.orderDate}</td> */}
-                    <td className="text-center">{entry.orderDate}</td>
-                    <td className="text-center">{entry.orderDate}</td>
-                    </tr>
+                    {invoiceArray.map((entry, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td className="text-center">{entry.orderDate}</td>
+                        <td className="text-center">{entry.orderNumber}</td>
+                        <td className="text-center">{entry.CustomeName}</td>
+                        <td className="text-center">{entry.productName}</td>
+                        <td className="text-center">{entry.serialNumber}</td>
+                        <td className="text-center">{entry.customerReason}</td>
+                        {/* <td className="text-center">{entry.orderDate}</td> */}
+                        <td className="text-center">{entry.orderDate}</td>
+                        <td className="text-center">{entry.orderDate}</td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
-            <button className="next action-button" onClick={handleSubmit}>
+            <button className="next action-button" onClick={handleSubmitlast}>
               Submit
             </button>
             <button
@@ -548,8 +556,11 @@ useEffect(() => {
                   </button>
                 </div>
                 <div className="col-2 text-center">
-                  <button className="btn btn-success" onClick={navigate('/invoiceTable')}>
-                  <i className="fa-solid fa-file-lines header-icon2"></i>
+                  <button
+                    className="btn btn-success"
+                    onClick={navigate("/invoiceTable")}
+                  >
+                    <i className="fa-solid fa-file-lines header-icon2"></i>
                     {/* Generate Invoice */}
                     Invoice Table
                   </button>

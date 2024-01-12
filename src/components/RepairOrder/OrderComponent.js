@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 const Translator = ({ name, value, onChange }) => {
   const [text, setText] = useState("");
   const [fromLanguage, setFromLanguage] = useState("en-GB");
-  const [toLanguage, setToLanguage] = useState('');
+  const [toLanguage, setToLanguage] = useState("");
 
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
@@ -19,12 +19,12 @@ const Translator = ({ name, value, onChange }) => {
 
   const handleExchange = () => {
     const currentText = text;
+    console.log(`currentText :${currentText}`);
     const tempLanguage = fromLanguage;
     setFromLanguage(toLanguage);
     setToLanguage(tempLanguage);
-      handleTranslation(currentText, toLanguage, fromLanguage);
+    handleTranslation(currentText, toLanguage, fromLanguage);
   };
-  
 
   const handleTranslation = (text, fromLang, toLang) => {
     if (!text) return;
@@ -33,9 +33,9 @@ const Translator = ({ name, value, onChange }) => {
     )}&langpair=en-GB|gu-IN`;
     // const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
     //         text
-    //       )}&langpair=en-GB|${toLang}`;
-          console.log(`url :${apiUrl}`);
-    
+    //       )}&langpair=${fromLang}|${toLang}`;
+    console.log(`url :${apiUrl}`);
+
     fetch(apiUrl)
       .then((res) => {
         if (!res.ok) {
@@ -59,7 +59,7 @@ const Translator = ({ name, value, onChange }) => {
     }
   }, [fromLanguage, toLanguage]);
 
-   const languages = {
+  const languages = {
     "en-GB": "English",
     "gu-IN": "Gujarati",
     "hi-IN": "Hindi",
@@ -67,19 +67,21 @@ const Translator = ({ name, value, onChange }) => {
     "pa-IN": "Panjabi",
     "te-IN": "Telugu",
   };
+
   return (
     <div className="container">
       <div className="wrapper">
         <div className="text-input">
           <textarea
-      className="input_repair"
-      placeholder="Order Remark (upto 500 characters)"
-      onChange={handleInputChange}
-      style={{
-        height: "48px",
-        borderRadius: "5px",
-      }}
-    />
+            className="input_repair"
+            placeholder="Order Remark (upto 500 characters)"
+            onChange={handleInputChange}
+            value={text}
+            style={{
+              height: "48px",
+              borderRadius: "5px",
+            }}
+          />
         </div>
         <div className="language-dropdown">
           <select value={fromLanguage} onChange={handleLanguageChange}>

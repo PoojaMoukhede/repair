@@ -178,7 +178,6 @@ export function APIContextProvider({ children }) {
           orderRemark,
           orderDate,
           orderNumber,
-          CustomerName,
           CustomerReferance,
           RefrenceDate,
           CustomeName,

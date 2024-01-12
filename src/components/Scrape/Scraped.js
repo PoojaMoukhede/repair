@@ -111,7 +111,7 @@ export default function Scraped() {
                                       {entry.orderNumber}
                                     </td>
                                     <td className="text-center">
-                                      {entry.CustomerName}
+                                      {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
                                       {entry.orderRemark}

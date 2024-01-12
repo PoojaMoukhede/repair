@@ -159,7 +159,13 @@ export default function Ready() {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {entry.Orderdate}
+                                      {new Date(
+                                        entry.orderDate
+                                      ).toLocaleString("en-US", {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                      })}
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.orderNumber} */}
@@ -175,7 +181,7 @@ export default function Ready() {
                                       />
                                     </td>
                                     <td className="text-center">
-                                      {entry.CustomerName}
+                                      {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
                                       {entry.productName}

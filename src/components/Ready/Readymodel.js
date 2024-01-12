@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 
-function Readymodel({ Title, onButtonClick, btnText, orderID,orderState }) {
+function Readymodel({ Title, onButtonClick, btnText, orderID, orderState }) {
   const [show, setShow] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
 
@@ -11,7 +11,6 @@ function Readymodel({ Title, onButtonClick, btnText, orderID,orderState }) {
 
   const handleMoveToProcess = async () => {
     try {
-
       const response = await axios.put(
         `http://localhost:8000/orders/${orderID}/${orderState}`
       );
@@ -82,7 +81,13 @@ function Readymodel({ Title, onButtonClick, btnText, orderID,orderState }) {
             </div>
             <div className="col-6">
               <span>Repair Order Date</span>
-              <h5 className="modelText">{orderDetails.orderDate}</h5>
+              <h5 className="modelText">
+                {new Date(orderDetails.orderDate).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </h5>
             </div>
           </div>
 

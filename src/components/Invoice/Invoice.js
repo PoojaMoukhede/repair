@@ -144,7 +144,7 @@ export default function Invoice({ show, onHide }) {
                                     </td>
 
                                     <td className="text-center">
-                                    {entry.CustomerName}
+                                    {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.totalAmount} */}

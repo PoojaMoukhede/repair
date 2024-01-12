@@ -244,7 +244,7 @@ a {
   box-shadow: inset 0px 0px 10px 10px #405180;
 }
 .btn2:hover {
-  /* box-shadow: inset 0px 0px 10px 10px #fff; */
+  box-shadow:  0px 5px 5px 5px #f2f5fd;
   background-color: #405180;
   color: white;
 }
@@ -585,18 +585,17 @@ li,
   font-weight: 600;
 }
 
-
 .btnB:hover {
   background: #405180;
   cursor: pointer;
   color: white;
 }
-.btnB{
+.btnB {
   border-radius: 60px 5px 60px 5px !important;
 }
-.animat{
-  transition: all .3s;
-  animation: bound .6s ease-in infinite alternate;
+.animat {
+  transition: all 0.3s;
+  animation: bound 0.6s ease-in infinite alternate;
 }
 .animat::before {
   display: block;
@@ -611,9 +610,111 @@ li,
 
 @keyframes bound {
   0% {
-   transform: translateY(0);
+    transform: translateY(0);
   }
   100% {
-   transform: translateY(10px);
+    transform: translateY(10px);
   }
 }
+
+/* .submitbox {
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: 0.5s;
+  margin-top: 40px;
+  letter-spacing: 4px;
+}
+
+.submitbox:hover {
+  background: #405180;
+  color: #fff;
+  border-radius: 60px 5px 60px 5px;
+  box-shadow: 0 0 5px #405180, 0 0 10px #405180, 0 0 30px #405180,
+    0 0 70px #405180;
+}
+
+.submitbox span {
+  position: absolute;
+  display: block;
+}
+
+.submitbox span:nth-child(1) {
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff);
+  animation: btn-anim1 1s linear infinite;
+}
+
+@keyframes btn-anim1 {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+.submitbox span:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #fff);
+  animation: btn-anim2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+
+@keyframes btn-anim2 {
+  0% {
+    top: -100%;
+  }
+  50%,
+  100% {
+    top: 100%;
+  }
+}
+
+.submitbox span:nth-child(3) {
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #fff);
+  animation: btn-anim3 1s linear infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes btn-anim3 {
+  0% {
+    right: -100%;
+  }
+  50%,
+  100% {
+    right: 100%;
+  }
+}
+
+.submitbox span:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #fff);
+  animation: btn-anim4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+
+@keyframes btn-anim4 {
+  0% {
+    bottom: -100%;
+  }
+  50%,
+  100% {
+    bottom: 100%;
+  }
+} */
