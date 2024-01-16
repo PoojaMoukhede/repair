@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ToBill() {
   const navigate = useNavigate();
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +26,15 @@ export default function ToBill() {
   };
 
   function handleClick(orderID) {
-    // console.log(`orderID : ${orderID}`);
+    // axios
+    // .put(`http://localhost:8000/orders/${orderID}/isinvoiced`
+    // )
+    // .then((res) => {
+    //   console.log("Server response:", res.data);
+    // })
+    // .catch((err) => {
+    //   console.error("Error updating order:", err);
+    // });
     navigate(`/billingInfo?orderID=${orderID}`);
   }
 
@@ -51,7 +59,6 @@ export default function ToBill() {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
-
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
 
   const filteredRows = currentEntries.filter((entry) =>
@@ -62,24 +69,6 @@ export default function ToBill() {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-  };
-
-  const makeStyle = (entriesData) => {
-    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
-
-    if (!isInProcess && !isReady && !isBilled && !isScraped) {
-      return {
-        background: "#f9bb00",
-        color: "black",
-        border: "1px solid #efc84a",
-      };
-    } else {
-      return {
-        background: "rgb(145 254 159 / 47%)",
-        color: "green",
-        border: "1px solid #85cb33",
-      };
-    }
   };
 
   return (
@@ -169,16 +158,18 @@ export default function ToBill() {
                                       <Readymodel
                                         show={isModalOpen}
                                         onHide={() => setIsModalOpen(false)}
-                                        orderState="isbilled"
+                                        orderState="isscraped"
                                         orderID={entry.orderID}
                                         onButtonClick={() => {
-                                          console.log("Confirmation 1 task");
+                                          console.log("Confirmation 1 task------------------------");
+                                          // handleOrderNumberClick(entry.orderID)
                                         }}
                                         Title={"Scraped Item"}
                                         btnText={"Scrape"}
                                       />
                                     </td>
                                     <td className="text-center">
+                                      {/* {entry.CustomeName} */}
                                       {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
@@ -260,8 +251,8 @@ export default function ToBill() {
         <Readymodel
           show={isModalOpen}
           onHide={() => setIsModalOpen(false)}
-          btnText={"Moving to In-Process"}
-          Title={"Repair Item DONE Confirmation"}
+          // btnText={"Moving to In-Process"}
+          // Title={"Repair Item DONE Confirmation"}
           orderDetails={selectedOrder}
           orderID={selectedOrder.orderID}
           orderState="isscraped"

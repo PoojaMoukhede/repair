@@ -9,7 +9,7 @@ import { useAPI } from "../Context";
 
 export default function OrderList() {
   const { processList } = useAPI();
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,13 +45,15 @@ export default function OrderList() {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
-
+  const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const handleClick = (entry) => {
     setSelectedOrder(entry);
     setIsModalOpen(true);
@@ -184,7 +186,10 @@ export default function OrderList() {
                                     </td>
 
                                     <td className="text-center">
+                                      {/* {entry.CustomeName}  */}
+                                      {/* uncomment when change or delete table */}
                                       {entry.CustomeName}
+
                                     </td>
                                     <td className="text-center">
                                       {entry.productName}
@@ -228,7 +233,28 @@ export default function OrderList() {
                             </table>
                           </div>
                         </div>
-                        <Pagination />
+                        {/* <Pagination /> */}
+                        <nav>
+                          <ul className="pagination">
+                            {Array.from({ length: totalPages }).map(
+                              (_, index) => (
+                                <li
+                                  key={index}
+                                  className={`page-item ${
+                                    currentPage === index + 1 ? "active" : ""
+                                  }`}
+                                >
+                                  <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(index + 1)}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </nav>
                       </div>
                     </div>
                   </div>

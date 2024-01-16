@@ -4,7 +4,7 @@ import QR from "../../Images/qr-code.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
-import { useNavigate ,useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
@@ -40,7 +40,6 @@ export default function RegularInvoice() {
       console.log(e);
     }
   }, [orderID]);
-
 
   function convertNumberToWords(number) {
     const units = [
@@ -90,14 +89,14 @@ export default function RegularInvoice() {
       if (num >= 11 && num <= 19) {
         result.push(teens[num - 11]);
       } else if (num >= 20) {
-        result.push(tens[Math.floor(num / 10)]);
+        result.push(tens[Math.floor(num / 10) - 1])
+        // result.push(tens[Math.floor(num / 10)]);
         num %= 10;
       }
 
       if (num > 0) {
         result.push(units[num]);
       }
-
       return result.join(" ");
     };
 
@@ -118,12 +117,12 @@ export default function RegularInvoice() {
         if (chunk === 0) {
           return "";
         }
-        //   console.log(index);
         const chunkInWords = convertChunkToWords(chunk);
         return (
           chunkInWords +
           (index === 0 ? "" : ` ${index === 1 ? "Thousand" : "Lakh"}`)
         );
+       
       })
       .reverse()
       .join(" ");
@@ -313,7 +312,7 @@ export default function RegularInvoice() {
                         }}
                       >
                         <p className="p-0 m-0">
-                          Addrress :{" "}
+                          Address :{" "}
                           <b>
                             {orderDetail.CustomerAddress},
                             {orderDetail.CustomerCity} ,{" "}
@@ -330,7 +329,7 @@ export default function RegularInvoice() {
                         }}
                       >
                         <p className="p-0 m-0">
-                          Addrress :
+                          Address :
                           <b>
                             {orderDetail.shippingAddress},
                             {orderDetail.shippingCity} ,{" "}

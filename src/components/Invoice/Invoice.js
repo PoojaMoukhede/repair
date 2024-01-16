@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Invoice({ show, onHide }) {
   const navigate = useNavigate();
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ export default function Invoice({ show, onHide }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/isbilled-orders");
+        const response = await axios.get("http://localhost:8000/invoice");
         setEntriesData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -46,7 +46,7 @@ export default function Invoice({ show, onHide }) {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
-
+  const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -58,8 +58,9 @@ export default function Invoice({ show, onHide }) {
 
   function handleClick(orderID) {
     navigate(`/regularinvoice/${orderID}`);
+    console.log(orderID);
   }
-
+  console.log(`filteredRows : ${currentEntries}`);
   return (
     <>
       <Header />
@@ -119,7 +120,9 @@ export default function Invoice({ show, onHide }) {
                                   <th className="text-center">
                                     Invoice Number
                                   </th>
-                                  <th className="text-center">Customer</th>
+                                  <th className="text-center">
+                                    Shipping Person
+                                  </th>
                                   <th className="text-center">Amount</th>
                                   <th className="text-center">IRN</th>
                                   <th className="text-center">Invoice</th>
@@ -130,21 +133,21 @@ export default function Invoice({ show, onHide }) {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td className="text-center">
-                                      {/* {new Date(
+                                      {new Date(
                                         entry.invoiceDate
                                       ).toLocaleString("en-US", {
                                         year: "numeric",
                                         month: "2-digit",
                                         day: "2-digit",
-                                      })} */}
-                                      { entry.invoiceDate}
+                                      })}
+                                      {/* { entry.invoiceDate} */}
                                     </td>
                                     <td className="text-center">
                                       {entry.invoice_number}
                                     </td>
 
                                     <td className="text-center">
-                                    {entry.CustomeName}
+                                      {entry.shippingPerson}
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.totalAmount} */}
@@ -161,7 +164,9 @@ export default function Invoice({ show, onHide }) {
                                           color: "green",
                                           fontSize: "1.2rem",
                                         }}
-                                        onClick={() => handleClick(entry.orderID)}
+                                        onClick={() =>
+                                          handleClick(entry.orderID)
+                                        }
                                       >
                                         {" "}
                                         <i className="fa-solid fa-eye header-icon2"></i>
@@ -175,7 +180,28 @@ export default function Invoice({ show, onHide }) {
                             </table>
                           </div>
                         </div>
-                        <Pagination />
+                        {/* <Pagination /> */}
+                        <nav>
+                          <ul className="pagination">
+                            {Array.from({ length: totalPages }).map(
+                              (_, index) => (
+                                <li
+                                  key={index}
+                                  className={`page-item ${
+                                    currentPage === index + 1 ? "active" : ""
+                                  }`}
+                                >
+                                  <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(index + 1)}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </nav>
                       </div>
                     </div>
                   </div>

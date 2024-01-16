@@ -144,7 +144,6 @@ p {
 
 #progressbar #account:before {
     font-family: FontAwesome;
-    /* content: "\f13e" */
     content: "\f007"
 }
 

@@ -6,7 +6,7 @@ import Pagination from "../Pagination/Pagination";
 import axios from "axios";
 
 export default function OrderList() {
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +31,7 @@ export default function OrderList() {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
-
+  const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,6 +63,9 @@ export default function OrderList() {
         border: "1px solid #85cb33",
       };
     }
+  };
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -153,7 +156,6 @@ export default function OrderList() {
                                       className="text-center"
                                       onClick={() =>
                                         handleOrderNumberClick(entry.orderID)
-                                      
                                       }
                                     >
                                       {entry.orderNumber}
@@ -161,6 +163,7 @@ export default function OrderList() {
                                     </td>
 
                                     <td className="text-center">
+                                      {/* {entry.CustomeName} */}
                                       {entry.CustomeName}
                                     </td>
                                     <td className="text-center">
@@ -205,7 +208,28 @@ export default function OrderList() {
                             </table>
                           </div>
                         </div>
-                        <Pagination />
+                        {/* <Pagination /> */}
+                        <nav>
+                          <ul className="pagination">
+                            {Array.from({ length: totalPages }).map(
+                              (_, index) => (
+                                <li
+                                  key={index}
+                                  className={`page-item ${
+                                    currentPage === index + 1 ? "active" : ""
+                                  }`}
+                                >
+                                  <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(index + 1)}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </nav>
                       </div>
                     </div>
                   </div>

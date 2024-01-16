@@ -5,71 +5,81 @@ import "./style.css";
 import bill from "../../Images/bill.png";
 import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+// import {
+//   CitySelect,
+//   CountrySelect,
+//   StateSelect,
+// } from "react-country-state-city";
 
 const BillingInformation = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderID = queryParams.get("orderID");
-  // console.log(orderID);
+  const currentDate = new Date().toISOString().split("T")[0];
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [invoice, setInvoice] = useState([
-    {
-      orderID: orderID,
-      invoice_number: "",
-      shippingAddress: "",
-      shippingPerson: "",
-      shippingCity: "",
-      shippingState: "",
-      shippingCountry: "",
-      invoiceDate: "",
-      transportationMode: "",
-      subTotal: "",
-      igst: "",
-      cgst: "",
-      sgst: "",
-      ff: "",
-      hsn: "",
-      // totalAmount: "",
-      // orderDate: "",
-      // orderNumber: "",
-      // CustomerAddress: "",
-      // CustomerCity: "",
-      // CustomerState: "",
-      // CustomerCountry: "",
-      // CustomeContactNo: "",
-      // CustomeEmail: "",
-      // CustomerGST: "",
-      // orderRemark: "",
-      // CustomeName:"",
-      // productName:"",
-      // serialNumber:'',
-      // customerReason:""
-    },
-  ]);
+  const [isInWarranty, setIsInWarranty] = useState(false);
+  const [invoice, setInvoice] = useState({
+    orderID: orderID,
+    invoice_number: "",
+    shippingAddress: "",
+    shippingPerson: "",
+    shippingCity: "",
+    shippingState: "",
+    shippingCountry: "",
+    invoiceDate: "",
+    transportationMode: "",
+    subTotal: 0,
+    igst: "",
+    cgst: "",
+    sgst: "",
+    ff: 0,
+    hsn: "",
+  });
+
+  const parsedSubTotal = parseFloat(invoice.subTotal);
+  const parsedFF = parseFloat(invoice.ff);
+  const [invoice1, setInvoice1] = useState([]);
+  // const [countryid, setCountryid] = useState(0);
+  // const [stateid, setstateid] = useState(0);
+  // const [selectedcity, setSelectedcity] = useState("");
   const [invoiceArray, setInvoiceArray] = useState([]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInvoice({ ...invoice, [name]: value });
+    // setInvoice({ ...invoice[0], [name]: value });
   };
   const handleSubmitlast = async (e) => {
     e.preventDefault();
-
-    // Extract shipping information from the form inputs
     const shippingData = {
-      shippingPerson: e.target.elements.shippingPerson.value,
-      shippingAddress: e.target.elements.shippingAddress.value,
-      shippingCity: e.target.elements.shippingCity.value,
-      shippingState: e.target.elements.shippingState.value,
-      shippingCountry: e.target.elements.shippingCountry.value,
-      transportationMode: e.target.elements.transportationMode.value,
-      ff: e.target.elements.ff.value,
+      orderID: orderID,
+      shippingPerson: invoice.shippingPerson,
+      shippingAddress: invoice.shippingAddress,
+      shippingCity: invoice.shippingCity,
+      shippingState: invoice.shippingState,
+      shippingCountry: invoice.shippingCountry,
+      transportationMode: invoice.transportationMode,
+      ff: parsedFF,
+      invoiceDate: currentDate,
+      hsn: invoice1.HSN,
+      cgst: 9.0,
+      sgst: 9.0,
+      // totalAmount: 120.25,
+      subTotal: parsedSubTotal,
     };
-
+    if (isInWarranty) {
+      shippingData.subTotal = 0;
+      shippingData.totalAmount = 0;
+    } else {
+      shippingData.subTotal = parsedSubTotal;
+      shippingData.totalAmount = parsedSubTotal;
+    }
     try {
       const response = await axios.post(
         "http://localhost:8000/invoice",
         shippingData
       );
+      console.log(`shipping Data : ${shippingData}`);
       setInvoice((prevInvoice) => ({
         ...prevInvoice,
       }));
@@ -79,37 +89,6 @@ const BillingInformation = () => {
       console.error("Error submitting shipping data:", error);
     }
   };
-
-  // const handleSubmitlast = (e) => {
-  //   e.preventDefault();
-  //   // const data = {
-  //   //   invoice_number: "",
-  //   //   shippingAddress: "",
-  //   //   shippingPerson: "",
-  //   //   shippingCity: "",
-  //   //   shippingState: "",
-  //   //   shippingCountry: "",
-  //   //   invoiceDate: "",
-  //   //   transportationMode: "",
-  //   //   subTotal: "",
-  //   //   igst: "",
-  //   //   cgst: "",
-  //   //   sgst: "",
-  //   //   ff: "",
-  //   //   hsn: "",
-  //   //   totalAmount: "",
-  //   // };
-  //   axios
-  //     .post("http://localhost:8000/invoice", invoice)
-  //     .then((res) => {
-  //       setInvoice(res.data);
-  //       console.log(` data : -------------------- : ${res.data}`);
-  //       // nextStep();
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error submitting data:", error);
-  //     });
-  // };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -138,11 +117,8 @@ const BillingInformation = () => {
           `http://localhost:8000/orders/${orderID}/details`
         );
         const result = Object.keys(response2).map((key) => response2[key]);
-        // console.log(`response from chnage to array : ${result}`);
         setInvoiceArray(result);
-        // setInvoice(response.data);
-        setInvoice(response2.data);
-        console.log(`response2 ------------ :${response2}`);
+        setInvoice1(response2.data);
       } catch (error) {
         console.error("Error fetching order details:", error);
       }
@@ -152,8 +128,33 @@ const BillingInformation = () => {
 
   const navigate = useNavigate();
   function handleNavigate() {
-    navigate("/regularinvoice");
+    // navigate("/regularinvoice");
+    // navigate(`/regularinvoice/${orderID}`)
+    console.log(`orderID : ${orderID}`);
   }
+
+  // const handleCountryChange = (e) => {
+  //   setCountryid(e.id);
+  //   setInvoice((customer) => ({
+  //     ...customer,
+  //     CustomerCountry: e.name,
+  //   }));
+  // };
+  // const handleStateChange = (e) => {
+  //   setstateid(e.id);
+  //   setInvoice((customer) => ({
+  //     ...customer,
+  //     CustomerState: e.name,
+  //   }));
+  // };
+
+  // const handleCityChange = (e) => {
+  //   setSelectedcity(e.id);
+  //   setInvoice((customer) => ({
+  //     ...customer,
+  //     CustomerCity: e.name,
+  //   }));
+  // };
 
   const renderStep = (step) => {
     switch (step) {
@@ -187,7 +188,7 @@ const BillingInformation = () => {
                     type="text"
                     name="email"
                     readOnly
-                    value={invoice.CustomeName}
+                    value={invoice1.CustomeName}
                   />
                 </div>
                 <div className="col-md-6">
@@ -199,7 +200,7 @@ const BillingInformation = () => {
                     type="text"
                     name="uname"
                     readOnly
-                    value={invoice.orderDate}
+                    value={invoice1.orderDate}
                   />
                 </div>
                 <div className="col-md-6">
@@ -211,7 +212,7 @@ const BillingInformation = () => {
                     type="text"
                     name="uname"
                     readOnly
-                    value={invoice.orderNumber}
+                    value={invoice1.orderNumber}
                   />
                 </div>
                 <div className="col-md-6">
@@ -230,7 +231,7 @@ const BillingInformation = () => {
                     type="text"
                     name="cpwd"
                     readOnly
-                    value={invoice.CustomerAddress}
+                    value={invoice1.CustomerAddress}
                   />
                 </div>
                 <div className="col-md-6">
@@ -241,7 +242,7 @@ const BillingInformation = () => {
                     type="text"
                     name="email"
                     readOnly
-                    value={invoice.CustomerCity}
+                    value={invoice1.CustomerCity}
                   />
                 </div>
                 <div className="col-md-6">
@@ -253,7 +254,7 @@ const BillingInformation = () => {
                     type="text"
                     name="uname"
                     readOnly
-                    value={invoice.CustomerState}
+                    value={invoice1.CustomerState}
                   />
                 </div>
                 <div className="col-md-6">
@@ -265,7 +266,7 @@ const BillingInformation = () => {
                     type="text"
                     name="pwd"
                     readOnly
-                    value={invoice.CustomerCountry}
+                    value={invoice1.CustomerCountry}
                   />
                 </div>
                 <div className="col-md-6">
@@ -276,7 +277,7 @@ const BillingInformation = () => {
                     type="text"
                     name="email"
                     readOnly
-                    value={invoice.CustomeContactNo}
+                    value={invoice1.CustomeContactNo}
                   />
                 </div>
                 <div className="col-md-6">
@@ -287,7 +288,7 @@ const BillingInformation = () => {
                     type="text"
                     name="uname"
                     readOnly
-                    value={invoice.CustomeEmail}
+                    value={invoice1.CustomeEmail}
                   />
                 </div>
                 <div className="col-md-6">
@@ -298,7 +299,7 @@ const BillingInformation = () => {
                     type="text"
                     name="pwd"
                     readOnly
-                    value={invoice.CustomerGST}
+                    value={invoice1.CustomerGST}
                   />
                 </div>
                 <div className="col-md-6">
@@ -310,7 +311,7 @@ const BillingInformation = () => {
                     type="email"
                     name="email"
                     readOnly
-                    value={invoice.orderRemark}
+                    value={invoice1.orderRemark}
                   />
                 </div>
               </div>
@@ -368,36 +369,17 @@ const BillingInformation = () => {
                     onChange={handleInputChange}
                   />
                 </div>
+
                 <div className="col-md-6">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-building header-icon2"></i>City
+                    <i className="fa-solid fa-building header-icon2"></i>Country
                   </label>
-                  <input
-                    type="text"
-                    name="shippingCity"
-                    placeholder="Shipping City"
-                    onChange={handleInputChange}
-                    value={invoice.shippingCity}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="fieldlabels">
-                    <i className="fa-solid fa-building-columns header-icon2"></i>
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    name="shippingState"
-                    placeholder="Shipping State"
-                    onChange={handleInputChange}
-                    value={invoice.shippingState}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="fieldlabels">
-                    <i className="fa-solid fa-earth-americas header-icon2"></i>
-                    Country
-                  </label>
+                  {/* <CountrySelect
+                    name="shippingCountry"
+                    onChange={handleCountryChange}
+                    placeHolder="Shipping Country"
+                    style={{height:'50px',border:'none'}}
+                  /> */}
                   <input
                     type="text"
                     name="shippingCountry"
@@ -406,7 +388,49 @@ const BillingInformation = () => {
                     value={invoice.shippingCountry}
                   />
                 </div>
-                <div className="col-md-3">
+
+                <div className="col-md-6">
+                  <label className="fieldlabels">
+                    <i className="fa-solid fa-building-columns header-icon2"></i>
+                    State
+                  </label>
+                  {/* <StateSelect
+                    name="shippingState"
+                    countryid={countryid}
+                    onChange={handleStateChange}
+                    placeHolder="Shipping State"
+                  /> */}
+                  <input
+                    type="text"
+                    name="shippingState"
+                    placeholder="Shipping State"
+                    onChange={handleInputChange}
+                    value={invoice.shippingState}
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fieldlabels">
+                    <i className="fa-solid fa-earth-americas header-icon2"></i>
+                    City
+                  </label>
+                  {/* <CitySelect
+                    name="shippingCity"
+                    countryid={countryid}
+                    stateid={stateid}
+                    placeHolder="Shipping City"
+                    onChange={handleCityChange}
+                    // required
+                  /> */}
+                  <input
+                    type="text"
+                    name="shippingCity"
+                    placeholder="Shipping City"
+                    onChange={handleInputChange}
+                    value={invoice.shippingCity}
+                  />
+                </div>
+                <div className="col-md-6 d-flex flex-column">
                   <label className="fieldlabels">
                     <i className="fa-solid fa-truck-plane header-icon2"></i>
                     Transportation Mode
@@ -417,7 +441,7 @@ const BillingInformation = () => {
                       borderBottom: "1px solid #e5e5e5",
                       backgroundColor: "transparent",
                       height: "47px",
-                      width: "350px",
+                      // width: "450px",
                     }}
                     name="transportationMode"
                     value={invoice.transportationMode}
@@ -429,20 +453,52 @@ const BillingInformation = () => {
                     <option value="Plane">Plane</option>
                     <option value="Truck">Truck</option>
                   </select>
-                  {/* <input type="text" name="email" placeholder="Shipping Country" /> */}
                 </div>
-                <div className="col-md-3">
+
+                {/* Add the checkbox */}
+                <div className="col-md-6 d-flex flex-row">
                   <label className="fieldlabels">
-                    <i className="fa-solid fa-indian-rupee-sign header-icon2"></i>
-                    F&F
+                    <i class="fa-solid fa-trash-can header-icon2"></i>
+                    Scrapped
                   </label>
                   <input
-                    type="number"
-                    name="email"
-                    value={invoice.ff}
-                    onChange={handleInputChange}
+                    type="checkbox"
+                    style={{ height: "20px", width: "100px" }}
+                    name="scrapped"
+                    checked={isInWarranty}
+                    onChange={() => setIsInWarranty(!isInWarranty)}
                   />
                 </div>
+                {/* Conditionally render F&F and Amount inputs based on the checkbox */}
+                {!isInWarranty && (
+                  <>
+                    <div className="col-md-6">
+                      <label className="fieldlabels">
+                        <i className="fa-solid fa-coins header-icon2"></i>
+                        F&F
+                      </label>
+                      <input
+                        type="number"
+                        placeholder=""
+                        name="ff"
+                        value={parsedFF}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="fieldlabels">
+                        <i className="fa-solid fa-indian-rupee-sign header-icon2"></i>
+                        Amount
+                      </label>
+                      <input
+                        type="number"
+                        name="subTotal"
+                        value={parsedSubTotal}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <button className="next action-button" onClick={handleSubmit}>
@@ -492,9 +548,7 @@ const BillingInformation = () => {
                       <th className="text-center">Repair Item</th>
                       <th className="text-center">Serial Number</th>
                       <th className="text-center"> Customer Reason</th>
-                      {/* <th className="text-center">Repairer Note</th> */}
                       <th className="text-center">Repaired Date</th>
-                      <th className="text-center">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -507,8 +561,6 @@ const BillingInformation = () => {
                         <td className="text-center">{entry.productName}</td>
                         <td className="text-center">{entry.serialNumber}</td>
                         <td className="text-center">{entry.customerReason}</td>
-                        {/* <td className="text-center">{entry.orderDate}</td> */}
-                        <td className="text-center">{entry.orderDate}</td>
                         <td className="text-center">{entry.orderDate}</td>
                       </tr>
                     ))}
@@ -630,6 +682,7 @@ const BillingInformation = () => {
                                   >
                                     <strong>Shipping Information</strong>
                                   </li>
+
                                   <li
                                     className={
                                       currentStep === 3 ? "active" : ""

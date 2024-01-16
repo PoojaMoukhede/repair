@@ -74,6 +74,7 @@ const Translator = ({ name, value, onChange }) => {
         <div className="text-input">
           <textarea
             className="input_repair"
+            name='orderRemark'
             placeholder="Order Remark (upto 500 characters)"
             onChange={handleInputChange}
             value={text}
