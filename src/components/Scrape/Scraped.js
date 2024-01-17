@@ -30,10 +30,10 @@ export default function Scraped() {
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
 
   const filteredRows = currentEntries.filter((entry) =>
-    Object.values(entry).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
 
   return (
     <>
@@ -103,7 +103,7 @@ export default function Scraped() {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
 
-                                    <td className="text-center"></td>
+                                    <td className="text-center">{entry.productName}</td>
                                     <td className="text-center">
                                       {entry.productName}
                                     </td>

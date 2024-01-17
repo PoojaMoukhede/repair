@@ -459,7 +459,7 @@ const BillingInformation = () => {
                 <div className="col-md-6 d-flex flex-row">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-trash-can header-icon2"></i>
-                    Scrapped
+                    Warranty ? 
                   </label>
                   <input
                     type="checkbox"

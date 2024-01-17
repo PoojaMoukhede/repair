@@ -47,10 +47,10 @@ export default function OrderList() {
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
-    Object.values(entry).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -159,7 +159,7 @@ export default function OrderList() {
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                          month: "short",
                                           day: "2-digit",
                                         }
                                       )}
@@ -177,6 +177,7 @@ export default function OrderList() {
                                         btnText={"Moving to In-Process"}
                                         Title={"Repair Item DONE Confirmation"}
                                         orderState="isready" 
+                                        orderNumber={entry.orderNumber}
                                         onButtonClick={() => {
                                           // transfer_To_Process(entry.orderID,"in_process")
                                           console.log("Confirmation 1 task");
@@ -205,11 +206,11 @@ export default function OrderList() {
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.orderDate} */}
-                                      {new Date(entry.orderDate).toLocaleString(
+                                      {new Date(entry.updated_at).toLocaleString(
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                         month: "short",
                                           day: "2-digit",
                                         }
                                       )}

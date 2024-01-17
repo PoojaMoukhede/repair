@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 
-function Readymodel({ Title, onButtonClick, btnText, orderID, orderState }) {
+function Readymodel({  Title, onButtonClick, btnText, orderID, orderState, orderNumber }) {
   const [show, setShow] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
 
@@ -52,7 +52,7 @@ function Readymodel({ Title, onButtonClick, btnText, orderID, orderState }) {
   return (
     <>
       <Button variant="" onClick={() => setShow(true)}>
-        {orderDetails.orderNumber}
+        {orderNumber}
       </Button>
 
       <Modal show={show} onHide={handleClose} size="lg">
@@ -84,7 +84,7 @@ function Readymodel({ Title, onButtonClick, btnText, orderID, orderState }) {
               <h5 className="modelText">
                 {new Date(orderDetails.orderDate).toLocaleString("en-US", {
                   year: "numeric",
-                  month: "2-digit",
+                 month: "short",
                   day: "2-digit",
                 })}
               </h5>

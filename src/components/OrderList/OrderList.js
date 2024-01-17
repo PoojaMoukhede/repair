@@ -16,9 +16,7 @@ export default function OrderList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/orders"
-        );
+        const response = await axios.get("http://localhost:8000/orders");
         setEntriesData(response.data);
       } catch (error) {
         console.error("Error fetching order list:", error);
@@ -27,16 +25,17 @@ export default function OrderList() {
     fetchData();
   }, []);
 
-
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
+
   const filteredRows = currentEntries.filter((entry) =>
-    Object.values(entry).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
+
 
   const handleClick = (entry) => {
     setSelectedOrder(entry);
@@ -146,7 +145,7 @@ export default function OrderList() {
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                         month: "short",
                                           day: "2-digit",
                                         }
                                       )}
@@ -159,7 +158,6 @@ export default function OrderList() {
                                       }
                                     >
                                       {entry.orderNumber}
-                                      
                                     </td>
 
                                     <td className="text-center">
@@ -180,11 +178,11 @@ export default function OrderList() {
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.orderDate} */}
-                                      {new Date(entry.orderDate).toLocaleString(
+                                      {new Date(entry.updated_at).toLocaleString(
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                         month: "short",
                                           day: "2-digit",
                                         }
                                       )}

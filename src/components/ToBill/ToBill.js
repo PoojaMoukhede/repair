@@ -62,10 +62,10 @@ export default function ToBill() {
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
 
   const filteredRows = currentEntries.filter((entry) =>
-    Object.values(entry).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -148,7 +148,7 @@ export default function ToBill() {
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                          month: "short",
                                           day: "2-digit",
                                         }
                                       )}
@@ -160,6 +160,7 @@ export default function ToBill() {
                                         onHide={() => setIsModalOpen(false)}
                                         orderState="isscraped"
                                         orderID={entry.orderID}
+                                        orderNumber={entry.orderNumber}
                                         onButtonClick={() => {
                                           console.log("Confirmation 1 task------------------------");
                                           // handleOrderNumberClick(entry.orderID)
@@ -185,11 +186,11 @@ export default function ToBill() {
                                       {entry.orderRemark}
                                     </td>
                                     <td className="text-center">
-                                      {new Date(entry.orderDate).toLocaleString(
+                                      {new Date(entry.updated_at).toLocaleString(
                                         "en-US",
                                         {
                                           year: "numeric",
-                                          month: "2-digit",
+                                          month: "short",
                                           day: "2-digit",
                                         }
                                       )}{" "}

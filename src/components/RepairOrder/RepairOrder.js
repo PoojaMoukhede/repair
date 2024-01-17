@@ -77,7 +77,6 @@
 //     });
 //   };
 
-
 //   // const handleInputChange = (id, name, value) => {
 //   //   console.log(`-------------`);
 //   //   setOrderItems((prevItems) => {
@@ -102,7 +101,7 @@
 //   //     });
 //   //   });
 //   // };
-  
+
 //   // useEffect(() => {
 //   //   setOrderItems((prevItems) => {
 //   //     return prevItems.map((item) => ({
@@ -111,7 +110,6 @@
 //   //     }));
 //   //   });
 //   // }, [selectedCustomerId]);
-  
 
 //   const handleButtonClick = () => {
 //     axios
@@ -946,11 +944,11 @@ export default function RepairOrder() {
                             <OrderComponent
                               name="orderRemark"
                               value={orderItems.orderRemark}
-                              onChange={(e) =>
+                              onChange={(translatedText) =>
                                 handleInputChange(
                                   orderItems.id,
                                   "orderRemark",
-                                  e.target.value
+                                  translatedText
                                 )
                               }
                             />

@@ -31,27 +31,20 @@ const Translator = ({ name, value, onChange }) => {
     const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
       text
     )}&langpair=en-GB|gu-IN`;
-    // const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
-    //         text
-    //       )}&langpair=${fromLang}|${toLang}`;
-    console.log(`url :${apiUrl}`);
-
+  
     fetch(apiUrl)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setText(data.responseData.translatedText);
         console.log(`data : ${data.responseData.translatedText}`);
+          onChange(data.responseData.translatedText);
       })
       .catch((error) => {
         console.error("Translation error:", error);
         setText("Translation Error");
       });
   };
+  
 
   useEffect(() => {
     if (text.trim() !== "") {

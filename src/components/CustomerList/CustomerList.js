@@ -9,6 +9,7 @@ export default function CustomerList() {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setselectedCustomer] = useState(null);
   const currentPath = location.pathname;
   const handleAddMember = (newEmployee) => {
@@ -50,6 +51,12 @@ export default function CustomerList() {
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
   };
+
+  const filteredRows = rows.filter((entry) =>
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
 
   return (
     <>
@@ -117,9 +124,19 @@ export default function CustomerList() {
                               Add Customer
                             </button>
                           </Link>
+                          {/* <div className="d-flex">
+                          <label htmlFor="search">Search: </label>
+                          <input
+                            type="text"
+                            id="search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                          />
+                        </div> */}
                         </div>
                       </div>
                     </div>
+                    
                     <div className="tab-content">
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart p-0">

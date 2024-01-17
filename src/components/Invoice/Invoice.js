@@ -137,7 +137,7 @@ export default function Invoice({ show, onHide }) {
                                         entry.invoiceDate
                                       ).toLocaleString("en-US", {
                                         year: "numeric",
-                                        month: "2-digit",
+                                       month: "short",
                                         day: "2-digit",
                                       })}
                                       {/* { entry.invoiceDate} */}

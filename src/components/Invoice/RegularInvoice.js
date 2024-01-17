@@ -271,7 +271,7 @@ export default function RegularInvoice() {
                           "en-US",
                           {
                             year: "numeric",
-                            month: "2-digit",
+                           month: "short",
                             day: "2-digit",
                           }
                         )}
