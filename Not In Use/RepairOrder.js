@@ -313,7 +313,8 @@ export default function RepairOrder() {
                                 <th scope="col">Serial Number</th>
                                 <th scope="col">HSN</th>
                                 <th scope="col">
-                                  <FaShieldHalved />
+                                  Warranty
+                                  {/* <FaShieldHalved /> */}
                                 </th>
                                 {/* <th scope="col">Rate</th>
                                 <th scope="col">Tax(%)</th>

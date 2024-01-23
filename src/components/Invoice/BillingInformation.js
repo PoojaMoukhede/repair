@@ -76,7 +76,7 @@ const BillingInformation = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8000/invoice",
+        "http://192.168.1.211:8000/invoice",
         shippingData
       );
       console.log(`shipping Data : ${shippingData}`);
@@ -112,9 +112,9 @@ const BillingInformation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await axios.get(`http://localhost:8000/invoiceData/${orderID}`)
+        // const response = await axios.get(`http://192.168.1.211:8000/invoiceData/${orderID}`)
         const response2 = await axios.get(
-          `http://localhost:8000/orders/${orderID}/details`
+          `http://192.168.1.211:8000/orders/${orderID}/details`
         );
         const result = Object.keys(response2).map((key) => response2[key]);
         setInvoiceArray(result);
@@ -459,7 +459,7 @@ const BillingInformation = () => {
                 <div className="col-md-6 d-flex flex-row">
                   <label className="fieldlabels">
                     <i class="fa-solid fa-trash-can header-icon2"></i>
-                    Warranty ? 
+                    Is In Warranty?
                   </label>
                   <input
                     type="checkbox"

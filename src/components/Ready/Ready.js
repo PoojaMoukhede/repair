@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar";
 import axios from "axios";
 import Navbar from "../Navbar";
 import Readymodel from "./Readymodel";
+import { Link } from "react-router-dom";
 
 export default function Ready() {
   const [entriesPerPage, setEntriesPerPage] = useState(5);
@@ -19,7 +20,7 @@ export default function Ready() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/isready-orders"
+          "http://192.168.1.211:8000/isready-orders"
         );
         setEntriesData(response.data);
       } catch (error) {
@@ -32,7 +33,7 @@ export default function Ready() {
   const handleMoveToProcess = async (orderID) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/orders/${orderID}/isbilled`
+        `http://192.168.1.211:8000/orders/${orderID}/isbilled`
       );
       console.log("Server response:", response.data );
       console.log(orderID);
@@ -77,12 +78,14 @@ export default function Ready() {
         background: "#f9bb00",
         color: "black",
         border: "1px solid #efc84a",
+        fontSize:'0.7rem'
       };
     } else {
       return {
         background: "rgb(145 254 159 / 47%)",
         color: "green",
         border: "1px solid #85cb33",
+        fontSize:'0.7rem'
       };
     }
   };
@@ -92,7 +95,7 @@ export default function Ready() {
       <Navbar />
       <div id="grid">
         <Sidebar />
-        <div id="right">
+        <div id="right" className="ps-1 pt-1">
           <div className="app-main__outer">
             <div className="app-main__inner">
               <div className="row">
@@ -101,8 +104,14 @@ export default function Ready() {
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
+                        <Link to="/dashboard">
+                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                              <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
+                              Back
+                            </button>{" "}
+                          </Link>
                           <label htmlFor="entriesPerPage">
-                            Show entries :{" "}
+                          Entries :{" "}
                           </label>
                           <input
                             type="number"
@@ -119,6 +128,7 @@ export default function Ready() {
                           <label htmlFor="search">Search: </label>
                           <input
                             type="text"
+                            className="search"
                             id="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}

@@ -12,7 +12,7 @@ function Readymodel({  Title, onButtonClick, btnText, orderID, orderState, order
   const handleMoveToProcess = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/orders/${orderID}/${orderState}`
+        `http://192.168.1.211:8000/orders/${orderID}/${orderState}`
       );
       const updatedOrderDetails = response.data;
       console.log("Updated order details:", updatedOrderDetails);
@@ -30,7 +30,7 @@ function Readymodel({  Title, onButtonClick, btnText, orderID, orderState, order
   const handleFetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/orders/${orderID}/details`
+        `http://192.168.1.211:8000/orders/${orderID}/details`
       );
       const mergedData = response.data;
       console.log(`merge data : ${mergedData}`);

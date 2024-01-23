@@ -3,7 +3,7 @@ import Header from "../Header";
 import Sidebar from "../Sidebar";
 import Navbar from "./Navbar";
 import Pagination from "../Pagination/Pagination";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link} from "react-router-dom";
 import axios from "axios";
 
 export default function Invoice({ show, onHide }) {
@@ -16,7 +16,7 @@ export default function Invoice({ show, onHide }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/invoice");
+        const response = await axios.get("http://192.168.1.211:8000/invoice");
         setEntriesData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -76,8 +76,15 @@ export default function Invoice({ show, onHide }) {
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
+                        <Link to="/dashboard">
+                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                              <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
+                              Back
+                            </button>{" "}
+                          </Link>
                           <label htmlFor="entriesPerPage">
-                            Show entries :{" "}
+                            Entries :{" "}
+                        
                           </label>
                           <input
                             type="number"
@@ -95,6 +102,7 @@ export default function Invoice({ show, onHide }) {
                           <input
                             type="text"
                             id="search"
+                            className="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                           />

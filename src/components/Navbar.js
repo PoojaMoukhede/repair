@@ -16,7 +16,8 @@ export default function Navbar() {
       <div className="navbar-container2">
         <nav className="navbar2">
           <ul>
-          <li>
+           
+            <li>
               <Link
                 to="/addRepair"
                 className={`btn navbtn ${
@@ -25,7 +26,7 @@ export default function Navbar() {
                 onClick={() => handleButtonClick("Order Item List")}
               >
                 <i className="header-icon fa-solid fa-cart-plus animat"></i>
-                New Order 
+                New Order
               </Link>
             </li>
             <li>

@@ -4,11 +4,14 @@ import QR from "../../Images/qr-code.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation } from "react-router-dom";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
-  const { orderID } = useParams();
+  // const { orderID } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const orderID = queryParams.get("orderID");
   let componentRef = useRef();
   const [detail, setDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
@@ -18,7 +21,7 @@ export default function RegularInvoice() {
   useEffect(() => {
     try {
       axios
-        .get(`http://localhost:8000/companyDetail`)
+        .get(`http://192.168.1.211:8000/companyDetail`)
         .then((response) => {
           setDetail(response.data[0]);
         })
@@ -26,7 +29,7 @@ export default function RegularInvoice() {
           console.error("Error fetching data:", error);
         });
       axios
-        .get(`http://localhost:8000/invoiceData/${orderID}`)
+        .get(`http://192.168.1.211:8000/invoiceData/${orderID}`)
         .then((response) => {
           const responseData = response.data;
           setOrderDetail(responseData);

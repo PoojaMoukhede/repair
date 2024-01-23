@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar";
 import axios from "axios";
 import Navbar from "../Navbar";
 import Readymodel from "../Ready/Readymodel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 export default function ToBill() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function ToBill() {
   const handleMoveToProcess = async (orderID) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/orders/${orderID}/isscraped`
+        `http://192.168.1.211:8000/orders/${orderID}/isscraped`
       );
       console.log("Server response:", response.data);
     } catch (error) {
@@ -26,16 +26,7 @@ export default function ToBill() {
   };
 
   function handleClick(orderID) {
-    // axios
-    // .put(`http://localhost:8000/orders/${orderID}/isinvoiced`
-    // )
-    // .then((res) => {
-    //   console.log("Server response:", res.data);
-    // })
-    // .catch((err) => {
-    //   console.error("Error updating order:", err);
-    // });
-    navigate(`/billingInfo?orderID=${orderID}`);
+    navigate(`/regularinvoice?orderID=${orderID}`)
   }
 
   function handleOrderNumberClick(orderID) {
@@ -46,7 +37,7 @@ export default function ToBill() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/isbilled-orders"
+          "http://192.168.1.211:8000/isbilled-orders"
         );
         setEntriesData(response.data);
       } catch (error) {
@@ -77,7 +68,7 @@ export default function ToBill() {
       <Navbar />
       <div id="grid">
         <Sidebar />
-        <div id="right">
+        <div id="right" className="ps-1 pt-1">
           <div className="app-main__outer">
             <div className="app-main__inner">
               <div className="row">
@@ -86,8 +77,14 @@ export default function ToBill() {
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
+                        <Link to="/dashboard">
+                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                              <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
+                              Back
+                            </button>{" "}
+                          </Link>
                           <label htmlFor="entriesPerPage">
-                            Show entries :{" "}
+                            Entries :{" "}
                           </label>
                           <input
                             type="number"
@@ -105,6 +102,7 @@ export default function ToBill() {
                           <input
                             type="text"
                             id="search"
+                            className="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                           />

@@ -8,12 +8,14 @@
   top: -10px;
   left: 25%;
   width: 50%;
-  background-color: #004976; 
+  /* background-color: #004976;  */
+  background: #004976;
+  background: linear-gradient(0deg, #004976 0%, #0a68a3 100%);
   /* #405180 */
   color: white;
   padding: 8px;
   z-index: 2;
-  border-radius: 40px 5px 40px 5px;
+  border-radius: 5px;
 }
 
 .navbar2 ul{

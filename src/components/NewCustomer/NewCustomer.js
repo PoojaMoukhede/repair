@@ -131,7 +131,7 @@ export default function NewCustomer() {
     const isValid = Object.values(newErrors).every((error) => error === "");
     setIsFormValid(isValid);
 
-  // return {isValid ,valid};
+    // return {isValid ,valid};
     return valid;
   };
 
@@ -185,11 +185,8 @@ export default function NewCustomer() {
               <div className="row">
                 <div className="col-md-8 m-auto mt-3">
                   <div className="card cardR">
-                    <div
-                      className="card-header-tab card-header card-header2"
-                      style={{ backgroundColor: "white", color: "black" }}
-                    >
-                      <div className="card-header-title">
+                    <div className="card-header-tab card-header card-header2">
+                      <div className="card-header-title text-center">
                         <i className="header-icon fa-solid fa-user-plus"></i>
                         Create New Customer
                       </div>
@@ -199,7 +196,10 @@ export default function NewCustomer() {
                         <div className="widget-chart p-3">
                           <form className="row g-3" onSubmit={handleSubmit}>
                             <div className="col-md-6">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Name
                               </label>
                               <input
@@ -217,7 +217,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Email
                               </label>
                               <input
@@ -236,7 +239,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-12">
-                              <label htmlFor="inputAddress" className="form-label">
+                              <label
+                                htmlFor="inputAddress"
+                                className="form-label"
+                              >
                                 Customer Address
                               </label>
                               <textarea
@@ -255,51 +261,12 @@ export default function NewCustomer() {
                                 {formErrors.CustomerAddress}
                               </div>
                             </div>
+
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
-                                Country
-                              </label>
-                              <CountrySelect
-                                name="CustomerCountry"
-                                onChange={handleCountryChange}
-                                placeHolder="Select Country"
-                              />
-                              <div className="invalid-feedback">
-                                {formErrors.CustomerCountry}
-                              </div>
-                            </div>
-                            <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
-                                State
-                              </label>
-                              <StateSelect
-                                name="CustomerState"
-                                countryid={countryid}
-                                onChange={handleStateChange}
-                                placeHolder="Select State"
-                              />
-                              <div className="invalid-feedback">
-                                {formErrors.CustomerState}
-                              </div>
-                            </div>
-                            <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
-                                City
-                              </label>
-                              <CitySelect
-                                name="CustomerCity"
-                                countryid={countryid}
-                                stateid={stateid}
-                                placeHolder="Select City"
-                                onChange={handleCityChange}
-                                // required
-                              />
-                              <div className="invalid-feedback">
-                                {formErrors.CustomerCity}
-                              </div>
-                            </div>
-                            <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer GST
                               </label>
                               <input
@@ -318,7 +285,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer PAN
                               </label>
                               <input
@@ -337,7 +307,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer CIN
                               </label>
                               <input
@@ -356,7 +329,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer TAN
                               </label>
                               <input
@@ -375,7 +351,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Pin Code
                               </label>
                               <input
@@ -394,7 +373,10 @@ export default function NewCustomer() {
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <label htmlFor="inputEmail4" className="form-label">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
                                 Customer Phone Number
                               </label>
                               <input
@@ -412,20 +394,60 @@ export default function NewCustomer() {
                                 {formErrors.CustomeContactNo}
                               </div>
                             </div>
-                            <div className="col-12 d-flex justify-content-center align-item-center">
-                              <button
-                                type="submit"
-                                className={`btn btn2 submitbox`}
-                                // className={`btn btn2 ${isFormValid ? "enabled" : "disabled"}`}
-                                // disabled={!isFormValid}
-                                style={{
-                                  width: "50%"
-                                }}
+                            <div className="col-md-4">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
                               >
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
+                                Country
+                              </label>
+                              <CountrySelect
+                                name="CustomerCountry"
+                                onChange={handleCountryChange}
+                                placeHolder="Select Country"
+                              />
+                              <div className="invalid-feedback">
+                                {formErrors.CustomerCountry}
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
+                                State
+                              </label>
+                              <StateSelect
+                                name="CustomerState"
+                                countryid={countryid}
+                                onChange={handleStateChange}
+                                placeHolder="Select State"
+                              />
+                              <div className="invalid-feedback">
+                                {formErrors.CustomerState}
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <label
+                                htmlFor="inputEmail4"
+                                className="form-label"
+                              >
+                                City
+                              </label>
+                              <CitySelect
+                                name="CustomerCity"
+                                countryid={countryid}
+                                stateid={stateid}
+                                placeHolder="Select City"
+                                onChange={handleCityChange}
+                                // required
+                              />
+                              <div className="invalid-feedback">
+                                {formErrors.CustomerCity}
+                              </div>
+                            </div>
+                            <div className="col-12 d-flex justify-content-center align-item-center">
+                              <button type="submit" className={`btn btn2`}>
                                 <i
                                   className="fa-solid fa-circle-plus"
                                   style={{
@@ -450,4 +472,3 @@ export default function NewCustomer() {
     </>
   );
 }
-

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import EditCustomer from "../NewCustomer/EditCustomer";
 import axios from "axios";
 
 export default function CustomerList() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +20,7 @@ export default function CustomerList() {
   useEffect(() => {
     try {
       axios
-        .get(`http://localhost:8000/customer`)
+        .get(`http://192.168.1.211:8000/customer`)
         .then((response) => {
           setRows(response.data);
           console.log("sort data", response.data);
@@ -47,96 +48,53 @@ export default function CustomerList() {
   };
 
   const [activeButton, setActiveButton] = useState(null);
-
-  const handleButtonClick = (buttonName) => {
-    setActiveButton(buttonName);
-  };
-
   const filteredRows = rows.filter((entry) =>
-  Object.values(entry).some((value) =>
-    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-  )
-);
+    Object.values(entry).some(
+      (value) =>
+        value !== null &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <>
       <Header />
       <div id="grid">
         <Sidebar />
-        <div id="right">
+        <div id="right" className="ps-1 pt-1"> 
           <div className="app-main__outer">
             <div className="app-main__inner">
-              <div className="row">
+              <div className="row ">
                 <div className="col-md-12">
-                  <div
-                    className="card"
-                    style={{ marginTop: "5px", borderTop: "none" }}
-                  >
-                    <div
-                      className="card-header-tab card-header card-header2 p-0"
-                      style={{
-                        backgroundColor: "white",
-                        color: "black",
-                        height: "40px",
-                      }}
-                    >
-                      <div className="d-flex">
-                        <div
-                          className="card-header-title"
-                          style={{ width: "50%" }}
-                        >
-                          <Link
-                            to="/customerList"
-                            className={` ${
-                              currentPath === "/customerList" ? "active" : ""
-                            }`}
-                            onClick={() => handleButtonClick("Customer List")}
-                            
-                          >
-                            <button
-                              className="btn btnB"
-                              style={{ width: "100%" }}
-                              onClick={() => handleButtonClick("Customer List")}
-                            >
-                              <i className="header-icon fa-solid fa-users"></i>
-                              Customer List
-                            </button>
-                          </Link>
-                        </div>
-
-                        <div
-                          className="card-header-title"
-                          style={{ width: "50%" }}
-                        >
-                          <Link
-                            to="/customer"
-                            className={` ${
-                              currentPath === "/customer" ? "active" : ""
-                            }`}
-                            onClick={() => handleButtonClick("Customer List")}
-                          >
-                            <button
-                              className="btn btnB"
-                              style={{ width: "100%" }}
-                              onClick={() => handleButtonClick("Add Customer")}
-                            >
-                              <i className="header-icon fa-solid fa-circle-plus"></i>
-                              Add Customer
-                            </button>
-                          </Link>
-                          {/* <div className="d-flex">
-                          <label htmlFor="search">Search: </label>
-                          <input
-                            type="text"
-                            id="search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                          />
-                        </div> */}
-                        </div>
+                  <div className="card">
+                    <div className="card-header-tab card-header d-flex justify-content-between">
+                      <div className="card-header-title">
+                       Customer List
                       </div>
+
+                      <div className="search-wrapper">
+                        <input
+                          type="text"
+                          id="search2"
+                          placeholder="Type to search"
+                          style={{ height: "40px",width:'500px'}}
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </div>
+
+                      <button
+                        className={`btn btnchart ${
+                          activeButton === "Add Customer" ? "activebtn" : ""
+                        }`}
+                        onClick={() => navigate("/customer")}
+                      >
+                        <i className="header-icon fa-solid fa-circle-plus"></i>
+                        Add Customer
+                      </button>
                     </div>
-                    
+
                     <div className="tab-content">
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart p-0">
@@ -168,7 +126,7 @@ export default function CustomerList() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {rows.map((data, index) => (
+                                {filteredRows.map((data, index) => (
                                   <tr
                                     key={index}
                                     style={{ fontSize: "0.85rem" }}

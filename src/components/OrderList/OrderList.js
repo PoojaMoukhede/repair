@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import Pagination from "../Pagination/Pagination";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function OrderList() {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
@@ -16,7 +17,7 @@ export default function OrderList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/orders");
+        const response = await axios.get("http://192.168.1.211:8000/orders");
         setEntriesData(response.data);
       } catch (error) {
         console.error("Error fetching order list:", error);
@@ -31,11 +32,12 @@ export default function OrderList() {
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
 
   const filteredRows = currentEntries.filter((entry) =>
-  Object.values(entry).some((value) =>
-    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-  )
-);
-
+    Object.values(entry).some(
+      (value) =>
+        value !== null &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   const handleClick = (entry) => {
     setSelectedOrder(entry);
@@ -45,21 +47,23 @@ export default function OrderList() {
     setSelectedOrder(orderID);
     console.log(orderID);
   }
-
   const makeStyle = (entriesData) => {
-    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
-
+    const { isInProcess, isReady, isBilled, isScraped, isinvoiced } =
+      entriesData;
     if (!isInProcess && !isReady && !isBilled && !isScraped) {
       return {
         background: "#f9bb00",
         color: "black",
         border: "1px solid #efc84a",
+        fontSize:'0.7rem'
       };
-    } else {
+    }
+    if (isinvoiced) {
       return {
         background: "rgb(145 254 159 / 47%)",
         color: "green",
         border: "1px solid #85cb33",
+        fontSize:'0.7rem'
       };
     }
   };
@@ -73,7 +77,7 @@ export default function OrderList() {
       <Navbar />
       <div id="grid">
         <Sidebar />
-        <div id="right">
+        <div id="right" className="ps-1 pt-1">
           <div className="app-main__outer">
             <div className="app-main__inner">
               <div className="row">
@@ -82,8 +86,14 @@ export default function OrderList() {
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
+                          <Link to="/dashboard">
+                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                              <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
+                              Back
+                            </button>{" "}
+                          </Link>
                           <label htmlFor="entriesPerPage">
-                            Show entries :{" "}
+                            Entries :{" "}
                           </label>
                           <input
                             type="number"
@@ -101,6 +111,7 @@ export default function OrderList() {
                           <input
                             type="text"
                             id="search"
+                            className="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                           />
@@ -145,7 +156,7 @@ export default function OrderList() {
                                         "en-US",
                                         {
                                           year: "numeric",
-                                         month: "short",
+                                          month: "short",
                                           day: "2-digit",
                                         }
                                       )}
@@ -178,26 +189,22 @@ export default function OrderList() {
                                     </td>
                                     <td className="text-center">
                                       {/* {entry.orderDate} */}
-                                      {new Date(entry.updated_at).toLocaleString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                         month: "short",
-                                          day: "2-digit",
-                                        }
-                                      )}
+                                      {new Date(
+                                        entry.updated_at
+                                      ).toLocaleString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "2-digit",
+                                      })}
                                     </td>
                                     <td className="text-center">
                                       <p
                                         className="text-center laststatus"
                                         style={makeStyle(entriesData)}
                                       >
-                                        {!entriesData.isInProcess &&
-                                        !entriesData.isReady &&
-                                        !entriesData.isBilled &&
-                                        !entriesData.isScraped
-                                          ? "Pending"
-                                          : "Repaired"}
+                                        {entriesData.isinvoiced
+                                          ? "Repaired"
+                                          : "Pending"}
                                       </p>
                                     </td>
                                   </tr>

@@ -11,13 +11,12 @@
   background-color: #f9fdff;
 }
 .cardR {
-  border-radius: 30px;
-  border: 1px solid #fdfdfd;
-  border-left: 4px solid #405180;
-  border-right: 4px solid #405180;
-  /* box-shadow: inset 0px 0px 10px 10px #ffffff; */
+  border-radius: 5px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
-
+.cardR input {
+  box-shadow: inset 0 2px 4px 0 rgba(206, 209, 224, 0.2);
+}
 #grid {
   transition: 300ms;
   display: grid;
@@ -226,31 +225,35 @@ a {
   margin-right: 12px;
 }
 .card-header {
-  background-color: #12192c;
+  /* background-color: #12192c; */
+  background: #12192c;
+  background: linear-gradient(0deg, #12192c 0%, #12192c 100%);
   color: #fff;
-  /* margin: auto; */
+  height: 53px;
 }
-.card-header2 {
-  /* padding: 0; */
-  margin-top: -20px !important;
-  border-radius: 60px 5px 60px 5px !important;
-  margin: auto;
-  box-shadow: inset 0px 0px 10px 10px #405180;
+.card-header-title {
+  font-size: 1.2rem;
+  margin: 5px 0px 0px 0px;
 }
 .btn2 {
-  border-radius: 60px 5px 60px 5px !important;
-  margin: auto;
+  border-radius: 5px;
   height: 45px;
-  box-shadow: inset 0px 0px 10px 10px #405180;
+  width: 25%;
+  color: white;
+  background: #004976;
+  background: linear-gradient(0deg, #004976 0%, #0a68a3 100%);
+  border: none;
+}
+.btn2:before {
+  height: 0%;
+  width: 2px;
 }
 .btn2:hover {
-  box-shadow:  0px 5px 5px 5px #f2f5fd;
-  background-color: #405180;
   color: white;
-}
-.card-header2:first-child {
-  width: 50% !important;
-  text-align: center;
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
+    -4px -4px 6px 0 rgba(116, 125, 136, 0.5),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.2),
+    inset 4px 4px 6px 0 rgba(0, 0, 0, 0.4);
 }
 .modal-container {
   background-color: #fff;
@@ -316,7 +319,17 @@ input[type="date"] {
   margin-left: 5px;
   margin-right: 5px;
 }
-#search {
+#search2 {
+  margin-left: 5px;
+  border-radius: 4px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  border-bottom: 2px #004976 solid;
+  display: block;
+  font-size: 15px;
+}
+.search {
   margin-left: 5px;
   border-radius: 4px;
   background-color: transparent;
@@ -328,7 +341,9 @@ input[type="date"] {
 }
 .table thead th {
   color: #ffffff;
-  background-color: #004976;
+  background: #004976;
+  background: linear-gradient(0deg, #004976 0%, #0a68a3 100%);
+  /* background-color: #004976; */
   padding: 15px;
   border: 1px solid #25345f;
   font-weight: 500;
@@ -362,7 +377,7 @@ td {
   font-size: 18px;
   padding: 10px 15px;
   border-radius: 5px;
-  border-bottom: 1px solid blue;
+  /* border-bottom: 1px solid blue; */
   border: none;
 }
 .text-input textarea::placeholder {
@@ -616,105 +631,15 @@ li,
     transform: translateY(10px);
   }
 }
-
-/* .submitbox {
-  position: relative;
-  display: inline-block;
-  text-transform: uppercase;
-  overflow: hidden;
-  transition: 0.5s;
-  margin-top: 40px;
-  letter-spacing: 4px;
+.btnchart {
+  text-align: center;
+  color: white;
+  background: #004976;
+  background: linear-gradient(0deg, #004976 0%, #0a68a3 100%);
 }
 
-.submitbox:hover {
-  background: #405180;
-  color: #fff;
-  border-radius: 60px 5px 60px 5px;
-  box-shadow: 0 0 5px #405180, 0 0 10px #405180, 0 0 30px #405180,
-    0 0 70px #405180;
+.btnchart:hover {
+  color: white;
+  box-shadow: 2px 2px 3px 0 #004976,
+    inset 2px 2px 3px 0 rgba(0, 0, 0, 0.4);
 }
-
-.submitbox span {
-  position: absolute;
-  display: block;
-}
-
-.submitbox span:nth-child(1) {
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #fff);
-  animation: btn-anim1 1s linear infinite;
-}
-
-@keyframes btn-anim1 {
-  0% {
-    left: -100%;
-  }
-  50%,
-  100% {
-    left: 100%;
-  }
-}
-
-.submitbox span:nth-child(2) {
-  top: -100%;
-  right: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, #fff);
-  animation: btn-anim2 1s linear infinite;
-  animation-delay: 0.25s;
-}
-
-@keyframes btn-anim2 {
-  0% {
-    top: -100%;
-  }
-  50%,
-  100% {
-    top: 100%;
-  }
-}
-
-.submitbox span:nth-child(3) {
-  bottom: 0;
-  right: -100%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(270deg, transparent, #fff);
-  animation: btn-anim3 1s linear infinite;
-  animation-delay: 0.5s;
-}
-
-@keyframes btn-anim3 {
-  0% {
-    right: -100%;
-  }
-  50%,
-  100% {
-    right: 100%;
-  }
-}
-
-.submitbox span:nth-child(4) {
-  bottom: -100%;
-  left: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(360deg, transparent, #fff);
-  animation: btn-anim4 1s linear infinite;
-  animation-delay: 0.75s;
-}
-
-@keyframes btn-anim4 {
-  0% {
-    bottom: -100%;
-  }
-  50%,
-  100% {
-    bottom: 100%;
-  }
-} */
