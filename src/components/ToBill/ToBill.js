@@ -26,7 +26,7 @@ export default function ToBill() {
   };
 
   function handleClick(orderID) {
-    navigate(`/regularinvoice?orderID=${orderID}`)
+    navigate(`/regularinvoice/${orderID}`)
   }
 
   function handleOrderNumberClick(orderID) {

@@ -1,15 +1,6 @@
 #grid {
   height: 95vh;
 }
-
-#left {
-  background-color: #12192c;
-}
-
-#right {
-  padding: 1rem;
-  background-color: #f9fdff;
-}
 .cardR {
   border-radius: 5px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -22,21 +13,19 @@
   display: grid;
   grid-template-columns: 48px auto;
 }
-
+#left{
+  background-color: #12192c;
+}
 #grid:has(#left:hover) {
   grid-template-columns: 13% auto;
 }
-
-#grid {
-  transition: 300ms;
-  display: grid;
-  grid-template-columns: var(--left, 48px) auto;
-}
-
 #grid:has(#left:hover) {
   --left: 30%;
 }
-
+#right {
+  padding: 1rem;
+  background-color: #f9fdff;
+}
 .fa-2x {
   font-size: 1.8em;
 }
@@ -63,7 +52,6 @@
 .file {
   height: 18px;
 }
-.main-menu:hover,
 nav.main-menu.expanded {
   width: 100%;
   overflow: visible;
@@ -82,7 +70,9 @@ nav.main-menu.expanded {
   -webkit-transform: translateZ(0) scale(1, 1);
   z-index: 1000;
 }
-
+.main-menu:hover{
+  width:13%;
+}
 .main-menu > ul {
   margin: 5px 0;
   padding-top: 3.5rem;

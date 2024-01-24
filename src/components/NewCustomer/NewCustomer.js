@@ -16,7 +16,7 @@ export default function NewCustomer() {
   const [selectedcity, setSelectedcity] = useState("");
   const { onAddCustomer } = useAPI();
   const [isFormValid, setIsFormValid] = useState(false);
-
+  const [showShippingForm, setShowShippingForm] = useState(false);
   const [formData, setFormData] = useState({
     CustomeName: "",
     CustomeEmail: "",
@@ -30,6 +30,12 @@ export default function NewCustomer() {
     CustomerPAN: "",
     CustomerCIN: "",
     CustomerTAN: "",
+    ShippingPerson: "",
+    ShippingAddress: "",
+    ShippingCountry: "",
+    ShippingState: "",
+    ShippingCity: "",
+    TransportationMode: "",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -45,6 +51,12 @@ export default function NewCustomer() {
     CustomerPAN: "",
     CustomerCIN: "",
     CustomerTAN: "",
+    ShippingPerson: "",
+    ShippingAddress: "",
+    ShippingCountry: "",
+    ShippingState: "",
+    ShippingCity: "",
+    TransportationMode: "",
   });
 
   const handleInputChange = (e) => {
@@ -127,6 +139,30 @@ export default function NewCustomer() {
       valid = false;
     }
 
+    if (formData.ShippingPerson.trim() === "") {
+      newErrors.ShippingPerson = "Please enter Shipping Person.";
+      valid = false;
+    }
+    if (formData.ShippingAddress.trim() === "") {
+      newErrors.ShippingAddress = "Please enter the Shipping Address.";
+      valid = false;
+    }
+    if (formData.ShippingCountry.trim() === "") {
+      newErrors.ShippingCountry = "Please enter the Shipping Country.";
+      valid = false;
+    }
+    if (formData.ShippingState.trim() === "") {
+      newErrors.ShippingState = "Please enter the Shipping State.";
+      valid = false;
+    }
+    if (formData.ShippingCity.trim() === "") {
+      newErrors.ShippingCity = "Please enter the Shipping City.";
+      valid = false;
+    }
+    if (formData.TransportationMode.trim() === "") {
+      newErrors.TransportationMode = "Please enter Transportation Mode.";
+      valid = false;
+    }
     setFormErrors(newErrors);
     const isValid = Object.values(newErrors).every((error) => error === "");
     setIsFormValid(isValid);
@@ -137,9 +173,15 @@ export default function NewCustomer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowShippingForm(true);
+    console.log("Form validated successfully:", formData);
+  };
+
+  const handleAddCustomer = (e) => {
+    e.preventDefault();
     if (validateForm()) {
       onAddCustomer(formData);
-      console.log("Form submitted:", formData);
+      console.log("Customer data added to API:", formData);
     } else {
       console.log("Form validation failed.");
     }
@@ -448,14 +490,14 @@ export default function NewCustomer() {
                             </div>
                             <div className="col-12 d-flex justify-content-center align-item-center">
                               <button type="submit" className={`btn btn2`}>
+                                Continue
                                 <i
-                                  className="fa-solid fa-circle-plus"
+                                  className=" fa-solid fa-circle-chevron-right"
                                   style={{
                                     fontSize: "1.3rem",
-                                    marginRight: "1rem",
+                                    marginLeft: "1rem",
                                   }}
                                 ></i>
-                                Add Customer
                               </button>
                             </div>
                           </form>
@@ -465,6 +507,151 @@ export default function NewCustomer() {
                   </div>
                 </div>
               </div>
+              {showShippingForm && (
+                <div className="row mt-3">
+                  <div className="col-md-8 m-auto mt-3">
+                    <div className="card cardR">
+                      <div className="card-header-tab card-header card-header2">
+                        <div className="card-header-title text-center">
+                          <i className="header-icon fa-solid fa-user-plus"></i>
+                          Shipping Details
+                        </div>
+                      </div>
+                      <div className="tab-content">
+                        <div
+                          className="tab-pane fade active show"
+                          id="tab-eg-55"
+                        >
+                          <div className="widget-chart p-3">
+                            <form className="row g-3">
+                              <div className="col-md-6">
+                                <label className="form-label">
+                                  Shipping Person
+                                </label>
+                                <input
+                                  type="text"
+                                  name="ShippingPerson"
+                                  className="form-control"
+                                  value={formData.ShippingPerson}
+                                  onChange={handleInputChange}
+                                />
+                                <div className="invalid-feedback">
+                                  {formErrors.ShippingPerson}
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <label className="form-label">
+                                  Shipping Address
+                                </label>
+                                <input
+                                  type="text"
+                                  name="ShippingAddress"
+                                  className="form-control"
+                                  value={formData.ShippingAddress}
+                                  onChange={handleInputChange}
+                                />
+                                <div className="invalid-feedback">
+                                  {formErrors.ShippingAddress}
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <label className="form-label">
+                                  Shipping Country
+                                </label>
+
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="ShippingCountry"
+                                  onChange={handleInputChange}
+                                  value={formData.ShippingCountry}
+                                />
+                                <div className="invalid-feedback">
+                                  {formErrors.ShippingCountry}
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <label className="form-label">
+                                  Shipping State
+                                </label>
+
+                                <input
+                                  type="text"
+                                  name="ShippingState"
+                                  className="form-control"
+                                  onChange={handleInputChange}
+                                  value={formData.ShippingState}
+                                />
+                                <div className="invalid-feedback">
+                                  {formErrors.ShippingState}
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <label className="form-label">
+                                  Shipping City
+                                </label>
+
+                                <input
+                                  type="text"
+                                  name="ShippingCity"
+                                  className="form-control"
+                                  onChange={handleInputChange}
+                                  value={formData.ShippingCity}
+                                />
+                                <div className="invalid-feedback">
+                                  {formErrors.ShippingCity}
+                                </div>
+                              </div>
+                              <div className="col-md-6 d-flex flex-column">
+                                <label className="form-label">
+                                  Transportation Mode
+                                </label>
+                                <select
+                                  style={{
+                                    borderRadius: "5px",
+                                    border: "1px solid #e5e5e5",
+                                    backgroundColor: "transparent",
+                                    height: "40px",
+                                  }}
+                                  name="TransportationMode"
+                                  value={formData.TransportationMode}
+                                  onChange={handleInputChange}
+                                >
+                                  <option></option>
+                                  <option value="Train">Train</option>
+                                  <option value="Ship">Ship</option>
+                                  <option value="Plane">Plane</option>
+                                  <option value="Truck">Truck</option>
+                                </select>
+                                <div className="invalid-feedback">
+                                  {formErrors.TransportationMode}
+                                </div>
+                              </div>
+
+                              <div className="col-12 d-flex justify-content-center align-item-center">
+                                <button
+                                  type="submit"
+                                  className={`btn btn2`}
+                                  onClick={handleAddCustomer}
+                                >
+                                  <i
+                                    className="fa-solid fa-circle-plus"
+                                    style={{
+                                      fontSize: "1.3rem",
+                                      marginRight: "1rem",
+                                    }}
+                                  ></i>
+                                  Add Customer
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

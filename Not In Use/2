@@ -12,8 +12,8 @@ import "../Invoice/style.css";
 
 export default function RepairOrder() {
   const location = useLocation();
-  // const queryParams = new URLSearchParams(location.search);
-  // const orderID = queryParams.get("orderID");
+  const queryParams = new URLSearchParams(location.search);
+  const orderID = queryParams.get("orderID");
   const currentDate = new Date().toISOString().split("T")[0];
   const [cartCountValue, setCartCountValue] = useState(0);
   const [added, setAdded] = useState(false);
@@ -22,19 +22,78 @@ export default function RepairOrder() {
   const [referanceDate, setReferanceDate] = useState(currentDate);
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
   const [invoice1, setInvoice1] = useState([]);
+  const [isInWarranty, setIsInWarranty] = useState(false);
+
   const [placedOrder, setPlacedorder] = useState(false);
   const [lastOrderNumber, setLastOrderNumber] = useState(null);
   const [nextOrderNumber, setNextOrderNumber] = useState("");
-  const [orderid, setOrderID] = useState(null);
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const orderID = queryParams.get("orderID");
-    if (orderID) {
-      setOrderID(orderID);
+  const [lastInvoiceNumber, setLastInvoiceNumber] = useState(null);
+  const [nextInvoiceNumber, setNextInvoiceNumber] = useState("");
+  const handleInputChange2 = (e) => {
+    const { name, value } = e.target;
+    setInvoice({ ...invoice, [name]: value });
+  };
+  const [invoice, setInvoice] = useState({
+    orderID: orderID,
+    invoice_number: "",
+    shippingAddress: "",
+    shippingPerson: "",
+    shippingCity: "",
+    shippingState: "",
+    shippingCountry: "",
+    invoiceDate: "",
+    transportationMode: "",
+    subTotal: 0,
+    igst: "",
+    cgst: "",
+    sgst: "",
+    ff: 0,
+    // hsn: "",
+  });
+  const parsedSubTotal = parseFloat(invoice.subTotal);
+  const parsedFF = parseFloat(invoice.ff);
+  const handleSubmitlast = async (e) => {
+    e.preventDefault();
+    const shippingData = {
+      orderID: orderID,
+      invoice_number: nextInvoiceNumber,
+      // invoice_number:'MCIPL/RPR/2425/00027',
+      shippingPerson: invoice.shippingPerson,
+      shippingAddress: invoice.shippingAddress,
+      shippingCity: invoice.shippingCity,
+      shippingState: invoice.shippingState,
+      shippingCountry: invoice.shippingCountry,
+      transportationMode: invoice.transportationMode,
+      ff: parsedFF,
+      invoiceDate: currentDate,
+      cgst: 9.0,
+      sgst: 9.0,
+      subTotal: parsedSubTotal,
+    };
+    if (isInWarranty) {
+      shippingData.subTotal = 0;
+      shippingData.totalAmount = 0;
+    } else {
+      shippingData.subTotal = parsedSubTotal;
+      shippingData.totalAmount = parsedSubTotal;
     }
-  }, [useLocation()]);
-
+    try {
+      const response = await axios.post(
+        "http://192.168.1.211:8000/invoice",
+        shippingData
+      );
+      console.log(`shipping Data : ${shippingData}`);
+      setInvoice((prevInvoice) => ({
+        ...prevInvoice,
+      }));
+      alert("Your Order Placed Successfully...");
+      console.log(response);
+    } catch (error) {
+      console.error("Error submitting shipping data:", error);
+    }
+  };
+  console.log(`shipping data : ${invoice}`);
   useEffect(() => {
     try {
       axios
@@ -59,7 +118,7 @@ export default function RepairOrder() {
         productName: "",
         serialNumber: "",
         HSN: "",
-        isInWarranty: "",
+        isInWarranty: false,
         customerReason: "",
       },
     ]);
@@ -105,7 +164,7 @@ export default function RepairOrder() {
     RefrenceDate: "",
     CustomeName: "",
     CustomeID: "",
-    orderID: orderid,
+    orderID: orderID,
   });
 
   const handleButtonClick = (e) => {
@@ -115,13 +174,13 @@ export default function RepairOrder() {
       productName: orderItems.productName,
       serialNumber: orderItems.serialNumber,
       HSN: orderItems.HSN,
-      isInWarranty: orderItems.isInWarranty,
+      isInWarranty: false,
       customerReason: orderItems.customerReason,
       orderNumber: nextOrderNumber,
       orderRemark: orderItems.orderRemark,
-      orderDate: referanceDate,
+      orderDate: currentDate,
       CustomerReferance: orderItems.CustomerReferance,
-      RefrenceDate: referanceDate,
+      RefrenceDate: currentDate,
       CustomeName: orderItems.CustomeName,
       CustomeID: selectedCustomerId,
       // orderID: orderID,
@@ -180,7 +239,7 @@ export default function RepairOrder() {
         );
         const invoiceNumbers = response2.data.invoice_number;
         console.log(`invoice_number :${invoiceNumbers}`);
-        // setLastInvoiceNumber(invoiceNumbers);
+        setLastInvoiceNumber(invoiceNumbers);
       } catch (error) {
         console.error("Error fetching order details:", error);
       }
@@ -218,6 +277,37 @@ export default function RepairOrder() {
       );
     }
   }, [lastOrderNumber]);
+
+  useEffect(() => {
+    if (lastInvoiceNumber !== null && lastInvoiceNumber !== undefined) {
+      const lastInvoiceNumberParts = parseInt(
+        (lastInvoiceNumber.split("/") || []).pop(),
+        10
+      );
+      console.log(`lastInvoiceNumber : ${lastInvoiceNumber}`);
+      const lastInvoiceNumberNumeric = lastInvoiceNumberParts;
+      if (!isNaN(lastInvoiceNumberNumeric)) {
+        const currentYear = new Date().getFullYear();
+        const nextNumber = lastInvoiceNumberNumeric + 1;
+        const formattedNumber = nextNumber.toString().padStart(5, "0");
+        const newNextInvoiceNumber = `MCIPL/RPR/${currentYear
+          .toString()
+          .substring(2)}${(currentYear + 1)
+          .toString()
+          .substring(2)}/${formattedNumber}`;
+        console.log(`newNextInvoiceNumber : ${newNextInvoiceNumber}`);
+        setNextInvoiceNumber(newNextInvoiceNumber);
+      } else {
+        console.error(
+          "Failed to extract numeric part from the last Invoice number."
+        );
+      }
+    } else {
+      console.error(
+        "Failed to generate Invoice number. Last Invoice number not available."
+      );
+    }
+  }, [lastInvoiceNumber]);
 
   return (
     <>
@@ -325,7 +415,7 @@ export default function RepairOrder() {
                                 className={`form-control input_repair`}
                                 placeholder="Referance"
                                 value={referanceDate}
-                                // onChange={(e) => setReferanceDate(currentDate)}
+                                onChange={(e) => setReferanceDate(currentDate)}
                                 required
                               />
                             </div>
@@ -502,7 +592,7 @@ export default function RepairOrder() {
                                       </label>
                                       <input
                                         type="email"
-                                        name="orderRemark"
+                                        name="email"
                                         readOnly
                                         value={orderItems.orderRemark}
                                       />
@@ -536,7 +626,7 @@ export default function RepairOrder() {
                             <div className="widget-chart p-3">
                               <form
                                 className="row g-3"
-                                // onSubmit={handleSubmitlast}
+                                onSubmit={handleSubmitlast}
                               >
                                 <div className="form-card">
                                   <div className="row">
@@ -547,10 +637,10 @@ export default function RepairOrder() {
                                       </label>
                                       <input
                                         type="text"
-                                        name="ShippingPerson"
+                                        name="shippingPerson"
                                         placeholder="Shipping To"
-                                        value={invoice1.ShippingPerson}
-                                        // onChange={handleInputChange2}
+                                        value={invoice.shippingPerson}
+                                        onChange={handleInputChange2}
                                       />
                                     </div>
                                     <div className="col-md-6 d-flex flex-column">
@@ -560,10 +650,10 @@ export default function RepairOrder() {
                                       </label>
                                       <input
                                         type="text"
-                                        name="ShippingAddress"
+                                        name="shippingAddress"
                                         placeholder="Shipping Address"
-                                        value={invoice1.ShippingAddress}
-                                        // onChange={handleInputChange2}
+                                        value={invoice.shippingAddress}
+                                        onChange={handleInputChange2}
                                       />
                                     </div>
 
@@ -575,10 +665,10 @@ export default function RepairOrder() {
 
                                       <input
                                         type="text"
-                                        name="ShippingCountry"
+                                        name="shippingCountry"
                                         placeholder="Shipping Country"
-                                        // onChange={handleInputChange2}
-                                        value={invoice1.ShippingCountry}
+                                        onChange={handleInputChange2}
+                                        value={invoice.shippingCountry}
                                       />
                                     </div>
 
@@ -590,10 +680,10 @@ export default function RepairOrder() {
 
                                       <input
                                         type="text"
-                                        name="ShippingState"
+                                        name="shippingState"
                                         placeholder="Shipping State"
-                                        // onChange={handleInputChange2}
-                                        value={invoice1.ShippingState}
+                                        onChange={handleInputChange2}
+                                        value={invoice.shippingState}
                                       />
                                     </div>
 
@@ -605,10 +695,10 @@ export default function RepairOrder() {
 
                                       <input
                                         type="text"
-                                        name="ShippingCity"
+                                        name="shippingCity"
                                         placeholder="Shipping City"
-                                        // onChange={handleInputChange2}
-                                        value={invoice1.ShippingCity}
+                                        onChange={handleInputChange2}
+                                        value={invoice.shippingCity}
                                       />
                                     </div>
                                     <div className="col-md-6 d-flex flex-column ">
@@ -623,9 +713,9 @@ export default function RepairOrder() {
                                           backgroundColor: "transparent",
                                           height: "47px",
                                         }}
-                                        name="TransportationMode"
-                                        value={invoice1.TransportationMode}
-                                        // onChange={handleInputChange2}
+                                        name="transportationMode"
+                                        value={invoice.transportationMode}
+                                        onChange={handleInputChange2}
                                       >
                                         <option>
                                           Select Transportation Mode
@@ -636,6 +726,39 @@ export default function RepairOrder() {
                                         <option value="Truck">Truck</option>
                                       </select>
                                     </div>
+                                    <div className="col-md-6 d-flex flex-column pt-2">
+                                      <label className="fieldlabels">
+                                        <i className="fa-solid fa-coins header-icon2"></i>
+                                        F&F
+                                      </label>
+                                      <input
+                                        type="number"
+                                        placeholder=""
+                                        name="ff"
+                                        value={parsedFF}
+                                        onChange={handleInputChange2}
+                                      />
+                                    </div>
+                                    <div className="col-md-6 d-flex flex-column pt-2">
+                                      <label className="fieldlabels">
+                                        <i className="fa-solid fa-indian-rupee-sign header-icon2"></i>
+                                        Amount
+                                      </label>
+                                      <input
+                                        type="number"
+                                        name="subTotal"
+                                        value={parsedSubTotal}
+                                        onChange={handleInputChange2}
+                                      />
+                                    </div>
+
+                                    <button
+                                      onClick={handleSubmitlast}
+                                      className="add-to-cart"
+                                    >
+                                      <i className="fa-solid fa-check header-icon"></i>
+                                      Continue
+                                    </button>
                                   </div>
                                 </div>
                               </form>

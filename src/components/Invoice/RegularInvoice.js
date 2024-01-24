@@ -8,10 +8,10 @@ import { useNavigate, useParams,useLocation } from "react-router-dom";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
-  // const { orderID } = useParams();
+  const { orderID } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const orderID = queryParams.get("orderID");
+  // const orderID = queryParams.get("orderID");
   let componentRef = useRef();
   const [detail, setDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
@@ -30,6 +30,8 @@ export default function RegularInvoice() {
         });
       axios
         .get(`http://192.168.1.211:8000/invoiceData/${orderID}`)
+        // .get(`http://192.168.1.211:8000/invoiceData/12`)
+
         .then((response) => {
           const responseData = response.data;
           setOrderDetail(responseData);

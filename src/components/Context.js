@@ -80,10 +80,16 @@ export function APIContextProvider({ children }) {
           CustomerPAN,
           CustomerCIN,
           CustomerTAN,
+          ShippingPerson,
+          ShippingAddress,
+          ShippingCountry,
+          ShippingState,
+          ShippingCity,
+          TransportationMode
         } = res.data;
 
         setCustomer(data);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);

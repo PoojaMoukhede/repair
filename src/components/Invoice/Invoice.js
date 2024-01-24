@@ -48,9 +48,9 @@ export default function Invoice({ show, onHide }) {
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
-    Object.values(entry).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
+  Object.values(entry).some((value) =>
+    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
   );
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

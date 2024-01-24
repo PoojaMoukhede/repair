@@ -10,7 +10,7 @@ import { FaFile } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import m_logo from "../Images/multilogo.png";
 import { useLocation } from "react-router-dom";
-export default function Sidebar() {
+export default function Sidebar({ isHovered }) {
   const [selected, setSelected] = useState(null);
   function handleItemClick(item) {
     setSelected(item);
@@ -30,7 +30,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div id="left">
+      <div id="left" >
         <div className="scrollbar-sidebar">
           <nav className="main-menu">
             <ul>
