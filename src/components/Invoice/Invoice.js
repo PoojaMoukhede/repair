@@ -2,55 +2,65 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import Navbar from "./Navbar";
-import Pagination from "../Pagination/Pagination";
-import { useNavigate,Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Invoice({ show, onHide }) {
+export default function Invoice({ orderID }) {
   const navigate = useNavigate();
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [detail, setDetail] = useState([]);
+  console.log(orderID);
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://192.168.1.211:8000/invoice");
-        setEntriesData(response.data);
-        console.log(response.data);
+        const invoiceResponse = await axios.get(
+          "http://192.168.1.211:8000/invoice"
+        );
+        const customerResponse = await axios.get(
+          "http://192.168.1.211:8000/customer"
+        );
+
+        const invoiceData = invoiceResponse.data;
+        const customerData = customerResponse.data;
+
+        // Combine customer details with invoiceData
+        const combinedData = invoiceData.map((order) => {
+          const customerDetails = customerData.find(
+            (customer) => customer.CustomeID === order.CustomeID
+          );
+
+          return {
+            ...order,
+            ...customerDetails,
+          };
+        });
+
+        setEntriesData(combinedData);
+        setDetail(customerData);
       } catch (error) {
-        console.error("Error fetching order list:", error);
+        console.error("Error fetching order and customer data:", error);
       }
     };
+
     fetchData();
-    // getBilledData();
   }, []);
 
-  function getBilledData() {
-    const billedData = [];
-    entriesData.forEach((element) => {
-      if (
-        element.isInProcess === 1 &&
-        element.isReady === 1 &&
-        element.isBilled === 1 &&
-        element.isScraped === 0
-      ) {
-        billedData.push(element);
-        // console.log(`Billed Data ${billedData}`);
-        // console.log(`No data to render`);
-      }
-    });
-  }
+
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
   const totalPages = Math.ceil(entriesData.length / entriesPerPage);
   const filteredRows = currentEntries.filter((entry) =>
-  Object.values(entry).some((value) =>
-    value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-  )
+    Object.values(entry).some(
+      (value) =>
+        value !== null &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -76,16 +86,16 @@ export default function Invoice({ show, onHide }) {
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                        <Link to="/dashboard">
-                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                          <Link to="/dashboard">
+                            <button
+                              className="btn btn-success"
+                              style={{ padding: "5px", fontSize: "0.95rem" }}
+                            >
                               <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
                               Back
                             </button>{" "}
                           </Link>
-                          <label htmlFor="entriesPerPage">
-                            Entries :{" "}
-                        
-                          </label>
+                          <label htmlFor="entriesPerPage">Entries : </label>
                           <input
                             type="number"
                             id="entriesPerPage"
@@ -142,13 +152,12 @@ export default function Invoice({ show, onHide }) {
                                     <td>{index + 1}</td>
                                     <td className="text-center">
                                       {new Date(
-                                        entry.invoiceDate
+                                        entry.created_at
                                       ).toLocaleString("en-US", {
                                         year: "numeric",
-                                       month: "short",
+                                        month: "short",
                                         day: "2-digit",
                                       })}
-                                      {/* { entry.invoiceDate} */}
                                     </td>
                                     <td className="text-center">
                                       {entry.invoice_number}
@@ -158,13 +167,9 @@ export default function Invoice({ show, onHide }) {
                                       {entry.shippingPerson}
                                     </td>
                                     <td className="text-center">
-                                      {/* {entry.totalAmount} */}
                                       {parseFloat(entry.totalAmount).toFixed(2)}
                                     </td>
-                                    <td className="text-center">
-                                      {/* {entry.IRN} */} N/A
-                                    </td>
-                                    {/* <Link to='/regularinvoice'> */}
+                                    <td className="text-center">N/A</td>
                                     <td className="text-center">
                                       <button
                                         className="btn"
@@ -178,10 +183,8 @@ export default function Invoice({ show, onHide }) {
                                       >
                                         {" "}
                                         <i className="fa-solid fa-eye header-icon2"></i>
-                                        {/* <i className="fa-solid fa-circle-plus"></i> */}
                                       </button>
                                     </td>
-                                    {/* </Link> */}
                                   </tr>
                                 ))}
                               </tbody>

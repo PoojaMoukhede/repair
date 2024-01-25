@@ -28,9 +28,7 @@ export default function EditCustomer({ open, onClose, selectedCustomer }) {
     CustomerAddress: "",
     CustomerPinCode: "",
     CustomerGST: "",
-    CustomerPAN: "",
-    CustomerCIN: "",
-    CustomerTAN: "",
+  
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -43,9 +41,6 @@ export default function EditCustomer({ open, onClose, selectedCustomer }) {
     CustomerAddress: "",
     CustomerPinCode: "",
     CustomerGST: "",
-    CustomerPAN: "",
-    CustomerCIN: "",
-    CustomerTAN: "",
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,17 +83,6 @@ export default function EditCustomer({ open, onClose, selectedCustomer }) {
         valid = false;
       }
     }
-    // if (formData.CustomeContactNo.trim() === "") {
-    //   newErrors.CustomeContactNo = "Please enter the customer's phone number.";
-    //   valid = false;
-    // } else if (
-    //   isNaN(formData.CustomeContactNo) ||
-    //   formData.CustomeContactNo.length !== 10
-    // ) {
-    //   newErrors.CustomeContactNo =
-    //     "Please enter a valid 10-digit numeric phone number.";
-    //   valid = false;
-    // }
     if (formData.CustomerAddress.trim() === "") {
       newErrors.CustomerAddress = "Please enter the customer's address.";
       valid = false;
@@ -115,18 +99,6 @@ export default function EditCustomer({ open, onClose, selectedCustomer }) {
       newErrors.CustomerCity = "Please enter the customer's city.";
       valid = false;
     }
-
-    // if (formData.CustomerPinCode.trim() === "") {
-    //   newErrors.CustomerPinCode = "Please enter the customer's pin code.";
-    //   valid = false;
-    // } else if (
-    //   isNaN(formData.CustomerPinCode) ||
-    //   formData.CustomerPinCode.length !== 6
-    // ) {
-    //   newErrors.CustomeContactNo =
-    //     "Please enter a valid 6-digit numeric pin code.";
-    //   valid = false;
-    // }
     if (formData.CustomerGST.trim() === "") {
       newErrors.CustomerGST = "Please enter the customer's GST.";
       valid = false;
@@ -256,7 +228,7 @@ export default function EditCustomer({ open, onClose, selectedCustomer }) {
                   <TextField
                     type="text"
                     label="Customer GST"
-                    name="customerGST"
+                    name="CustomerGST"
                     value={formData.CustomerGST}
                     onChange={handleInputChange}
                     fullWidth
