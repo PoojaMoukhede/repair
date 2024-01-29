@@ -26,7 +26,7 @@ export default function RepairOrder() {
   useEffect(() => {
     try {
       axios
-        .get(`http://localhost:8000/customer`)
+        .get(`http://192.168.1.211:8000/customer`)
         .then((response) => {
           setCustomerData(response.data);
           console.log("sort data", response.data);
@@ -106,7 +106,7 @@ export default function RepairOrder() {
 
   // const handleButtonClick = () => {
   //   axios
-  //     .post("http://localhost:8000/orders", orderItems)
+  //     .post("http://192.168.1.211:8000/orders", orderItems)
   //     .then((res) => {
   //       console.log(`Server response:`, res.data);
   //       const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
@@ -118,7 +118,7 @@ export default function RepairOrder() {
   // };
   const handleButtonClick = () => {
     axios
-      .post("http://localhost:8000/orders", orderItems)
+      .post("http://192.168.1.211:8000/orders", orderItems)
       .then((res) => {
         console.log(`Server response:`, res.data);
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];

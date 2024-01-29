@@ -16,6 +16,7 @@ export default function Header() {
 
   return (
     <>
+      {/* <div className="row" > */}
       <nav className="navbar sticky-top" style={{ backgroundColor: "#002147" }}>
         <div className="container-fluid">
           <a className="navbar-brand" href="#/">
@@ -33,6 +34,7 @@ export default function Header() {
           </form>
         </div>
       </nav>
+      {/* </div> */}
     </>
   );
 }

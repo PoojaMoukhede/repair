@@ -25,7 +25,7 @@ export default function RepairOrder() {
   const [placedOrder, setPlacedorder] = useState(false);
   const [lastOrderNumber, setLastOrderNumber] = useState(null);
   const [nextOrderNumber, setNextOrderNumber] = useState("");
-  const [orderid, setOrderID] = useState(null);
+  const [orderID, setOrderID] = useState(null);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -105,7 +105,7 @@ export default function RepairOrder() {
     RefrenceDate: "",
     CustomeName: "",
     CustomeID: "",
-    orderID: orderid,
+    orderID: orderID,
   });
 
   const handleButtonClick = (e) => {

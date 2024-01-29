@@ -4,7 +4,7 @@ import QR from "../../Images/qr-code.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
-import { useNavigate, useParams,useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ export default function RegularInvoice() {
       if (num >= 11 && num <= 19) {
         result.push(teens[num - 11]);
       } else if (num >= 20) {
-        result.push(tens[Math.floor(num / 10) - 1])
+        result.push(tens[Math.floor(num / 10) - 1]);
         // result.push(tens[Math.floor(num / 10)]);
         num %= 10;
       }
@@ -127,7 +127,6 @@ export default function RegularInvoice() {
           chunkInWords +
           (index === 0 ? "" : ` ${index === 1 ? "Thousand" : "Lakh"}`)
         );
-       
       })
       .reverse()
       .join(" ");
@@ -260,7 +259,7 @@ export default function RegularInvoice() {
                         N/A
                       </td>
                       <td colspan="2" style={{ border: "1px solid black" }}>
-                        {orderDetail.transportationMode}
+                        {orderDetail.TransportationMode}
                       </td>
                       <td colspan="3" style={{ border: "1px solid black" }}>
                         {orderDetail.invoice_number}
@@ -276,7 +275,7 @@ export default function RegularInvoice() {
                           "en-US",
                           {
                             year: "numeric",
-                           month: "short",
+                            month: "short",
                             day: "2-digit",
                           }
                         )}
@@ -304,7 +303,7 @@ export default function RegularInvoice() {
                         }}
                       >
                         <p className="p-0 m-0">
-                          Ship To : <b>{orderDetail.shippingPerson}</b>
+                          Ship To : <b>{orderDetail.ShippingPerson}</b>
                         </p>
                       </td>
                     </tr>
@@ -336,10 +335,10 @@ export default function RegularInvoice() {
                         <p className="p-0 m-0">
                           Address :
                           <b>
-                            {orderDetail.shippingAddress},
-                            {orderDetail.shippingCity} ,{" "}
-                            {orderDetail.shippingState},{" "}
-                            {orderDetail.shippingCountry}
+                            {orderDetail.ShippingAddress},
+                            {orderDetail.ShippingCity} ,{" "}
+                            {orderDetail.ShippingState},{" "}
+                            {orderDetail.ShippingCountry}
                           </b>{" "}
                         </p>
                       </td>
@@ -382,7 +381,7 @@ export default function RegularInvoice() {
                         Sr.
                       </th>
                       <th
-                        colspan="3"
+                        colspan="2"
                         style={{
                           border: "1px solid black",
                           backgroundColor: "#c2dbfe",
@@ -398,6 +397,15 @@ export default function RegularInvoice() {
                         colspan="2"
                       >
                         Serial No
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid black",
+                          backgroundColor: "#c2dbfe",
+                        }}
+                        colspan="1"
+                      >
+                        Warranty
                       </th>
                       <th
                         style={{
@@ -428,16 +436,20 @@ export default function RegularInvoice() {
                         Repair Rate
                       </th>
                     </tr>
+
                     {orderDetailTable.map((entry, index) => (
                       <tr className="m-0 p-0" key={index}>
                         <td style={{ border: "1px solid black" }}>
                           {index + 1}
                         </td>
-                        <td colspan="3" style={{ border: "1px solid black" }}>
+                        <td colspan="2" style={{ border: "1px solid black" }}>
                           {entry.productName}
                         </td>
                         <td colspan="2" style={{ border: "1px solid black" }}>
                           {entry.serialNumber}
+                        </td>
+                        <td style={{ border: "1px solid black" }} colspan="1">
+                          {entry.isInWarranty ? "YES" : "NO"}
                         </td>
                         <td style={{ border: "1px solid black" }} colspan="2">
                           {entry.HSN}

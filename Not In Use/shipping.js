@@ -104,7 +104,7 @@ export default function EditShipping({
         const currentYear = new Date().getFullYear();
         const nextNumber = lastInvoiceNumberNumeric + 1;
         const currentMonth = new Date();
-        const formattedNumber = nextNumber.toString().padStart(5, "0");
+        const formattedNumber = nextNumber.toString().padStart(6, "0");
         const newNextOrderNumber = `MCIPL/RPR/${currentYear
           .toString()
           .substring(2)}${(currentYear + 1)
@@ -112,9 +112,9 @@ export default function EditShipping({
           .substring(2)}/${(currentMonth).toLocaleString('en-us',{
           month: "short",
         })}/${formattedNumber}`;
-    
+        // console.log(`Next Invoice Number before set: ${nextInvoiceNumber}`);
         setNextInvoiceNumber(newNextOrderNumber);
-        console.log(`Next Invoice Number: ${nextInvoiceNumber}`);
+        console.log(`Next Invoice Number after set: ${nextInvoiceNumber}`);
       } else {
         console.error(
           "Failed to extract numeric part from the last order number."

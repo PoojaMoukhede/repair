@@ -17,6 +17,7 @@ export default function ToBill() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [detail, setDetail] = useState([]);
   const [selectedDetails, setselectedDetails] = useState(null);
+  const [selectedCustomer,setSelectedCustomer] = useState(null)
   const handleMoveToProcess = async (orderID) => {
     try {
       const response = await axios.put(
@@ -40,7 +41,7 @@ export default function ToBill() {
 
         const ordersData = ordersResponse.data;
         const customerData = customerResponse.data;
-
+        const CustomeID_sent = customerResponse.data.CustomeID
         // Combine customer details with orders
         const combinedData = ordersData.map((order) => {
           const customerDetails = customerData.find(
@@ -55,6 +56,8 @@ export default function ToBill() {
 
         setEntriesData(combinedData);
         setDetail(customerData);
+        setSelectedCustomer(CustomeID_sent)
+        console.log(`CustomeID_sent : ${customerResponse[0].data}`);
       } catch (error) {
         console.error("Error fetching order and customer data:", error);
       }
@@ -64,6 +67,8 @@ export default function ToBill() {
   }, []);
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
+    // setSelectedOrder(CustomeID)
+    // console.log(`orderID : ${orderID},CustomeID : ${CustomeID}`);
   }
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -272,9 +277,9 @@ export default function ToBill() {
                                         style={makeStyle(entriesData)}
                                       >
                                         {entry.isInWarranty ? (
-                                          <i class="fa-solid fa-square-check"></i>
+                                          <i className="fa-solid fa-square-check"></i>
                                         ) : (
-                                          <i class="fa-solid fa-square-xmark"></i>
+                                          <i className="fa-solid fa-square-xmark"></i>
                                         )}
                                       </p>
                                     </td>
@@ -291,7 +296,7 @@ export default function ToBill() {
                                           handleButtonClick(entry.orderID);
                                         }}
                                       >
-                                        <i class="fa-solid fa-circle-plus"></i>
+                                        <i className="fa-solid fa-circle-plus"></i>
                                       </button>
                                     </td>
                                   </tr>
@@ -346,10 +351,13 @@ export default function ToBill() {
       {isModalOpen1 && (
         <EditShipping
           selectedDetails={selectedDetails}
+          selectedOrder={selectedOrder}
+          selectedCustomer={selectedCustomer}
           open={isModalOpen1}
           onClose={() => setIsModalOpen1(false)}
           onAdd={handleAddDetails}
           orderID1={selectedOrder?.orderID}
+          CustomeID={selectedDetails?.CustomeID}
           onButtonClick={() => {
             handleOrderNumberClick(selectedOrder.orderID);
             console.log(`selectedOrder.orderID : ${selectedOrder}`);

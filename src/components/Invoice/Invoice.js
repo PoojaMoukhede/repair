@@ -152,7 +152,7 @@ export default function Invoice({ orderID }) {
                                     <td>{index + 1}</td>
                                     <td className="text-center">
                                       {new Date(
-                                        entry.created_at
+                                        entry.invoiceDate
                                       ).toLocaleString("en-US", {
                                         year: "numeric",
                                         month: "short",
@@ -164,7 +164,7 @@ export default function Invoice({ orderID }) {
                                     </td>
 
                                     <td className="text-center">
-                                      {entry.shippingPerson}
+                                      {entry.ShippingPerson}
                                     </td>
                                     <td className="text-center">
                                       {parseFloat(entry.totalAmount).toFixed(2)}
