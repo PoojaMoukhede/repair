@@ -245,7 +245,7 @@ export default function NewCustomer() {
                                 Customer Name
                               </label>
                               <input
-                                className={`form-control ${
+                                className={`form-control noborder${
                                   formErrors.CustomeName && "is-invalid"
                                 }`}
                                 id="CustomeName"
@@ -267,7 +267,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomeEmail && "is-invalid"
                                 }`}
                                 id="CustomeEmail"
@@ -289,7 +289,7 @@ export default function NewCustomer() {
                               </label>
                               <textarea
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerAddress && "is-invalid"
                                 }`}
                                 id="CustomerAddress"
@@ -313,7 +313,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerGST && "is-invalid"
                                 }`}
                                 id="CustomerGST"
@@ -335,7 +335,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerPAN && "is-invalid"
                                 }`}
                                 id="CustomerPAN"
@@ -357,7 +357,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerCIN && "is-invalid"
                                 }`}
                                 id="CustomerCIN"
@@ -379,7 +379,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="text"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerTAN && "is-invalid"
                                 }`}
                                 id="CustomerTAN"
@@ -401,7 +401,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="number"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomerPinCode && "is-invalid"
                                 }`}
                                 id="CustomerPinCode"
@@ -423,7 +423,7 @@ export default function NewCustomer() {
                               </label>
                               <input
                                 type="number"
-                                className={`form-control ${
+                                className={`form-control noborder ${
                                   formErrors.CustomeContactNo && "is-invalid"
                                 }`}
                                 id="CustomeContactNo"
@@ -531,7 +531,7 @@ export default function NewCustomer() {
                                 <input
                                   type="text"
                                   name="ShippingPerson"
-                                  className="form-control"
+                                  className="form-control noborder"
                                   value={formData.ShippingPerson}
                                   onChange={handleInputChange}
                                 />
@@ -546,7 +546,7 @@ export default function NewCustomer() {
                                 <input
                                   type="text"
                                   name="ShippingAddress"
-                                  className="form-control"
+                                  className="form-control noborder"
                                   value={formData.ShippingAddress}
                                   onChange={handleInputChange}
                                 />
@@ -561,7 +561,7 @@ export default function NewCustomer() {
 
                                 <input
                                   type="text"
-                                  className="form-control"
+                                  className="form-control noborder"
                                   name="ShippingCountry"
                                   onChange={handleInputChange}
                                   value={formData.ShippingCountry}
@@ -578,7 +578,7 @@ export default function NewCustomer() {
                                 <input
                                   type="text"
                                   name="ShippingState"
-                                  className="form-control"
+                                  className="form-control noborder"
                                   onChange={handleInputChange}
                                   value={formData.ShippingState}
                                 />
@@ -594,7 +594,7 @@ export default function NewCustomer() {
                                 <input
                                   type="text"
                                   name="ShippingCity"
-                                  className="form-control"
+                                  className="form-control noborder"
                                   onChange={handleInputChange}
                                   value={formData.ShippingCity}
                                 />

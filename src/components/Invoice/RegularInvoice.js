@@ -461,7 +461,7 @@ export default function RegularInvoice() {
                           style={{ border: "1px solid black", width: "150px" }}
                           colspan="3"
                         >
-                          {parseFloat(entry.totalAmount).toFixed(2)}
+                          {parseFloat(entry.subTotal).toFixed(2)}
                         </td>
                       </tr>
                     ))}

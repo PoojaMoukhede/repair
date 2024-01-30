@@ -66,6 +66,7 @@ export default function RepairOrder() {
     setCartCountValue((prevCount) => prevCount + 1);
   };
 
+
   const handleDeleteRow = (id) => {
     setOrderItems((prevItems) => prevItems.filter((item) => item.id !== id));
     setCartCountValue((prevCount) => prevCount - 1);
@@ -91,22 +92,26 @@ export default function RepairOrder() {
     });
   };
 
-  const [orderItems, setOrderItems] = useState({
-    id: 1,
-    productName: "",
-    serialNumber: "",
-    HSN: "",
-    isInWarranty: "",
-    customerReason: "",
-    orderNumber: "",
-    orderRemark: "",
-    orderDate: "",
-    CustomerReferance: "",
-    RefrenceDate: "",
-    CustomeName: "",
-    CustomeID: "",
-    orderID: orderID,
-  });
+  const [orderItems, setOrderItems] = useState(  // if  we want to add new order items in the future, this should be changed to a array of objects and in map change [0]
+
+      {
+        id: 1,
+        productName: "",
+        serialNumber: "",
+        HSN: "",
+        isInWarranty: "",
+        customerReason: "",
+        orderNumber: "",
+        orderRemark: "",
+        orderDate: "",
+        CustomerReferance: "",
+        RefrenceDate: "",
+        CustomeName: "",
+        CustomeID: "",
+        orderID: orderID,
+      }
+  
+  );
 
   const handleButtonClick = (e) => {
     e.preventDefault();
@@ -134,6 +139,7 @@ export default function RepairOrder() {
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
         setOrderItems(updatedOrderItems);
         setPlacedorder(true);
+        setAdded(true)
       })
       .catch((err) => {
         console.error("Error posting order:", err);
@@ -679,7 +685,7 @@ export default function RepairOrder() {
                             </thead>
                             <tbody className="table-group-divider">
                               <tr key={orderItems.orderID}>
-                                <th scope="row">{orderItems.orderID}</th>
+                                <th scope="row">{orderItems.id}</th>
                                 <td>
                                   <select
                                     className="form-select input_repair"
@@ -876,6 +882,8 @@ export default function RepairOrder() {
                   </div>
                 </div>
               </div>
+
+              
             </div>
           </div>
         </div>

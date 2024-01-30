@@ -11,7 +11,6 @@ export default function EditShipping({
   open,
   onClose,
   selectedDetails,
-  orderID1,
   selectedOrder,
   CustomeID,
   onButtonClick,
@@ -58,23 +57,32 @@ export default function EditShipping({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const updatedFormData = { ...formData, invoice_number: nextInvoiceNumber };
     axios
-      .post("http://192.168.1.211:8000/invoice", formData)
+      .post("http://192.168.1.211:8000/invoice", updatedFormData)
       .then((res) => {
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
+        handleMoveToInvoiced()
         setFormData(updatedOrderItems);
+        // handleMoveToInvoiced()
         if (onButtonClick) {
           onButtonClick();
         }
-        // const nextInvoiceNumber = generateNextInvoiceNumber();
-        // console.log("Generated Invoice Number:", nextInvoiceNumber);
-        // navigate(`/regularinvoice/${orderID}`)
       })
       .catch((err) => {
         console.error("Error posting order:", err);
       });
   };
-
+  const handleMoveToInvoiced = async () => {
+    try {
+      const response = await axios.put(
+        `http://192.168.1.211:8000/isinvoiced/${selectedOrder}`
+      );
+      console.log("Is Invoiced true : ", response.data);
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {

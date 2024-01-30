@@ -86,14 +86,14 @@ const Translator = ({ name, value, onChange }) => {
             ))}
           </select>
         </div>
-        <ul className="controls">
+        {/* <ul className="controls">
           <li className="row">
             <button onClick={handleExchange} className="btn btn-success">
               <i className="header-icon fa-solid fa-right-left"></i>
               Exchange Languages
             </button>
           </li>
-        </ul>
+        </ul> */}
       </div>
     </div>
   );

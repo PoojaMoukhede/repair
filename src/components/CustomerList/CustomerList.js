@@ -176,7 +176,7 @@ export default function CustomerList() {
                                     <td className="text-center">
                                       <button
                                         className="btn"
-                                        style={{ color: "" }}
+                                        style={{ color: "#f9bb00" }}
                                         onClick={(e) => {
                                           setIsModalOpen(true);
                                           setselectedCustomer(data);

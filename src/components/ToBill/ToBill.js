@@ -17,7 +17,7 @@ export default function ToBill() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [detail, setDetail] = useState([]);
   const [selectedDetails, setselectedDetails] = useState(null);
-  const [selectedCustomer,setSelectedCustomer] = useState(null)
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const handleMoveToProcess = async (orderID) => {
     try {
       const response = await axios.put(
@@ -41,7 +41,7 @@ export default function ToBill() {
 
         const ordersData = ordersResponse.data;
         const customerData = customerResponse.data;
-        const CustomeID_sent = customerResponse.data.CustomeID
+        const CustomeID_sent = customerResponse.data.CustomeID;
         // Combine customer details with orders
         const combinedData = ordersData.map((order) => {
           const customerDetails = customerData.find(
@@ -56,7 +56,7 @@ export default function ToBill() {
 
         setEntriesData(combinedData);
         setDetail(customerData);
-        setSelectedCustomer(CustomeID_sent)
+        setSelectedCustomer(CustomeID_sent);
         console.log(`CustomeID_sent : ${customerResponse[0].data}`);
       } catch (error) {
         console.error("Error fetching order and customer data:", error);
@@ -65,10 +65,9 @@ export default function ToBill() {
 
     fetchData();
   }, []);
+
   function handleOrderNumberClick(orderID) {
     setSelectedOrder(orderID);
-    // setSelectedOrder(CustomeID)
-    // console.log(`orderID : ${orderID},CustomeID : ${CustomeID}`);
   }
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -104,12 +103,8 @@ export default function ToBill() {
     });
     setDetail(newData);
   };
-  // const handleButtonClick = (orderID) => {
-  //   console.log("Clicked OrderID:", orderID);
-  //   setIsModalOpen1(true);
-  // };
+
   const handleButtonClick = (orderID) => {
-    console.log("Clicked OrderID:", orderID);
     setSelectedOrder(orderID);
     setIsModalOpen1(true);
   };
@@ -129,7 +124,7 @@ export default function ToBill() {
       };
     }
   };
-  console.log(`selectedOrder : ${selectedOrder}`);
+
   return (
     <>
       <Header />
@@ -277,27 +272,65 @@ export default function ToBill() {
                                         style={makeStyle(entriesData)}
                                       >
                                         {entry.isInWarranty ? (
-                                          <i className="fa-solid fa-square-check"></i>
+                                          <p
+                                            style={{
+                                              color: "#00c409",
+
+                                              fontSize: "0.7rem",
+                                              textAlign: "center",
+                                              margin: 0,
+                                            }}
+                                          >
+                                            YES
+                                          </p>
                                         ) : (
-                                          <i className="fa-solid fa-square-xmark"></i>
+                                          <p
+                                            style={{
+                                              fontSize: "0.7rem",
+
+                                              color: "#dd0000",
+                                              textAlign: "center",
+                                              margin: 0,
+                                            }}
+                                          >
+                                            NO
+                                          </p>
                                         )}
                                       </p>
                                     </td>
                                     <td className="text-center">
-                                      <button
-                                        className="btn"
-                                        style={{
-                                          color: "green",
-                                          fontSize: "1.2rem",
-                                        }}
-                                        orderID={entry.orderID}
-                                        onClick={() => {
-                                          setselectedDetails(entry);
-                                          handleButtonClick(entry.orderID);
-                                        }}
-                                      >
-                                        <i className="fa-solid fa-circle-plus"></i>
-                                      </button>
+                                      {entry.isinvoiced ? (
+                                        <button
+                                          className="btn"
+                                          style={{
+                                            background: "#f9bb00",
+                                            color: "black",
+                                            border: "1px solid #efc84a",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          {" "}
+                                          Generated
+                                        </button>
+                                      ) : (
+                                        <button
+                                          className="btn"
+                                          style={{
+                                            background:
+                                              "rgb(145 254 159 / 47%)",
+                                            color: "green",
+                                            border: "1px solid #85cb33",
+                                            fontSize: "0.7rem",
+                                          }}
+                                          orderID={entry.orderID}
+                                          onClick={() => {
+                                            setselectedDetails(entry);
+                                            handleButtonClick(entry.orderID);
+                                          }}
+                                        >
+                                          Generate
+                                        </button>
+                                      )}
                                     </td>
                                   </tr>
                                 ))}
