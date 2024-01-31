@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Header from "../Header";
-import Sidebar from "../Sidebar";
-import { FaShieldHalved } from "react-icons/fa6";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import { IoMdRemoveCircle } from "react-icons/io";
-import { FaOpencart } from "react-icons/fa6";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import OrderComponent from "./OrderComponent";
-import booked from "../../Images/checkmark.png";
+import OrderComponent from "../components/RepairOrder/OrderComponent";
 import { Link } from "react-router-dom";
-import "./btn.css";
+import "../components/RepairOrder/btn.css";
 import axios from "axios";
-import { useAPI } from "../Context";
+import { useAPI } from "../components/Context";
 
 export default function RepairOrder() {
   const [cartCountValue, setCartCountValue] = useState(0);

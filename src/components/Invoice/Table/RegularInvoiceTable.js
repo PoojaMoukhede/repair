@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Header from "../Header";
-import Sidebar from "../Sidebar";
-import Navbar from "./Navbar";
+import Header from "../../Header";
+import Sidebar from "../../Sidebar";
+import Navbar from "../Navbar";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Invoice({ orderID }) {
+export default function RegularInvoiceTable({ orderID }) {
   const navigate = useNavigate();
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +13,7 @@ export default function Invoice({ orderID }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [detail, setDetail] = useState([]);
   console.log(orderID);
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,14 +32,20 @@ export default function Invoice({ orderID }) {
           const customerDetails = customerData.find(
             (customer) => customer.CustomeID === order.CustomeID
           );
+         
 
           return {
             ...order,
             ...customerDetails,
+          
           };
         });
-
-        setEntriesData(combinedData);
+       
+        const zeroInvoice = combinedData.filter(
+            (item) => item.totalAmount != "0.00"
+          );
+        console.log(`zeroInvoice : ${zeroInvoice}`);
+        setEntriesData(zeroInvoice);
         setDetail(customerData);
       } catch (error) {
         console.error("Error fetching order and customer data:", error);
@@ -48,8 +54,6 @@ export default function Invoice({ orderID }) {
 
     fetchData();
   }, []);
-
-
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -62,6 +66,7 @@ export default function Invoice({ orderID }) {
         value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -70,7 +75,7 @@ export default function Invoice({ orderID }) {
     navigate(`/regularinvoice/${orderID}`);
     console.log(orderID);
   }
-  console.log(`filteredRows : ${currentEntries}`);
+  //   console.log(`filteredRows : ${currentEntries}`);
   return (
     <>
       <Header />

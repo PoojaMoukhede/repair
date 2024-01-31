@@ -48,6 +48,7 @@ export default function EditShipping({
         ShippingState: selectedDetails.ShippingState,
         TransportationMode: selectedDetails.TransportationMode,
         invoice_number: nextInvoiceNumber,
+        // invoice_number:'MCIPL/RPR/2425/Jan/000001',
         orderID: selectedOrder,
       };
 
@@ -102,6 +103,9 @@ export default function EditShipping({
   }, []);
 
   useEffect(() => {
+    if(!lastInvoiceNumber){
+      setNextInvoiceNumber('MCIPL/RPR/2425/Jan/000001');
+    }
     if (lastInvoiceNumber !== null && lastInvoiceNumber !== undefined) {
       const lastInvoiceNumberParts = parseInt(
         (lastInvoiceNumber.split("/") || []).pop(),

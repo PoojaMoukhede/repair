@@ -47,26 +47,6 @@ export default function OrderList() {
     setSelectedOrder(orderID);
     console.log(orderID);
   }
-  const makeStyle = (entriesData) => {
-    const { isInProcess, isReady, isBilled, isScraped, isinvoiced } =
-      entriesData;
-    if (!isInProcess && !isReady && !isBilled && !isScraped) {
-      return {
-        background: "#f9bb00",
-        color: "black",
-        border: "1px solid #efc84a",
-        fontSize:'0.7rem'
-      };
-    }
-    if (isinvoiced) {
-      return {
-        background: "rgb(145 254 159 / 47%)",
-        color: "green",
-        border: "1px solid #85cb33",
-        fontSize:'0.7rem'
-      };
-    }
-  };
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -87,14 +67,15 @@ export default function OrderList() {
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
                           <Link to="/dashboard">
-                            <button className="btn btn-success" style={{padding:'5px',fontSize:'0.95rem'}}>
+                            <button
+                              className="btn btn-success"
+                              style={{ padding: "5px", fontSize: "0.95rem" }}
+                            >
                               <i className="header-icon2 fa-solid fa-arrow-left-long"></i>
                               Back
                             </button>{" "}
                           </Link>
-                          <label htmlFor="entriesPerPage">
-                            Entries :{" "}
-                          </label>
+                          <label htmlFor="entriesPerPage">Entries : </label>
                           <input
                             type="number"
                             id="entriesPerPage"
@@ -198,15 +179,101 @@ export default function OrderList() {
                                       })}
                                     </td>
                                     <td className="text-center">
-                                      <p
-                                        className="text-center laststatus"
-                                        style={makeStyle(entriesData)}
-                                      >
-                                        {entriesData.isinvoiced
-                                          ? "Repaired"
-                                          : "Pending"}
-                                      </p>
+                                      {entry.isinvoiced ? (
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background: "#f9bb00",
+                                            color: "black",
+                                            border: "1px solid #efc84a",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Repaired
+                                        </p>
+                                      ) : (
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background:
+                                              "rgb(145 254 159 / 47%)",
+                                            color: "green",
+                                            border: "1px solid #85cb33",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Pending
+                                        </p>
+                                      )}
                                     </td>
+                                    {/* <td className="text-center">
+                                      {entry.isInProcess?
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background:
+                                              "rgb(145 254 159 / 47%)",
+                                            color: "green",
+                                            border: "1px solid #85cb33",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Pending
+                                        </p>:""
+                                      }
+                                      {entry.isReady?
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background: "#f9bb00",
+                                            color: "black",
+                                            border: "1px solid #efc84a",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Ready
+                                        </p>:''
+                                      }
+                                      {entry.isBilled ?
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background: "#f9bb00", // Adjust color as needed
+                                            color: "black",
+                                            border: "1px solid #efc84a", // Adjust border color as needed
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Billed
+                                        </p>:''
+                                      }
+                                      {entry.isScraped ?
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background: "red",
+                                            color: "white",
+                                            border: "1px solid #efc84a", // Adjust border color as needed
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Scraped
+                                        </p>:''
+                                      }
+                                      {entry.isinvoiced ?
+                                        <p
+                                          className="text-center btn"
+                                          style={{
+                                            background: "#f9bb00",
+                                            color: "black",
+                                            border: "1px solid #efc84a",
+                                            fontSize: "0.7rem",
+                                          }}
+                                        >
+                                          Repaired
+                                        </p>:''
+                                      }
+                                    </td> */}
                                   </tr>
                                 ))}
                               </tbody>

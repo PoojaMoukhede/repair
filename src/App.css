@@ -13,7 +13,7 @@
   display: grid;
   grid-template-columns: 48px auto;
 }
-#left{
+#left {
   background-color: #12192c;
 }
 #grid:has(#left:hover) {
@@ -70,8 +70,8 @@ nav.main-menu.expanded {
   -webkit-transform: translateZ(0) scale(1, 1);
   z-index: 1000;
 }
-.main-menu:hover{
-  width:13%;
+.main-menu:hover {
+  width: 13%;
 }
 .main-menu > ul {
   margin: 5px 0;
@@ -222,7 +222,7 @@ a {
   height: 53px;
 }
 .card-header-title {
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin: 5px 0px 0px 0px;
 }
 .btn2 {
@@ -630,6 +630,45 @@ li,
 
 .btnchart:hover {
   color: white;
-  box-shadow: 2px 2px 3px 0 #004976,
-    inset 2px 2px 3px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 3px 0 #004976, inset 2px 2px 3px 0 rgba(0, 0, 0, 0.4);
+}
+.blinking{
+  background-color:  rgb(145 254 159 / 47%);
+  border: 1px solid #85cb33;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Arial;
+  font-size: 0.8rem;
+  text-align: center;
+  text-decoration: none;
+  -webkit-animation: glowing 1500ms infinite;
+  -moz-animation: glowing 1500ms infinite;
+  -o-animation: glowing 1500ms infinite;
+  animation: glowing 1500ms infinite;
+  transition: smooth;
+}
+@-webkit-keyframes glowing {
+  0% { background-color: #85cb33; -webkit-box-shadow: 0 0 3px #85cb33; }
+  50% { background-color: #6ba32b; -webkit-box-shadow: 0 0 40px #6ba32b; }
+  100% { background-color: #85cb33; -webkit-box-shadow: 0 0 3px #85cb33; }
+}
+
+@-moz-keyframes glowing {
+  0% { background-color: #85cb33; -moz-box-shadow: 0 0 3px #85cb33; }
+  50% { background-color: #6ba32b; -moz-box-shadow: 0 0 40px #6ba32b; }
+  100% { background-color: #85cb33; -moz-box-shadow: 0 0 3px #85cb33; }
+}
+
+@-o-keyframes glowing {
+  0% { background-color: #85cb33; box-shadow: 0 0 3px #85cb33; }
+  50% { background-color: #6ba32b; box-shadow: 0 0 40px #6ba32b; }
+  100% { background-color: #85cb33; box-shadow: 0 0 3px #85cb33; }
+}
+
+@keyframes glowing {
+  0% { background-color: #85cb33; box-shadow: 0 0 3px #85cb33; }
+  50% { background-color: #6ba32b; box-shadow: 0 0 40px #6ba32b; }
+  100% { background-color: #85cb33; box-shadow: 0 0 3px #85cb33; }
 }

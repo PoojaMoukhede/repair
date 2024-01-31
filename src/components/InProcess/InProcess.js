@@ -180,6 +180,7 @@ export default function OrderList() {
                                       onClick={() =>
                                         handleOrderNumberClick(entry.orderID)
                                       }
+                                     
                                     >
                                       <Readymodel
                                         show={isModalOpen}
@@ -226,17 +227,26 @@ export default function OrderList() {
                                       )}
                                     </td>
                                     <td className="text-center">
-                                      <p
-                                        className="text-center laststatus"
-                                        style={makeStyle(entriesData)}
-                                      >
-                                        {!entriesData.isInProcess &&
-                                        !entriesData.isReady &&
-                                        !entriesData.isBilled &&
-                                        !entriesData.isScraped
-                                          ? "Pending"
-                                          : "Repaired"}
-                                      </p>
+                                    {entry.isinvoiced
+                                          ? (<p
+                                            className="text-center btn"
+                                            style={{
+                                              background: "#f9bb00",
+                                              color: "black",
+                                              border: "1px solid #efc84a",
+                                              fontSize: "0.7rem",
+                                            }}
+                                          >Repaired</p>)
+                                          : (<p
+                                            className="text-center btn"
+                                            style={{
+                                              background:
+                                              "rgb(145 254 159 / 47%)",
+                                            color: "green",
+                                            border: "1px solid #85cb33",
+                                            fontSize: "0.7rem",
+                                            }}
+                                          >Pending</p>)}
                                     </td>
                                   </tr>
                                 ))}

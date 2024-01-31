@@ -314,14 +314,14 @@ export default function ToBill() {
                                         </button>
                                       ) : (
                                         <button
-                                          className="btn"
-                                          style={{
-                                            background:
-                                              "rgb(145 254 159 / 47%)",
-                                            color: "green",
-                                            border: "1px solid #85cb33",
-                                            fontSize: "0.7rem",
-                                          }}
+                                          className="btn blinking"
+                                          // style={{
+                                          //   background:
+                                          //     "rgb(145 254 159 / 47%)",
+                                          //   color: "green",
+                                          //   border: "1px solid #85cb33",
+                                          //   fontSize: "0.7rem",
+                                          // }}
                                           orderID={entry.orderID}
                                           onClick={() => {
                                             setselectedDetails(entry);

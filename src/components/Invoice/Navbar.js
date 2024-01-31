@@ -42,9 +42,9 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                to="/regularinvoice"
+                to="/regularTable"
                 className={`btn navbtn ${
-                  currentPath === "/regularinvoice" ? "active" : ""
+                  currentPath === "/regularTable" ? "active" : ""
                 }`}
                 onClick={() => handleButtonClick("Regular Invoice")}
               >

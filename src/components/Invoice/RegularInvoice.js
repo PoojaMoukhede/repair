@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import logo from "../../Images/multispan-logo-HD.png";
-import QR from "../../Images/qr-code.png";
+import QR from "../../Images/image.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { jsPDF } from "jspdf";
+import "jspdf/dist/polyfills.es.js";
+import html2canvas from "html2canvas";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
@@ -12,7 +15,7 @@ export default function RegularInvoice() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   // const orderID = queryParams.get("orderID");
-  let componentRef = useRef();
+  let componentRef = useRef(null);
   const [detail, setDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
   const [orderDetailTable, setOrderDetailTable] = useState([]);
@@ -134,9 +137,18 @@ export default function RegularInvoice() {
     return `${words} Rupees Only`;
   }
 
+  const printDocument = () => {
+    html2canvas(componentRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("l", "px", [1000, 1100]);
+      pdf.addImage(imgData, "JPEG", 0, 0);
+      pdf.save("MCIPL-Invoice.pdf");
+    });
+  };
+
   return (
     <>
-      <main className="container-fluid" ref={(el) => (componentRef = el)}>
+      <main className="container-fluid" ref={componentRef}>
         <div className="row">
           {/* Printable Area */}
           <div className="container">
@@ -189,7 +201,10 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         colspan="10"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="text-uppercase p-0 m-0">
                           {detail.companyAddress}, {detail.companyCity},{" "}
@@ -202,13 +217,19 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         colspan="5"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="m-0 p-0">GST IN : {detail.companyGST}</p>
                       </td>
                       <td
                         colspan="5"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="m-0 p-0">PAN : {detail.companyPAN}</p>
                       </td>
@@ -216,13 +237,19 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         colspan="5"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="m-0 p-0">Web : {detail.companyWebsite}</p>
                       </td>
                       <td
                         colspan="5"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="m-0 p-0">CIN : {detail.companyCIN}</p>
                       </td>
@@ -346,7 +373,10 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         colspan="6"
-                        style={{ border: "1px solid #000", textAlign: "left" }}
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="p-0 m-0">
                           GST : <b>{orderDetail.CustomerGST}</b>{" "}
@@ -354,7 +384,10 @@ export default function RegularInvoice() {
                       </td>
                       <td
                         colspan="6"
-                        style={{ border: "1px solid #000", textAlign: "left" }}
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="p-0 m-0">
                           GST : <b>{orderDetail.CustomerGST}</b>{" "}
@@ -458,7 +491,10 @@ export default function RegularInvoice() {
                           18%
                         </td>
                         <td
-                          style={{ border: "1px solid black", width: "150px" }}
+                          style={{
+                            border: "1px solid black",
+                            width: "150px",
+                          }}
                           colspan="3"
                         >
                           {parseFloat(entry.subTotal).toFixed(2)}
@@ -588,7 +624,10 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         colspan="14"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         <p className="p-0 m-0">
                           Amount In Words :
@@ -676,7 +715,10 @@ export default function RegularInvoice() {
                       <td
                         col="1"
                         colspan="6"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         Branch Name : <b>{detail.branchName}</b>
                       </td>
@@ -685,7 +727,10 @@ export default function RegularInvoice() {
                       <td
                         col="1"
                         colspan="6"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                       >
                         Account No : <b>{detail.acNumber}</b>
                       </td>
@@ -693,7 +738,10 @@ export default function RegularInvoice() {
                     <tr>
                       <td
                         col="1"
-                        style={{ border: "1px solid black", textAlign: "left" }}
+                        style={{
+                          border: "1px solid black",
+                          textAlign: "left",
+                        }}
                         colspan="6"
                       >
                         IFSC/RTGS Code : <b>{detail.IFSC}</b>
@@ -703,13 +751,20 @@ export default function RegularInvoice() {
                       <td
                         col="1"
                         colspan="6"
-                        style={{ border: "1px solid #000", textAlign: "left" }}
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "left",
+                        }}
                       >
                         UPI :
                         <img
                           src={upi}
                           alt="UPI"
-                          style={{ padding: "0", margin: "0", height: "30px" }}
+                          style={{
+                            padding: "0",
+                            margin: "0",
+                            height: "30px",
+                          }}
                         />
                         <b> {detail.UPI}</b>
                       </td>
@@ -745,9 +800,9 @@ export default function RegularInvoice() {
                 Print
               </button>
             )}
-            content={() => componentRef}
+            content={() => componentRef.current}
           />
-          <button className="btn btn-success">
+          <button className="btn btn-success" onClick={() => printDocument()}>
             <i
               className="fa-solid fa-cloud-arrow-down header-icon2"
               style={{ color: "#e4e4dc" }}

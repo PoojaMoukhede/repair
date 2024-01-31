@@ -126,19 +126,37 @@ export default function NewCustomer() {
       newErrors.CustomerGST = "Please enter the customer's GST.";
       valid = false;
     }
+    else{
+      let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
+      if (!regex.test(formData.CustomerGST)) {
+        newErrors.CustomerGST = "Please enter a valid 15 digits alpha-numeric GST number.";
+        valid = false;
+      }
+    }
     if (formData.CustomerPAN.trim() === "") {
       newErrors.CustomerPAN = "Please enter the customer's PAN.";
       valid = false;
+    }else{
+      let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/);
+      if (!regex.test(formData.CustomerPAN)) {
+        newErrors.CustomerPAN = "Please enter a valid 10 digits alpha-numeric PAN number.";
+        valid = false;
+      }
     }
     if (formData.CustomerCIN.trim() === "") {
       newErrors.CustomerCIN = "Please enter the customer's CIN.";
       valid = false;
+    }else{
+      let regex = new RegExp(/^([LUu]{1})([0-9]{5})([A-Za-z]{2})([0-9]{4})([A-Za-z]{3})([0-9]{6})$/);
+      if (!regex.test(formData.CustomerCIN)) {
+        newErrors.CustomerCIN = "Please enter a valid 21 digits alpha-numeric CIN number.";
+        valid = false;
+      }
     }
     if (formData.CustomerTAN.trim() === "") {
-      newErrors.CustomerTAN = "Please enter the customer's TAN.";
+      newErrors.CustomerTAN = "Please enter a valid 10 digits alpha-numeric TAN number.";
       valid = false;
     }
-
     if (formData.ShippingPerson.trim() === "") {
       newErrors.ShippingPerson = "Please enter Shipping Person.";
       valid = false;
@@ -318,6 +336,7 @@ export default function NewCustomer() {
                                 }`}
                                 id="CustomerGST"
                                 name="CustomerGST"
+                                placeholder="06BZAHM6385P6Z2"
                                 value={formData.CustomerGST}
                                 onChange={handleInputChange}
                                 required
@@ -340,6 +359,7 @@ export default function NewCustomer() {
                                 }`}
                                 id="CustomerPAN"
                                 name="CustomerPAN"
+                                placeholder="BNZAA2318J"
                                 value={formData.CustomerPAN}
                                 onChange={handleInputChange}
                                 required
@@ -362,6 +382,7 @@ export default function NewCustomer() {
                                 }`}
                                 id="CustomerCIN"
                                 name="CustomerCIN"
+                                placeholder="U12345AB6784CDE123456"
                                 value={formData.CustomerCIN}
                                 onChange={handleInputChange}
                                 required

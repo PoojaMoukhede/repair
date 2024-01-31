@@ -89,7 +89,7 @@ export function APIContextProvider({ children }) {
         } = res.data;
 
         setCustomer(data);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);

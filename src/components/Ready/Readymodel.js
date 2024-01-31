@@ -51,7 +51,7 @@ function Readymodel({  Title, onButtonClick, btnText, orderID, orderState, order
 
   return (
     <>
-      <Button variant="" onClick={() => setShow(true)}>
+      <Button variant="" onClick={() => setShow(true)}  style={{fontSize:'0.9rem'}}>
         {orderNumber}
       </Button>
 

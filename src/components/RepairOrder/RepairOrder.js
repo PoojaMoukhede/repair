@@ -66,7 +66,6 @@ export default function RepairOrder() {
     setCartCountValue((prevCount) => prevCount + 1);
   };
 
-
   const handleDeleteRow = (id) => {
     setOrderItems((prevItems) => prevItems.filter((item) => item.id !== id));
     setCartCountValue((prevCount) => prevCount - 1);
@@ -75,71 +74,80 @@ export default function RepairOrder() {
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
 
   const handleInputChange = (id, name, value) => {
-    if (name === "CustomeName") {
-      const selectedCustomer = customerData.find(
-        (customer) => customer.CustomeName === value
-      );
-
-      setSelectedCustomerId(selectedCustomer ? selectedCustomer.CustomeID : "");
-      setIsCustomerSelected(true);
-    }
-
-    setSelectedCustomer(value);
-    setOrderItems({
-      ...orderItems,
-      [name]: value,
-      CustomeID: selectedCustomerId,
+    setOrderItems((prevItems) => {
+      return prevItems.map((item) => {
+        if (item.id === id) {
+          if (name === "CustomeName") {
+            const selectedCustomer = customerData.find(
+              (customer) => customer.CustomeName === value
+            );
+            setSelectedCustomerId(
+              selectedCustomer ? selectedCustomer.CustomeID : ""
+            );
+            setIsCustomerSelected(true);
+          }
+          setSelectedCustomer(value);
+          console.log(`customerData : ${selectedCustomer}`);
+          return {
+            ...item,
+            [name]: value,
+            CustomeID: selectedCustomerId,
+          };
+        }
+        return item;
+      });
     });
+    console.log(`input :${value}`);
   };
 
-  const [orderItems, setOrderItems] = useState(  // if  we want to add new order items in the future, this should be changed to a array of objects and in map change [0]
-
-      {
-        id: 1,
-        productName: "",
-        serialNumber: "",
-        HSN: "",
-        isInWarranty: "",
-        customerReason: "",
-        orderNumber: "",
-        orderRemark: "",
-        orderDate: "",
-        CustomerReferance: "",
-        RefrenceDate: "",
-        CustomeName: "",
-        CustomeID: "",
-        orderID: orderID,
-      }
-  
-  );
+  const [orderItems, setOrderItems] = useState([
+    {
+      id: 1,
+      productName: "",
+      serialNumber: "",
+      HSN: "",
+      isInWarranty: "",
+      customerReason: "",
+      orderNumber: "",
+      orderRemark: "",
+      orderDate: "",
+      CustomerReferance: "",
+      RefrenceDate: "",
+      CustomeName: "",
+      CustomeID: "",
+      orderID: orderID,
+    },
+  ]);
 
   const handleButtonClick = (e) => {
     e.preventDefault();
     const orderDataSent = {
       id: 1,
-      productName: orderItems.productName,
-      serialNumber: orderItems.serialNumber,
-      HSN: orderItems.HSN,
-      isInWarranty: orderItems.isInWarranty,
-      customerReason: orderItems.customerReason,
+      productName: orderItems[0].productName,
+      serialNumber: orderItems[0].serialNumber,
+      HSN: orderItems[0].HSN,
+      isInWarranty: orderItems[0].isInWarranty,
+      customerReason: orderItems[0].customerReason,
       orderNumber: nextOrderNumber,
-      orderRemark: orderItems.orderRemark,
+      // orderNumber: "RPR/24/Jan/2425/00001",
+      orderRemark: orderItems[0].orderRemark,
       orderDate: referanceDate,
-      CustomerReferance: orderItems.CustomerReferance,
+      CustomerReferance: orderItems[0].CustomerReferance,
       RefrenceDate: referanceDate,
-      CustomeName: orderItems.CustomeName,
+      CustomeName: orderItems[0].CustomeName,
       CustomeID: selectedCustomerId,
       // orderID: orderID,
     };
 
     axios
-      .post("http://192.168.1.211:8000/orders", orderDataSent)
+      .post("http://192.168.1.211:8000/ordersMultiple", [orderDataSent])
       .then((res) => {
         console.log(`Server response:`, res.data);
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
         setOrderItems(updatedOrderItems);
         setPlacedorder(true);
-        setAdded(true)
+        setAdded(true);
+        window.location.reload();
       })
       .catch((err) => {
         console.error("Error posting order:", err);
@@ -196,6 +204,9 @@ export default function RepairOrder() {
   }, []);
 
   useEffect(() => {
+    if(!lastOrderNumber){
+      setNextOrderNumber('RPR/24/Jan/00001');
+    }
     if (lastOrderNumber !== null && lastOrderNumber !== undefined) {
       const lastOrderNumberParts = parseInt(
         (lastOrderNumber.split("/") || []).pop(),
@@ -276,7 +287,7 @@ export default function RepairOrder() {
                                 name="CustomeName"
                                 onChange={(e) =>
                                   handleInputChange(
-                                    orderItems.id,
+                                    orderItems[0].id,
                                     "CustomeName",
                                     e.target.value
                                   )
@@ -380,18 +391,7 @@ export default function RepairOrder() {
                                         value={invoice1.CustomeName}
                                       />
                                     </div>
-                                    <div className="col-md-6 d-flex flex-column">
-                                      <label className="fieldlabels">
-                                        <i className="fa-solid fa-calendar-days header-icon2"></i>
-                                        Repair Order Date
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="uname"
-                                        readOnly
-                                        value={invoice1.updated_at}
-                                      />
-                                    </div>
+
                                     <div className="col-md-6 d-flex flex-column pt-2">
                                       <label className="fieldlabels">
                                         <i className="fa-solid fa-cart-arrow-down header-icon2"></i>
@@ -499,18 +499,6 @@ export default function RepairOrder() {
                                         name="pwd"
                                         readOnly
                                         value={invoice1.CustomerGST}
-                                      />
-                                    </div>
-                                    <div className="col-md-6 d-flex flex-column pt-2">
-                                      <label className="fieldlabels">
-                                        <i className="fa-solid fa-file-lines header-icon2"></i>
-                                        Remark
-                                      </label>
-                                      <input
-                                        type="email"
-                                        name="orderRemark"
-                                        readOnly
-                                        value={orderItems.orderRemark}
                                       />
                                     </div>
                                   </div>
@@ -654,7 +642,7 @@ export default function RepairOrder() {
                 )}
               </div>
 
-              <div className="row mt-3">
+              <div className="row mt-1">
                 <div className="col-md-12">
                   <div
                     className="card"
@@ -684,141 +672,141 @@ export default function RepairOrder() {
                               </tr>
                             </thead>
                             <tbody className="table-group-divider">
-                              <tr key={orderItems.orderID}>
-                                <th scope="row">{orderItems.id}</th>
-                                <td>
-                                  <select
-                                    className="form-select input_repair"
-                                    aria-label="Default select example"
-                                    value={orderItems.productName}
-                                    name="productName"
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        orderItems.id,
-                                        "productName",
-                                        e.target.value
-                                      )
-                                    }
-                                  >
-                                    <option value="" disabled>
-                                      Select Product Name
-                                    </option>
-                                    <option value="Temprature Controller">
-                                      Temprature Controller
-                                    </option>
-                                    <option value="Timers & Counters">
-                                      Timers & Counters
-                                    </option>
-                                    <option value="Process Control Instruments">
-                                      Process Control Instruments
-                                    </option>
-                                    <option value="Power & Energy Meters">
-                                      Power & Energy Meters
-                                    </option>
-                                    <option value="APFC & Protection Relays">
-                                      APFC & Protection Relays
-                                    </option>
-                                    <option value="Color Mark Sensors">
-                                      Color Mark Sensors
-                                    </option>
-                                    <option value="Cryo">Cryo</option>
-                                    <option value="Panel Meters">
-                                      Panel Meters
-                                    </option>
-                                  </select>
-                                </td>
-                                <td>
-                                  <input
-                                    className="input_repair"
-                                    placeholder="N/A"
-                                    value={orderItems.serialNumber}
-                                    name="serialNumber"
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        orderItems.id,
-                                        "serialNumber",
-                                        e.target.value
-                                      )
-                                    }
-                                    style={{
-                                      height: "38px",
-                                      borderRadius: "5px",
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  <input
-                                    className="input_repair"
-                                    placeholder="12345"
-                                    value={orderItems.HSN}
-                                    name="HSN"
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        orderItems.id,
-                                        "HSN",
-                                        e.target.value
-                                      )
-                                    }
-                                    style={{
-                                      height: "38px",
-                                      borderRadius: "5px",
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  <input
-                                    type="checkbox"
-                                    name="isInWarranty"
-                                    checked={orderItems.isInWarranty}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        orderItems.id,
-                                        "isInWarranty",
-                                        e.target.checked
-                                      )
-                                    }
-                                    style={{
-                                      height: "38px",
-                                      borderRadius: "5px",
-
-                                      width: "20px",
-                                    }}
-                                  />
-                                </td>
-
-                                <td>
-                                  <textarea
-                                    className="input_repair"
-                                    placeholder="20.0"
-                                    value={orderItems.customerReason}
-                                    name="customerReason"
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        orderItems.id,
-                                        "customerReason",
-                                        e.target.value
-                                      )
-                                    }
-                                    style={{
-                                      height: "48px",
-                                      borderRadius: "5px",
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger p-1"
-                                    onClick={() =>
-                                      handleDeleteRow(orderItems.id)
-                                    }
-                                  >
-                                    <IoMdRemoveCircle
-                                      style={{ fontSize: "1.5rem" }}
+                              {orderItems.map((item) => (
+                                <tr key={item.orderID}>
+                                  <th scope="row">{item.id}</th>
+                                  <td>
+                                    <select
+                                      className="form-select input_repair"
+                                      aria-label="Default select example"
+                                      value={item.productName}
+                                      name="productName"
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          item.id,
+                                          "productName",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="" disabled>
+                                        Select Product Name
+                                      </option>
+                                      <option value="Temprature Controller">
+                                        Temprature Controller
+                                      </option>
+                                      <option value="Timers & Counters">
+                                        Timers & Counters
+                                      </option>
+                                      <option value="Process Control Instruments">
+                                        Process Control Instruments
+                                      </option>
+                                      <option value="Power & Energy Meters">
+                                        Power & Energy Meters
+                                      </option>
+                                      <option value="APFC & Protection Relays">
+                                        APFC & Protection Relays
+                                      </option>
+                                      <option value="Color Mark Sensors">
+                                        Color Mark Sensors
+                                      </option>
+                                      <option value="Cryo">Cryo</option>
+                                      <option value="Panel Meters">
+                                        Panel Meters
+                                      </option>
+                                    </select>
+                                  </td>
+                                  <td>
+                                    <input
+                                      className="input_repair"
+                                      placeholder="N/A"
+                                      value={item.serialNumber}
+                                      name="serialNumber"
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          item.id,
+                                          "serialNumber",
+                                          e.target.value
+                                        )
+                                      }
+                                      style={{
+                                        height: "38px",
+                                        borderRadius: "5px",
+                                      }}
                                     />
-                                  </button>
-                                </td>
-                              </tr>
+                                  </td>
+                                  <td>
+                                    <input
+                                      className="input_repair"
+                                      placeholder="12345"
+                                      value={item.HSN}
+                                      name="HSN"
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          item.id,
+                                          "HSN",
+                                          e.target.value
+                                        )
+                                      }
+                                      style={{
+                                        height: "38px",
+                                        borderRadius: "5px",
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      name="isInWarranty"
+                                      checked={item.isInWarranty}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          item.id,
+                                          "isInWarranty",
+                                          e.target.checked
+                                        )
+                                      }
+                                      style={{
+                                        height: "38px",
+                                        borderRadius: "5px",
+
+                                        width: "20px",
+                                      }}
+                                    />
+                                  </td>
+
+                                  <td>
+                                    <textarea
+                                      className="input_repair"
+                                      placeholder="20.0"
+                                      value={item.customerReason}
+                                      name="customerReason"
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          item.id,
+                                          "customerReason",
+                                          e.target.value
+                                        )
+                                      }
+                                      style={{
+                                        height: "48px",
+                                        borderRadius: "5px",
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger p-1"
+                                      onClick={() => handleDeleteRow(item.id)}
+                                    >
+                                      <IoMdRemoveCircle
+                                        style={{ fontSize: "1.5rem" }}
+                                      />
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
                           </table>
 
@@ -843,10 +831,10 @@ export default function RepairOrder() {
                             </span>
                             <OrderComponent
                               name="orderRemark"
-                              value={orderItems.orderRemark}
+                              value={orderItems[0].orderRemark}
                               onChange={(translatedText) =>
                                 handleInputChange(
-                                  orderItems.id,
+                                  orderItems[0].id,
                                   "orderRemark",
                                   translatedText
                                 )
@@ -867,23 +855,12 @@ export default function RepairOrder() {
                             </div>
                             <div className="dots"></div>
                           </button>
-                          {/* {placedOrder ? (
-                            <button
-                              onClick={handleSubmitlast}
-                              className="add-to-cart"
-                            >
-                              <i className="fa-solid fa-check header-icon"></i>
-                              Complete Order
-                            </button>
-                          ) : null} */}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              
             </div>
           </div>
         </div>

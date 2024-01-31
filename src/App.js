@@ -4,15 +4,17 @@ import Main from "./components/Dashboard/Main";
 import NewCustomer from "./components/NewCustomer/NewCustomer";
 import CustomerList from "./components/CustomerList/CustomerList";
 import RepairOrder from "./components/RepairOrder/RepairOrder";
+// import RepairOrder from "./Not In Use/RepairOrder";
 import OrderList from "./components/OrderList/OrderList";
 import InProcess from "./components/InProcess/InProcess";
 import Ready from "./components/Ready/Ready";
 import ToBill from "./components/ToBill/ToBill";
 import Login from "./components/Login/Login";
 import { APIContextProvider } from "./components/Context";
-import Invoice from "./components/Invoice/Invoice";
+import Invoice from "./components/Invoice/Table/Invoice";
 import Scraped from "./components/Scrape/Scraped";
-import ZeroInvoice from "./components/Invoice/ZeroInvoice";
+import ZeroInvoice from "./components/Invoice/Table/ZeroInvoiceTable";
+import RegularInvoiceTable from "./components/Invoice/Table/RegularInvoiceTable";
 import RegularInvoice from "./components/Invoice/RegularInvoice";
 import BillingInformation from "./components/Invoice/BillingInformation";
 
@@ -39,7 +41,11 @@ function App() {
             <Route exact path="/invoiceTable" element={<Invoice />} />
             <Route exact path="/scrape" element={<Scraped />} />
             <Route exact path="/zeroinvoice" element={<ZeroInvoice />} />
-            <Route  path="/regularinvoice/:orderID" element={<RegularInvoice />} />
+            <Route exact path ='/regularTable' element={<RegularInvoiceTable/>} />
+            <Route
+              path="/regularinvoice/:orderID"
+              element={<RegularInvoice />}
+            />
             <Route path="/regularinvoice/*" element={<RegularInvoice />} />
             <Route exact path="/billingInfo" element={<BillingInformation />} />
           </Routes>
