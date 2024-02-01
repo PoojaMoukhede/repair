@@ -11,15 +11,23 @@ import html2canvas from "html2canvas";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
-  const { orderID } = useParams();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
+  const { CustomeID, orderNumber } = useParams();
+  console.log(`CustomeID : ${CustomeID}, orderNumber : ${orderNumber},  `);
+  // const location = useLocation();
+  // const queryParams = new URLSearchParams(location.search);
   // const orderID = queryParams.get("orderID");
   let componentRef = useRef(null);
   const [detail, setDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
   const [orderDetailTable, setOrderDetailTable] = useState([]);
   const [word, setWord] = useState("");
+  const [subtotal, setSubtotal] = useState(0);
+  const [totalAmountWithGST, setTotalAmountWithGST] = useState(0);
+  const[totalCGST,setTotalCSGT]= useState(0);
+  const[totalSGST,setTotalSSGT]= useState(0);
+  const[totalIGST,setTotalISGT]= useState(0);
+  const[totalFF,setTotalFF]= useState(0);
+
 
   useEffect(() => {
     try {
@@ -32,14 +40,22 @@ export default function RegularInvoice() {
           console.error("Error fetching data:", error);
         });
       axios
-        .get(`http://192.168.1.211:8000/invoiceData/${orderID}`)
-        // .get(`http://192.168.1.211:8000/invoiceData/12`)
+        .get(
+          `http://localhost:8000/ordersWithSame?CustomeID=6&orderNumber=RPR/24/Feb/00004`
+          // `http://localhost:8000/ordersWithSame?CustomeID=${CustomeID}&orderNumber=${orderNumber}`
 
+        )
         .then((response) => {
           const responseData = response.data;
-          setOrderDetail(responseData);
-          setWord(convertNumberToWords(responseData.totalAmount));
-          setOrderDetailTable([responseData]); // Wrap responseData in an array
+          setOrderDetail(responseData.invoices[0]);
+          setSubtotal(responseData.subtotal);
+          setTotalAmountWithGST(responseData.totalAmountWithGST);
+          setTotalCSGT(responseData.cgst)
+          setTotalSSGT(responseData.sgst)
+          setTotalISGT(responseData.igst)
+          setTotalFF(responseData.ffTotal)
+          setOrderDetailTable(responseData.invoices);
+          setWord(convertNumberToWords(responseData.totalAmountWithGST));
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -47,7 +63,7 @@ export default function RegularInvoice() {
     } catch (e) {
       console.log(e);
     }
-  }, [orderID]);
+  }, []);
 
   function convertNumberToWords(number) {
     const units = [
@@ -469,33 +485,29 @@ export default function RegularInvoice() {
                         Repair Rate
                       </th>
                     </tr>
-
                     {orderDetailTable.map((entry, index) => (
                       <tr className="m-0 p-0" key={index}>
                         <td style={{ border: "1px solid black" }}>
                           {index + 1}
                         </td>
-                        <td colspan="2" style={{ border: "1px solid black" }}>
+                        <td colSpan="2" style={{ border: "1px solid black" }}>
                           {entry.productName}
                         </td>
-                        <td colspan="2" style={{ border: "1px solid black" }}>
+                        <td colSpan="2" style={{ border: "1px solid black" }}>
                           {entry.serialNumber}
                         </td>
-                        <td style={{ border: "1px solid black" }} colspan="1">
+                        <td style={{ border: "1px solid black" }} colSpan="1">
                           {entry.isInWarranty ? "YES" : "NO"}
                         </td>
-                        <td style={{ border: "1px solid black" }} colspan="2">
+                        <td style={{ border: "1px solid black" }} colSpan="2">
                           {entry.HSN}
                         </td>
-                        <td style={{ border: "1px solid black" }} colspan="2">
+                        <td style={{ border: "1px solid black" }} colSpan="2">
                           18%
                         </td>
                         <td
-                          style={{
-                            border: "1px solid black",
-                            width: "150px",
-                          }}
-                          colspan="3"
+                          style={{ border: "1px solid black", width: "150px" }}
+                          colSpan="3"
                         >
                           {parseFloat(entry.subTotal).toFixed(2)}
                         </td>
@@ -534,8 +546,9 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >
-                        {orderDetail.subTotal}
+                      >{parseFloat(subtotal).toFixed(2)}
+                      
+                        {/* {orderDetail.subTotal} */}
                       </td>
                     </tr>
                     <tr></tr>
@@ -551,8 +564,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >
-                        {orderDetail.igst}
+                      >{totalIGST}
+                        {/* {orderDetail.igst} */}
                       </td>
                     </tr>
                     <tr>
@@ -567,8 +580,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >
-                        {orderDetail.cgst}
+                      >{totalCGST}
+                        {/* {orderDetail.cgst} */}
                       </td>
                     </tr>
                     <tr>
@@ -583,8 +596,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >
-                        {orderDetail.sgst}
+                      >{totalSGST}
+                        {/* {orderDetail.sgst} */}
                       </td>
                     </tr>
                     <tr>
@@ -599,8 +612,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >
-                        {orderDetail.ff}
+                      >{totalFF}
+                        {/* {orderDetail.ff} */}
                       </td>
                     </tr>
 
@@ -617,7 +630,8 @@ export default function RegularInvoice() {
                         colspan="4"
                         style={{ border: "1px solid black" }}
                       >
-                        {parseFloat(orderDetail.totalAmount).toFixed(2)}{" "}
+                        {/* {parseFloat(orderDetail.totalAmount).toFixed(2)}{" "} */}
+                        {parseFloat(totalAmountWithGST).toFixed(2)}
                         &#x20B9;
                       </td>
                     </tr>

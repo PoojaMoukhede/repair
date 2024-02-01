@@ -15,6 +15,7 @@ export default function EditShipping({
   CustomeID,
   onButtonClick,
 }) {
+  // console.log(`selectedDetails : ${selectedDetails.orderNumber}`);
   const navigate = useNavigate();
   const [lastInvoiceNumber, setLastInvoiceNumber] = useState(null);
   const [nextInvoiceNumber, setNextInvoiceNumber] = useState("");
@@ -30,6 +31,7 @@ export default function EditShipping({
     ff: "",
     CustomeID: CustomeID,
     invoice_number: "",
+    orderNumber:'',
     // invoice_number:'MCIPL/RPR/2425/Jan/000001'
   });
 
@@ -50,6 +52,7 @@ export default function EditShipping({
         invoice_number: nextInvoiceNumber,
         // invoice_number:'MCIPL/RPR/2425/Jan/000001',
         orderID: selectedOrder,
+        orderNumber: selectedDetails.orderNumber,
       };
 
       setFormData(customer);
@@ -63,7 +66,7 @@ export default function EditShipping({
       .post("http://192.168.1.211:8000/invoice", updatedFormData)
       .then((res) => {
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
-        handleMoveToInvoiced()
+        handleMoveToInvoiced();
         setFormData(updatedOrderItems);
         // handleMoveToInvoiced()
         if (onButtonClick) {
@@ -124,7 +127,7 @@ export default function EditShipping({
           .substring(2)}/${(currentMonth).toLocaleString('en-us',{
           month: "short",
         })}/${formattedNumber}`;
-    
+
         setNextInvoiceNumber(newNextOrderNumber);
         console.log(`Next Invoice Number: ${nextInvoiceNumber}`);
       } else {
@@ -138,6 +141,36 @@ export default function EditShipping({
       );
     }
   }, [lastInvoiceNumber,nextInvoiceNumber]);
+  // useEffect(() => {
+  //   if (!lastInvoiceNumber) {
+  //     setNextInvoiceNumber("MCIPL/RPR/2425/Jan/000001");
+  //   } else {
+  //     const lastInvoiceNumberParts = lastInvoiceNumber.split("/");
+  //     const lastInvoiceMonth = lastInvoiceNumberParts[lastInvoiceNumberParts.length - 2];
+  //     const lastInvoiceYear = lastInvoiceNumberParts[lastInvoiceNumberParts.length - 3];
+  //     const currentMonth = new Date().toLocaleString("en-us", { month: "short" }).substring(0, 3);
+  //     const currentYear = new Date().getFullYear().toString().substring(2);
+  
+  //     if (
+  //       lastInvoiceMonth.toLowerCase() !== currentMonth.toLowerCase() ||
+  //       lastInvoiceYear !== currentYear
+  //     ) {
+  //       // Reset invoice number for the new month
+  //       setNextInvoiceNumber(`MCIPL/RPR/2425/${currentMonth}/000001`);
+  //     } else {
+  //       const lastInvoiceNumberParts = parseInt(lastInvoiceNumberParts.pop(), 10);
+  //       if (!isNaN(lastInvoiceNumberParts)) {
+  //         const nextNumber = lastInvoiceNumberParts + 1;
+  //         const formattedNumber = nextNumber.toString().padStart(6, "0");
+  //         const newNextInvoiceNumber = `MCIPL/RPR/2425/${currentMonth}/${formattedNumber}`;
+  //         setNextInvoiceNumber(newNextInvoiceNumber);
+  //       } else {
+  //         console.error("Failed to extract numeric part from the last invoice number.");
+  //       }
+  //     }
+  //   }
+  // }, [lastInvoiceNumber]);
+  
 
   return (
     <>

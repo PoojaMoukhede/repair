@@ -5,7 +5,7 @@ import Navbar from "../Navbar";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Invoice({ orderID }) {
+export default function Invoice({ orderID, CustomeID }) {
   const navigate = useNavigate();
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +13,7 @@ export default function Invoice({ orderID }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [detail, setDetail] = useState([]);
   console.log(orderID);
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,8 +49,6 @@ export default function Invoice({ orderID }) {
     fetchData();
   }, []);
 
-
-
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
@@ -66,9 +64,9 @@ export default function Invoice({ orderID }) {
     setCurrentPage(pageNumber);
   };
 
-  function handleClick(orderID) {
-    navigate(`/regularinvoice/${orderID}`);
-    console.log(orderID);
+  function handleClick(CustomeID, orderNumber) {
+    navigate(`/regularinvoice/${CustomeID}/${orderNumber}`);
+    console.log(CustomeID, orderNumber);
   }
   console.log(`filteredRows : ${currentEntries}`);
   return (
@@ -137,6 +135,7 @@ export default function Invoice({ orderID }) {
                                   <th className="text-center">Invoice Date</th>
                                   <th className="text-center">
                                     Invoice Number
+                                    {/* Order Number */}
                                   </th>
                                   <th className="text-center">
                                     Shipping Person
@@ -161,6 +160,7 @@ export default function Invoice({ orderID }) {
                                     </td>
                                     <td className="text-center">
                                       {entry.invoice_number}
+                                      {/* {entry.orderNumber} */}
                                     </td>
 
                                     <td className="text-center">
@@ -178,8 +178,14 @@ export default function Invoice({ orderID }) {
                                           fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
-                                          handleClick(entry.orderID)
+                                          handleClick(
+                                            entry.CustomeID,
+                                            entry.orderNumber
+                                          )
+                                          
                                         }
+                                        CustomeID={entry.CustomeID}
+                                        orderNumber={entry.orderNumber}
                                       >
                                         {" "}
                                         <i className="fa-solid fa-eye header-icon2"></i>

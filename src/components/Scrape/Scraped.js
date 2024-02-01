@@ -124,7 +124,7 @@ export default function Scraped() {
                           >
                             <table
                               className="align-middle mb-0 table table-border table-striped table-hover"
-                              style={{ fontSize: "0.9rem", color: "white" }}
+                              style={{ fontSize: "0.9rem", color: "white" ,cursor:"default" }}
                             >
                               <thead style={{ background: "beige" }}>
                                 <tr>

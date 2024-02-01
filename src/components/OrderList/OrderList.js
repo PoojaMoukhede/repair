@@ -109,7 +109,7 @@ export default function OrderList() {
                           >
                             <table
                               className="align-middle mb-0 table table-border table-striped table-hover"
-                              style={{ fontSize: "0.9rem", color: "white" }}
+                              style={{ fontSize: "0.9rem", color: "white" ,cursor:"default"}}
                             >
                               <thead style={{ background: "beige" }}>
                                 <tr>
@@ -187,6 +187,7 @@ export default function OrderList() {
                                             color: "black",
                                             border: "1px solid #efc84a",
                                             fontSize: "0.7rem",
+                                            cursor:"default"
                                           }}
                                         >
                                           Repaired

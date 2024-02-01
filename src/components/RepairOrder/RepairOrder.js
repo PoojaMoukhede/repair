@@ -15,7 +15,7 @@ export default function RepairOrder() {
   // const queryParams = new URLSearchParams(location.search);
   // const orderID = queryParams.get("orderID");
   const currentDate = new Date().toISOString().split("T")[0];
-  const [cartCountValue, setCartCountValue] = useState(0);
+  const [cartCountValue, setCartCountValue] = useState(1);
   const [added, setAdded] = useState(false);
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState("");
@@ -26,6 +26,8 @@ export default function RepairOrder() {
   const [lastOrderNumber, setLastOrderNumber] = useState(null);
   const [nextOrderNumber, setNextOrderNumber] = useState("");
   const [orderID, setOrderID] = useState(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
+  const [selectedCustomerName, setSelectedCustomerName] = useState("");
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -52,26 +54,22 @@ export default function RepairOrder() {
   }, []);
 
   const handleAddRow = () => {
-    setOrderItems((prevItems) => [
-      ...prevItems,
-      {
-        id: prevItems.length + 1,
-        productName: "",
-        serialNumber: "",
-        HSN: "",
-        isInWarranty: "",
-        customerReason: "",
-      },
-    ]);
+    const newOrderItem = {
+      id: orderItems.length + 1,
+      productName: "",
+      serialNumber: "",
+      HSN: "",
+      isInWarranty: "",
+      customerReason: "",
+      orderID: orderID,
+    };
+    setOrderItems((prevItems) => [...prevItems, newOrderItem]);
     setCartCountValue((prevCount) => prevCount + 1);
   };
-
   const handleDeleteRow = (id) => {
     setOrderItems((prevItems) => prevItems.filter((item) => item.id !== id));
     setCartCountValue((prevCount) => prevCount - 1);
   };
-
-  const [selectedCustomerId, setSelectedCustomerId] = useState("");
 
   const handleInputChange = (id, name, value) => {
     setOrderItems((prevItems) => {
@@ -97,7 +95,6 @@ export default function RepairOrder() {
         return item;
       });
     });
-    console.log(`input :${value}`);
   };
 
   const [orderItems, setOrderItems] = useState([
@@ -118,36 +115,34 @@ export default function RepairOrder() {
       orderID: orderID,
     },
   ]);
-
   const handleButtonClick = (e) => {
     e.preventDefault();
-    const orderDataSent = {
-      id: 1,
-      productName: orderItems[0].productName,
-      serialNumber: orderItems[0].serialNumber,
-      HSN: orderItems[0].HSN,
-      isInWarranty: orderItems[0].isInWarranty,
-      customerReason: orderItems[0].customerReason,
+
+    const orderDataSent = orderItems.map((item) => ({
+      productName: item.productName,
+      serialNumber: item.serialNumber,
+      HSN: item.HSN,
+      isInWarranty: item.isInWarranty,
+      customerReason: item.customerReason,
       orderNumber: nextOrderNumber,
-      // orderNumber: "RPR/24/Jan/2425/00001",
-      orderRemark: orderItems[0].orderRemark,
+      orderRemark: item.orderRemark,
       orderDate: referanceDate,
-      CustomerReferance: orderItems[0].CustomerReferance,
+      CustomerReferance: item.CustomerReferance,
       RefrenceDate: referanceDate,
-      CustomeName: orderItems[0].CustomeName,
+      CustomeName: selectedCustomerName,
       CustomeID: selectedCustomerId,
-      // orderID: orderID,
-    };
+    }));
 
     axios
-      .post("http://192.168.1.211:8000/ordersMultiple", [orderDataSent])
+      .post("http://192.168.1.211:8000/ordersMultiple", orderDataSent)
       .then((res) => {
-        console.log(`Server response:`, res.data);
+        console.log("Server response:", res.data);
         const updatedOrderItems = Array.isArray(res.data) ? res.data : [];
         setOrderItems(updatedOrderItems);
         setPlacedorder(true);
         setAdded(true);
-        window.location.reload();
+        alert(`Your ${orderDataSent.length} Orders are added successfully`);
+        // window.location.reload();
       })
       .catch((err) => {
         console.error("Error posting order:", err);
@@ -161,6 +156,7 @@ export default function RepairOrder() {
           `http://192.168.1.211:8000/customer/${selectedCustomerId}`
         );
         setInvoice1(response2.data);
+        setSelectedCustomerName(response2.data.CustomeName);
       } catch (error) {
         console.error("Error fetching order details:", error);
       }
@@ -204,8 +200,8 @@ export default function RepairOrder() {
   }, []);
 
   useEffect(() => {
-    if(!lastOrderNumber){
-      setNextOrderNumber('RPR/24/Jan/00001');
+    if (!lastOrderNumber) {
+      setNextOrderNumber("RPR/24/Feb/00001");
     }
     if (lastOrderNumber !== null && lastOrderNumber !== undefined) {
       const lastOrderNumberParts = parseInt(
@@ -235,6 +231,9 @@ export default function RepairOrder() {
       );
     }
   }, [lastOrderNumber]);
+
+
+  
 
   return (
     <>
@@ -271,7 +270,7 @@ export default function RepairOrder() {
                         <div className="widget-chart p-3">
                           <form
                             className="row g-3"
-                            onSubmit={(e) => e.preventDefault()}
+                            // onSubmit={(e) => e.preventDefault()}
                           >
                             <div className="col-md-4">
                               <label
@@ -831,10 +830,10 @@ export default function RepairOrder() {
                             </span>
                             <OrderComponent
                               name="orderRemark"
-                              value={orderItems[0].orderRemark}
+                              value={orderItems.orderRemark}
                               onChange={(translatedText) =>
                                 handleInputChange(
-                                  orderItems[0].id,
+                                  orderItems.id,
                                   "orderRemark",
                                   translatedText
                                 )
