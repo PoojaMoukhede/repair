@@ -174,12 +174,12 @@ export default function ToBill() {
                       </div>
                     </div>
 
-                    <div className="tab-content">
+                    <div className="tab-content" style={{borderBottom:'2px solid #004976'}}>
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart">
                           <div
                             className="table-responsive table"
-                            style={{ height: "80vh" }}
+                            style={{ height: "78.5vh" }}
                           >
                             <table
                               className="align-middle mb-0 table table-border table-striped table-hover"

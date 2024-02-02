@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "../Sidebar";
 import newCustomer from "../../Images/shortlist (1).png";
 import repairOrder from "../../Images/purchase-order.png";

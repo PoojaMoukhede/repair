@@ -251,10 +251,10 @@ export default function NewCustomer() {
                         Create New Customer
                       </div>
                     </div>
-                    <div className="tab-content">
+                    <div className="tab-content" style={{borderBottom:'2px solid #004976'}}>
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart p-3">
-                          <form className="row g-3" onSubmit={handleSubmit}>
+                          <form className="row g-3" onSubmit={handleSubmit} >
                             <div className="col-md-6">
                               <label
                                 htmlFor="inputEmail4"
@@ -538,7 +538,7 @@ export default function NewCustomer() {
                           Shipping Details
                         </div>
                       </div>
-                      <div className="tab-content">
+                      <div className="tab-content" style={{borderBottom:'2px solid #004976'}}>
                         <div
                           className="tab-pane fade active show"
                           id="tab-eg-55"

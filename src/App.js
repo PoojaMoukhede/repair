@@ -17,6 +17,8 @@ import ZeroInvoice from "./components/Invoice/Table/ZeroInvoiceTable";
 import RegularInvoiceTable from "./components/Invoice/Table/RegularInvoiceTable";
 import RegularInvoice from "./components/Invoice/RegularInvoice";
 import BillingInformation from "./components/Invoice/BillingInformation";
+import Translator from "./Not In Use/Translator";
+import List2 from "./components/CustomerList/List2";
 
 function App() {
   return (
@@ -43,11 +45,15 @@ function App() {
             <Route exact path="/zeroinvoice" element={<ZeroInvoice />} />
             <Route exact path ='/regularTable' element={<RegularInvoiceTable/>} />
             <Route
-              path="/regularinvoice/:orderID"
+              path="/regularinvoice?CustomeID=/:CustomeID&orderNumber=/:orderNumber"
               element={<RegularInvoice />}
             />
             <Route path="/regularinvoice/*" element={<RegularInvoice />} />
             <Route exact path="/billingInfo" element={<BillingInformation />} />
+
+
+            <Route path="/list" element={<List2/>}/>
+            <Route path='/pooja' element={<Translator/>}/>
           </Routes>
         </APIContextProvider>
       </BrowserRouter>

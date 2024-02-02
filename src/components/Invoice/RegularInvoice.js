@@ -4,18 +4,20 @@ import QR from "../../Images/image.png";
 import axios from "axios";
 import upi from "../../Images/upi-ar21.svg";
 import ReactToPrint from "react-to-print";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import "jspdf/dist/polyfills.es.js";
 import html2canvas from "html2canvas";
 
 export default function RegularInvoice() {
   const navigate = useNavigate();
-  const { CustomeID, orderNumber } = useParams();
-  console.log(`CustomeID : ${CustomeID}, orderNumber : ${orderNumber},  `);
-  // const location = useLocation();
-  // const queryParams = new URLSearchParams(location.search);
-  // const orderID = queryParams.get("orderID");
+  // const { CustomeID, orderNumber } = useSearchParams();
+  // console.log(`CustomeID : ${CustomeID}, orderNumber : ${orderNumber},`);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const CustomeID = queryParams.get("CustomeID");
+  const orderNumber = queryParams.get("orderNumber");
+  console.log(`CustomeID : ${CustomeID}, orderNumber : ${orderNumber},`);
   let componentRef = useRef(null);
   const [detail, setDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
@@ -23,12 +25,13 @@ export default function RegularInvoice() {
   const [word, setWord] = useState("");
   const [subtotal, setSubtotal] = useState(0);
   const [totalAmountWithGST, setTotalAmountWithGST] = useState(0);
-  const[totalCGST,setTotalCSGT]= useState(0);
-  const[totalSGST,setTotalSSGT]= useState(0);
-  const[totalIGST,setTotalISGT]= useState(0);
-  const[totalFF,setTotalFF]= useState(0);
-
-
+  const [totalCGST, setTotalCSGT] = useState(0);
+  const [totalSGST, setTotalSSGT] = useState(0);
+  const [totalIGST, setTotalISGT] = useState(0);
+  const [totalFF, setTotalFF] = useState(0);
+  console.log(
+    `http://localhost:8000/ordersWithSame?CustomeID=${CustomeID}&orderNumber=${orderNumber}`
+  );
   useEffect(() => {
     try {
       axios
@@ -41,19 +44,18 @@ export default function RegularInvoice() {
         });
       axios
         .get(
-          `http://localhost:8000/ordersWithSame?CustomeID=6&orderNumber=RPR/24/Feb/00004`
-          // `http://localhost:8000/ordersWithSame?CustomeID=${CustomeID}&orderNumber=${orderNumber}`
-
+          // `http://localhost:8000/ordersWithSame?CustomeID=6&orderNumber=RPR/24/Feb/00004`
+          `http://localhost:8000/ordersWithSame?CustomeID=${CustomeID}&orderNumber=${orderNumber}`
         )
         .then((response) => {
           const responseData = response.data;
           setOrderDetail(responseData.invoices[0]);
           setSubtotal(responseData.subtotal);
           setTotalAmountWithGST(responseData.totalAmountWithGST);
-          setTotalCSGT(responseData.cgst)
-          setTotalSSGT(responseData.sgst)
-          setTotalISGT(responseData.igst)
-          setTotalFF(responseData.ffTotal)
+          setTotalCSGT(responseData.cgst);
+          setTotalSSGT(responseData.sgst);
+          setTotalISGT(responseData.igst);
+          setTotalFF(responseData.ffTotal);
           setOrderDetailTable(responseData.invoices);
           setWord(convertNumberToWords(responseData.totalAmountWithGST));
         })
@@ -172,7 +174,7 @@ export default function RegularInvoice() {
               <div className="col-12 pt-2">
                 <table
                   className="table table-borderless table-sm"
-                  style={{ border: "1px solid #000" }}
+                  // style={{ border: "1px solid #000" }}
                 >
                   <tbody>
                     <tr>
@@ -546,8 +548,9 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >{parseFloat(subtotal).toFixed(2)}
-                      
+                      >
+                        {parseFloat(subtotal).toFixed(2)}
+
                         {/* {orderDetail.subTotal} */}
                       </td>
                     </tr>
@@ -564,7 +567,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >{totalIGST}
+                      >
+                        {totalIGST}
                         {/* {orderDetail.igst} */}
                       </td>
                     </tr>
@@ -580,7 +584,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >{totalCGST}
+                      >
+                        {totalCGST}
                         {/* {orderDetail.cgst} */}
                       </td>
                     </tr>
@@ -596,7 +601,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >{totalSGST}
+                      >
+                        {totalSGST}
                         {/* {orderDetail.sgst} */}
                       </td>
                     </tr>
@@ -612,7 +618,8 @@ export default function RegularInvoice() {
                         col="1"
                         colspan="4"
                         style={{ border: "1px solid black" }}
-                      >{totalFF}
+                      >
+                        {totalFF}
                         {/* {orderDetail.ff} */}
                       </td>
                     </tr>

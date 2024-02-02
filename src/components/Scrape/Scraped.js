@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import Pagination from "../Pagination/Pagination";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function Scraped() {
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +27,7 @@ export default function Scraped() {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = entriesData.slice(indexOfFirstEntry, indexOfLastEntry);
+  const totalPages = Math.ceil(entriesData.length / entriesPerPage);
 
   const filteredRows = currentEntries.filter((entry) =>
     Object.values(entry).some(
@@ -36,6 +36,10 @@ export default function Scraped() {
         value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -50,33 +54,7 @@ export default function Scraped() {
                   <div className="card">
                     <div className="card-header-tab card-header">
                       <div className="d-flex justify-content-between align-items-center">
-                        {/* <div class="dropdown">
-                          <button
-                            class="btn btn-secondary dropdown-toggle"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            onClick={()=>console.log(`Hellooo sweetie`)}
-                          >
-                            Back
-                          </button>
-                          <div
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <a class="dropdown-item" href="#/">
-                              Action
-                            </a>
-                            <a class="dropdown-item" href="#/">
-                              Another action
-                            </a>
-                            <a class="dropdown-item" href="#/">
-                              Something else here
-                            </a>
-                          </div>
-                        </div> */}
+                        
 
                         <Link to="/dashboard">
                           <button
@@ -115,7 +93,7 @@ export default function Scraped() {
                       </div>
                     </div>
 
-                    <div className="tab-content">
+                    <div className="tab-content" style={{borderBottom:'2px solid #004976'}}>
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart">
                           <div
@@ -164,7 +142,27 @@ export default function Scraped() {
                             </table>
                           </div>
                         </div>
-                        <Pagination />
+                        <nav>
+                          <ul className="pagination">
+                            {Array.from({ length: totalPages }).map(
+                              (_, index) => (
+                                <li
+                                  key={index}
+                                  className={`page-item ${
+                                    currentPage === index + 1 ? "active" : ""
+                                  }`}
+                                >
+                                  <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(index + 1)}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </nav>
                       </div>
                     </div>
                   </div>

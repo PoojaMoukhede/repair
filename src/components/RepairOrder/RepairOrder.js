@@ -201,7 +201,10 @@ export default function RepairOrder() {
 
   useEffect(() => {
     if (!lastOrderNumber) {
-      setNextOrderNumber("RPR/24/Feb/00001");
+      const currentMonth = new Date().toLocaleString("en-US", {
+        month: "short",
+      });
+      setNextOrderNumber(`RPR/24/${currentMonth}/00001`);
     }
     if (lastOrderNumber !== null && lastOrderNumber !== undefined) {
       const lastOrderNumberParts = parseInt(
@@ -257,7 +260,7 @@ export default function RepairOrder() {
                 <div className="col-md-12">
                   <div
                     className="card"
-                    style={{ border: "1px solid lightgray" }}
+                    style={{ border: "1px solid lightgray",borderBottom:'2px solid #004976' }}
                   >
                     <div className="card-header-tab card-header">
                       <div className="card-header-title">
@@ -360,7 +363,7 @@ export default function RepairOrder() {
                     <div className="col-md-6">
                       <div
                         className="card"
-                        style={{ border: "1px solid lightgray" }}
+                        style={{ border: "1px solid lightgray" ,borderBottom:'2px solid #004976'}}
                       >
                         <div className="card-header-tab card-header">
                           <div className="card-header-title">
@@ -513,7 +516,7 @@ export default function RepairOrder() {
                     <div className="col-md-6">
                       <div
                         className="card"
-                        style={{ border: "1px solid lightgray" }}
+                        style={{ border: "1px solid lightgray",borderBottom:'2px solid #004976' }}
                       >
                         <div className="card-header-tab card-header">
                           <div className="card-header-title">
@@ -641,11 +644,11 @@ export default function RepairOrder() {
                 )}
               </div>
 
-              <div className="row mt-1">
+              <div className="row mt-3">
                 <div className="col-md-12">
                   <div
                     className="card"
-                    style={{ border: "1px solid lightgray" }}
+                    style={{ border: "1px solid lightgray", borderBottom:'2px solid #004976'}}
                   >
                     <div className="card-header-tab card-header">
                       <div className="card-header-title">
@@ -653,6 +656,7 @@ export default function RepairOrder() {
                         Order Item Detail
                       </div>
                     </div>
+                 
                     <div className="tab-content">
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart p-3">

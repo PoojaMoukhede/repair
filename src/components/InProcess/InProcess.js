@@ -3,13 +3,10 @@ import Header from "../Header";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import Readymodel from "../Ready/Readymodel";
-import Pagination from "../Pagination/Pagination";
 import axios from "axios";
-import { useAPI } from "../Context";
 import { Link } from "react-router-dom";
 
 export default function OrderList() {
-  const { processList } = useAPI();
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesData, setEntriesData] = useState([]);
@@ -63,25 +60,6 @@ export default function OrderList() {
     setSelectedOrder(orderID);
     console.log(orderID);
   }
-  const makeStyle = (entriesData) => {
-    const { isInProcess, isReady, isBilled, isScraped } = entriesData;
-
-    if (!isInProcess && !isReady && !isBilled && !isScraped) {
-      return {
-        background: "#f9bb00",
-        color: "black",
-        border: "1px solid #efc84a",
-        fontSize:'0.7rem'
-      };
-    } else {
-      return {
-        background: "rgb(145 254 159 / 47%)",
-        color: "green",
-        border: "1px solid #85cb33",
-        fontSize:'0.7rem'
-      };
-    }
-  };
 
   return (
     <>
@@ -131,12 +109,12 @@ export default function OrderList() {
                       </div>
                     </div>
 
-                    <div className="tab-content">
+                    <div className="tab-content" style={{borderBottom:'2px solid #004976'}}>
                       <div className="tab-pane fade active show" id="tab-eg-55">
                         <div className="widget-chart">
                           <div
                             className="table-responsive table"
-                            style={{ height: "80vh" }}
+                            style={{ height: "85vh" }}
                           >
                             <table
                               className="align-middle mb-0 table table-border table-striped table-hover"

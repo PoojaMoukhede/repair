@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import EditCustomer from "../NewCustomer/EditCustomer";
 import axios from "axios";
 
+
 export default function CustomerList() {
-  const location = useLocation();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setselectedCustomer] = useState(null);
-  const currentPath = location.pathname;
   const handleAddMember = (newEmployee) => {
     setRows((prevRows) => [...prevRows, newEmployee]);
   };
@@ -100,7 +99,7 @@ export default function CustomerList() {
                         <div className="widget-chart p-0">
                           <div
                             className="table-responsive"
-                            style={{ height: "80vh" }}
+                            style={{ height: "86vh" ,borderBottom:'2px solid #004976'}}
                           >
                             <table
                               className="align-middle mb-0 table table-borderless table-striped table-hover"
@@ -189,6 +188,7 @@ export default function CustomerList() {
                                 ))}
                               </tbody>
                             </table>
+                            {/* <List2/> */}
                           </div>
                         </div>
                       </div>

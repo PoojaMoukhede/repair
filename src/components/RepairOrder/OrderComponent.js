@@ -79,9 +79,9 @@ const Translator = ({ name, value, onChange }) => {
         </div>
         <div className="language-dropdown">
           <select value={fromLanguage} onChange={handleLanguageChange}>
-            {Object.keys(languages).map((country_code) => (
-              <option key={country_code} value={country_code}>
-                {languages[country_code]}
+            {Object.keys(languages).map((state_code) => (
+              <option key={state_code} value={state_code}>
+                {languages[state_code]}
               </option>
             ))}
           </select>
